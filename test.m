@@ -1,0 +1,50 @@
+%% galerkin test
+
+% Setup
+clear; clc; path(pathdef); close('all'); 
+addpath('./');
+addpath('./formulations');
+addpath('./functions');
+addpath('./geometry');
+addpath('./input');
+addpath('./output');
+addpath('./symbolic');
+addpath('./tests');
+set(0,'DefaultFigureVisible','off');
+
+% Run tests
+TestName=dbstack;
+TestName=TestName.name;
+Files=dir(sprintf('tests/%s*.m',TestName));
+Passed=zeros(size(Files,1),1);
+CPUTime=zeros(size(Files,1),1);
+for Test=1:length(Files)
+  CPUTime(Test)=cputime;
+  run(['tests/',Files(Test).name]);
+  Passed(Test)=Simulation.TestPassed;
+  CPUTime(Test)=cputime-CPUTime(Test);
+end
+
+% Print results
+clc;
+Exitus='passed';
+for Test=1:length(Files)
+  fprintf('\n%s%s',Files(Test).name,repmat('.',1,66-length(Files(Test).name)));
+  if Passed(Test)
+    fprintf('PASSED in %.1f sec',CPUTime(Test));
+  else
+    fprintf('FAILED!!!');
+    Exitus='failed';
+  end
+end
+fprintf('\n\nTest completed (%s) in %.0f sec\n',Exitus,sum(CPUTime));
+
+% Show and close figures
+set(0,'DefaultFigureVisible','on');
+set(findobj('type','figure'),'Visible','on');
+for iFig=1:length(findobj('type','figure'))
+  close; pause(0.2);
+end
+
+% Delete useless variables
+clearvars -except Files Passed CPUTime;
