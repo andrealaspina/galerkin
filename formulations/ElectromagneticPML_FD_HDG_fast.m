@@ -1,0 +1,1079 @@
+classdef ElectromagneticPML_FD_HDG_fast < Formulation  
+  
+  properties
+    
+    % Number of global components
+    NumGlobalComp=@(NumSpaceDim) NumSpaceDim-1;
+    
+    % Number of Voigt components
+    NumVoigtComp=@(NumSpaceDim) 0;
+    
+    % Number of local components
+    NumLocalComp=@(NumSpaceDim) NumSpaceDim*(NumSpaceDim-1)/2+NumSpaceDim;
+    
+    % Number of post-processed components
+    NumPostComp=@(NumSpaceDim) NumSpaceDim;
+
+    % Discretization type
+    DiscretizationType='HDG';
+
+    % Time derivative order
+    TimeDerOrder=NaN;
+    
+    % Time/frequency domain
+    Domain='Frequency';
+    
+  end
+  
+  methods
+    
+    %% Initialize unknowns
+    function [Block]=initializeUnknowns(~,iD,Block,~,~,Sizes)
+      Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes*Sizes(iD).NumGlobalComp,1);
+      Block(iD,iD).SolutionLocal=zeros(Sizes(iD).NumLocalNodes,Sizes(iD).NumLocalComp,1);
+    end
+    
+    %% Compute initial conditions
+    function [Block]=computeInitialConditions(~,~,Block,~,~,~,~,~,~)
+
+    end
+    
+    %% Build block
+    function [Block,Elements]=buildBlock(~,iD,Block,Elements,~,Parameters,~,~,Time,RefElement,Sizes)
+      NodesElem=Elements(iD).Nodes;
+      FacesElem=Elements(iD).Faces;
+      LhsCoef=zeros(Sizes(iD).NumElementLhsCoef,Sizes(iD).NumElements);
+      RhsCoef=zeros(Sizes(iD).NumElementRhsCoef,Sizes(iD).NumElements);
+      MatLocal=cell(Sizes(iD).NumElements,1);
+      VecLocal=cell(Sizes(iD).NumElements,1);
+      parfor iElem=1:Sizes(iD).NumElements
+        [LhsGlobalElem,RhsGlobalElem,MatLocalElem,VecLocalElem]=...
+          buildBlockElement(NodesElem{iElem},FacesElem(iElem),...
+          Parameters,Time,RefElement,Sizes);
+        LhsCoef(:,iElem)=reshape(LhsGlobalElem.',[],1);
+        RhsCoef(:,iElem)=reshape(RhsGlobalElem.',[],1);
+        MatLocal{iElem}=MatLocalElem;
+        VecLocal{iElem}=VecLocalElem;
+      end
+      Block(iD,iD).LhsGlobal=fsparse(Block(iD,iD).LhsRowIndices,...
+                                     Block(iD,iD).LhsColIndices,LhsCoef(:));
+      Block(iD,iD).RhsGlobal=fsparse(Block(iD,iD).RhsRowIndices,1,RhsCoef(:));
+      Elements(iD).MatLocal=MatLocal;
+      Elements(iD).VecLocal=VecLocal;
+    end
+    
+    %% Do post-process
+    function [Elements]=doPostProcess(~,Elements,~,Parameters,~,Time,RefElement,Sizes)
+      RefElement.PostLowHigh=createReferenceElement(Sizes.NumSpaceDim,...
+                              Parameters.Degree  ,Parameters.Degree+2,Parameters.NodesDistribution);
+      RefElement.PostHigh=createReferenceElement(Sizes.NumSpaceDim,...
+                              Parameters.Degree+1,Parameters.Degree+2,Parameters.NodesDistribution);
+      RefElement.PostHighHigh=createReferenceElement(Sizes.NumSpaceDim,...
+                              Parameters.Degree+2,Parameters.Degree+2,Parameters.NodesDistribution);
+      NodesElem=Elements.Nodes;
+      SolutionLocalElem=Elements.SolutionLocal;
+      LhsPost=cell(Sizes.NumElements,1);
+      RhsPost=cell(Sizes.NumElements,1);
+      parfor iElem=1:Sizes.NumElements
+        [LhsPostElem,RhsPostElem]=...
+          doPostProcessElement(NodesElem{iElem},...
+          SolutionLocalElem{iElem},...
+          Parameters,Time,RefElement,Sizes);
+        LhsPost{iElem}=LhsPostElem;
+        RhsPost{iElem}=RhsPostElem;
+      end
+      Elements.LhsPost=LhsPost;
+      Elements.RhsPost=RhsPost;
+    end
+    
+    %% Store results
+    function [Results]=storeResults(~,iD,iST,Results,Block,~,Parameters,~,Time,~,Sizes)
+      if iST==1
+        Results(iD).Frequency=[];
+        Results(iD).MagneticField=[];
+        Results(iD).ElectricField=[];
+      end
+      Results(iD).Frequency(iST)=Time.Frequency;
+      Results(iD).MagneticField(:,:,iST)=Block(iD,iD).SolutionLocal(:,...
+        1:Sizes(iD).NumSpaceDim*(Sizes(iD).NumSpaceDim-1)/2);
+      Results(iD).ElectricField(:,:,iST)=Block(iD,iD).SolutionLocal(:,...
+        Sizes(iD).NumSpaceDim*(Sizes(iD).NumSpaceDim-1)/2+(1:Sizes(iD).NumSpaceDim));
+      if strcmp(Parameters(iD).PostProcessingHDG,'yes') && ...
+         matchField(Block(iD,iD),'SolutionPost')
+        Results(iD).ElectricFieldPost=Block(iD,iD).SolutionPost;
+      end
+    end
+    
+    %% Data for Paraview
+    function [PointData,CellData]=dataForParaview(~,Results,Parameters,Mesh,Sizes,isPostProcess)
+      
+      if matchField(Results,'Frequency')
+        
+        if not(isPostProcess)
+          
+          % Write magnetic field (real)
+          H_real=real(Results.MagneticField(:,:,end));
+          PointData=sprintf('\nVECTORS Magnetic_field_real float\n');
+          if Sizes.NumSpaceDim==2
+            PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[zeros(2,size(H_real,1));H_real'])];
+          elseif Sizes.NumSpaceDim==3
+            PointData=[PointData,sprintf('%.12f %.12f %.12f\n',H_real')];
+          end
+          
+          % Write magnetic field (imag)
+          H_imag=imag(Results.MagneticField(:,:,end));
+          PointData=[PointData,sprintf('\nVECTORS Magnetic_field_imag float\n')];
+          if Sizes.NumSpaceDim==2
+            PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[zeros(2,size(H_imag,1));H_imag'])];
+          elseif Sizes.NumSpaceDim==3
+            PointData=[PointData,sprintf('%.12f %.12f %.12f\n',H_imag')];
+          end
+          
+          % Write electric field (real)
+          e_real=real(Results.ElectricField(:,:,end));
+          PointData=[PointData,sprintf('\nVECTORS Electric_field_real float\n')];
+          if Sizes.NumSpaceDim==2
+            PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[e_real';zeros(1,size(e_real,1))])];
+          elseif Sizes.NumSpaceDim==3
+            PointData=[PointData,sprintf('%.12f %.12f %.12f\n',e_real')];
+          end
+          
+          % Write electric field (imag)
+          e_imag=imag(Results.ElectricField(:,:,end));
+          PointData=[PointData,sprintf('\nVECTORS Electric_field_imag float\n')];
+          if Sizes.NumSpaceDim==2
+            PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[e_imag';zeros(1,size(e_imag,1))])];
+          elseif Sizes.NumSpaceDim==3
+            PointData=[PointData,sprintf('%.12f %.12f %.12f\n',e_imag')];
+          end
+          
+        elseif isPostProcess
+          
+          % Write postprocessed electric field (real)
+          ep_real=real(Results.ElectricFieldPost(:,:,end));
+          PointData=sprintf('\nVECTORS Electric_field_post_real float\n');
+          if Sizes.NumSpaceDim==2
+            PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[ep_real';zeros(1,size(ep_real,1))])];
+          elseif Sizes.NumSpaceDim==3
+            PointData=[PointData,sprintf('%.12f %.12f %.12f\n',ep_real')];
+          end
+          
+          % Write postprocessed electric field (imag)
+          ep_imag=imag(Results.ElectricFieldPost(:,:,end));
+          PointData=[PointData,sprintf('\nVECTORS Electric_field_post_imag float\n')];
+          if Sizes.NumSpaceDim==2
+            PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[ep_imag';zeros(1,size(ep_imag,1))])];
+          elseif Sizes.NumSpaceDim==3
+            PointData=[PointData,sprintf('%.12f %.12f %.12f\n',ep_imag')];
+          end
+          
+        end
+        
+        % Write damping function
+        s=Parameters.DampingFunction(Mesh.Nodes(1,:)',Mesh.Nodes(2,:)',Mesh.Nodes(3,:)');
+        PointData=[PointData,sprintf('\nVECTORS Damping_function float\n')];
+        if Sizes.NumSpaceDim==2
+          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[s';zeros(1,size(s,1))])];
+        elseif Sizes.NumSpaceDim==3
+          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',s')];
+        end
+        
+        % Write magnetic permeability
+        mu=Parameters.MagneticPermeability;
+        mu_DG=zeros(Sizes.NumElements,1);
+        for iElem=1:Sizes.NumElements
+          mu_DG(iElem,:)=mu;
+        end
+        CellData=[sprintf('\nSCALARS Magnetic_permeability float\n'),...
+                  sprintf('LOOKUP_TABLE default\n'),...
+                  sprintf('%.12f\n',mu_DG')];
+        
+        % Write electric permittivity
+        epsilon=Parameters.ElectricPermittivity;
+        epsilon_DG=zeros(Sizes.NumElements,1);
+        for iElem=1:Sizes.NumElements
+          epsilon_DG(iElem,:)=epsilon;
+        end
+        CellData=[CellData,sprintf('\nSCALARS Electric_permittivity float\n'),...
+                  sprintf('LOOKUP_TABLE default\n'),...
+                  sprintf('%.12f\n',epsilon_DG')];
+        
+        % Write electric conductivity
+        sigma=Parameters.ElectricConductivity;
+        sigma_DG=zeros(Sizes.NumElements,1);
+        for iElem=1:Sizes.NumElements
+          sigma_DG(iElem,:)=sigma;
+        end
+        CellData=[CellData,sprintf('\nSCALARS Electric_conductivity float\n'),...
+                  sprintf('LOOKUP_TABLE default\n'),...
+                  sprintf('%.12f\n',sigma_DG')];
+      
+      elseif matchField(Results,'Time')
+        
+        % Write magnetic field ifft (real)
+        H_real=real(Results.MagneticFieldIFFT(:,:,end));
+        PointData=sprintf('\nVECTORS Magnetic_field_ifft_real float\n');
+        if Sizes.NumSpaceDim==2
+          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[zeros(2,size(H_real,1));H_real'])];
+        elseif Sizes.NumSpaceDim==3
+          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',H_real')];
+        end
+        
+        % Write magnetic field ifft (imag)
+        H_imag=imag(Results.MagneticFieldIFFT(:,:,end));
+        PointData=[PointData,sprintf('\nVECTORS Magnetic_field_ifft_imag float\n')];
+        if Sizes.NumSpaceDim==2
+          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[zeros(2,size(H_imag,1));H_imag'])];
+        elseif Sizes.NumSpaceDim==3
+          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',H_imag')];
+        end
+        
+        % Write electric field ifft (real)
+        e_real=real(Results.ElectricFieldIFFT(:,:,end));
+        PointData=[PointData,sprintf('\nVECTORS Electric_field_ifft_real float\n')];
+        if Sizes.NumSpaceDim==2
+          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[e_real';zeros(1,size(e_real,1))])];
+        elseif Sizes.NumSpaceDim==3
+          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',e_real')];
+        end
+        
+        % Write electric field ifft (imag)
+        e_imag=imag(Results.ElectricFieldIFFT(:,:,end));
+        PointData=[PointData,sprintf('\nVECTORS Electric_field_ifft_imag float\n')];
+        if Sizes.NumSpaceDim==2
+          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[e_imag';zeros(1,size(e_imag,1))])];
+        elseif Sizes.NumSpaceDim==3
+          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',e_imag')];
+        end
+        
+        CellData='';
+        
+      end
+    
+    end
+    
+    %% Compute radiation
+    function [Results]=computeRadiation(~,iD,Results,Elements,Mesh,Faces,RefElement,Sizes)
+      NodesElem=Elements(iD).Nodes;
+      ResultsElem=mat2cell(...
+        [Results(iD).MagneticField(Mesh(iD).Elements(:),:),...
+         Results(iD).ElectricField(Mesh(iD).Elements(:),:)],...
+        ones(Sizes(iD).NumElements,1)*Sizes(iD).NumElementNodes,Sizes(iD).NumLocalComp);
+      Radiation=0;
+      for iFace=1:size(Faces(iD,iD).Radiation,1)
+        iElem=Faces(iD,iD).Radiation(iFace,1);
+        iElemFace=Faces(iD,iD).Radiation(iFace,2);
+        [RadiationElem]=...
+          computeRadiationElement(iElemFace,NodesElem{iElem},ResultsElem{iElem},...
+          RefElement,Sizes);
+        Radiation=Radiation+RadiationElem;
+      end
+      Results(iD).Radiation=Radiation;
+    end
+    
+    %% Compute divergence
+    function [Results]=computeDivergence(~,iD,Results,Elements,Parameters,RefElement,Sizes)
+      NodesElem=Elements(iD).Nodes;
+      SolutionLocalElem=Elements(iD).SolutionLocal;
+      MagneticFieldDiv=zeros(Sizes(iD).NumElementNodes,Sizes(iD).NumElements);
+      ElectricFieldDiv=zeros(Sizes(iD).NumElementNodes,Sizes(iD).NumElements);
+      parfor iElem=1:Sizes(iD).NumElements
+        [MagneticFieldDivElem,ElectricFielDivdElem]=...
+          computeDivergenceElement(NodesElem{iElem},...
+          SolutionLocalElem{iElem},...
+          Parameters,RefElement,Sizes);
+        MagneticFieldDiv(:,iElem)=reshape(MagneticFieldDivElem',[],1);
+        ElectricFieldDiv(:,iElem)=reshape(ElectricFielDivdElem',[],1);
+      end
+      Results(iD).MagneticFieldDiv=MagneticFieldDiv(:);
+      Results(iD).ElectricFieldDiv=ElectricFieldDiv(:);
+    end
+    
+  end
+  
+end
+
+%% Build block element
+function [LhsGlobal,RhsGlobal,MatLocal,VecLocal]=buildBlockElement(...
+  Nodes,Faces,Parameters,Time,RefElement,Sizes)
+
+% Get general parameters
+nsd=Sizes.NumSpaceDim;
+msd=nsd*(nsd+1)/2;
+qsd=msd-nsd;
+NumElementNodes=Sizes.NumElementNodes;
+NumElementFaces=Sizes.NumElementFaces;
+NumFaceNodes=Sizes.NumFaceNodes;
+mu=Parameters.MagneticPermeability;
+epsilon=Parameters.ElectricPermittivity;
+sigma=Parameters.ElectricConductivity;
+Sigma=Parameters.DampingFunction;
+eD=Parameters.ElectricField;
+j=Parameters.CurrentDensity;
+g=Parameters.IncidentField;
+Xe=Nodes';
+tauE=Parameters.StabElectricField;
+omega=2*pi*Time.Frequency;
+if matchField(Parameters,'FloquetCoefficient')
+  CF=Parameters.FloquetCoefficient;
+else
+  CF=1;
+end
+
+% Initialize lhs
+KHH=zeros(qsd*NumElementNodes,qsd*NumElementNodes);
+KHe=zeros(qsd*NumElementNodes,nsd*NumElementNodes);
+KHE=zeros(qsd*NumElementNodes,(nsd-1)*NumElementFaces*NumFaceNodes);
+Kee=zeros(nsd*NumElementNodes,nsd*NumElementNodes);
+KeE=zeros(nsd*NumElementNodes,(nsd-1)*NumElementFaces*NumFaceNodes);
+KEH=zeros((nsd-1)*NumElementFaces*NumFaceNodes,qsd*NumElementNodes);
+KEe=zeros((nsd-1)*NumElementFaces*NumFaceNodes,nsd*NumElementNodes);
+KEE=zeros((nsd-1)*NumElementFaces*NumFaceNodes,(nsd-1)*NumElementFaces*NumFaceNodes);
+
+% Initialize rhs
+fH=zeros(qsd*NumElementNodes,1);
+fe=zeros(nsd*NumElementNodes,1);
+fE=zeros((nsd-1)*NumElementFaces*NumFaceNodes,1);
+
+% Compute weights at Gauss points
+[Ne,Nex,Ney,Nez,weg]=mapShapeFunctionsLinear(1,RefElement,Xe(1:nsd+1,:),nsd);
+
+% Indices
+ne1=1:NumElementNodes;
+ne2=ne1+NumElementNodes;
+ne3=ne2+NumElementNodes;
+
+% Compute variables at nodes
+Sigmae=Sigma(Xe(:,1),Xe(:,2),Xe(:,3));
+sigmaxe=Sigmae(:,1);
+sigmaye=Sigmae(:,2);
+if nsd==3
+  sigmaze=Sigmae(:,3);
+end
+
+% Compute variables at Gauss points
+Xeg=Ne*Xe;
+sigmaxeg=Ne*sigmaxe;
+sigmayeg=Ne*sigmaye;
+if nsd==3
+  sigmazeg=Ne*sigmaze;
+end
+jeg=j(Xeg(:,1),Xeg(:,2),Xeg(:,3),omega);
+jxeg=jeg(:,1);
+jyeg=jeg(:,2);
+if nsd==3
+  jzeg=jeg(:,3);
+end
+
+% Compute basic matrices
+NweT=(weg.*Ne)';
+NwexT=(weg.*Nex)';
+NweyT=(weg.*Ney)';
+if nsd==3
+  NwezT=(weg.*Nez)';
+end
+Me=NweT*Ne;
+Me=(Me+Me')/2;
+Cxe=NwexT*Ne;
+Cye=NweyT*Ne;
+if nsd==3
+  Cze=NwezT*Ne;
+end
+
+% Compute lhs
+if nsd==2
+  KHH(ne1,ne1)=-mu*NweT*(((1i*omega+sigmaxeg).*(1i*omega+sigmayeg)./(1i*omega         )).*Ne);
+else
+  KHH(ne1,ne1)=-mu*NweT*(((1i*omega+sigmayeg).*(1i*omega+sigmazeg)./(1i*omega+sigmaxeg)).*Ne);
+  KHH(ne2,ne2)=-mu*NweT*(((1i*omega+sigmazeg).*(1i*omega+sigmaxeg)./(1i*omega+sigmayeg)).*Ne);
+  KHH(ne3,ne3)=-mu*NweT*(((1i*omega+sigmaxeg).*(1i*omega+sigmayeg)./(1i*omega+sigmazeg)).*Ne);
+end
+
+if nsd==2
+  KHe(ne1,ne1)=-Cye;
+  KHe(ne1,ne2)=+Cxe;
+else
+  KHe(ne2,ne1)=+Cze;
+  KHe(ne3,ne1)=-Cye;
+  KHe(ne1,ne2)=-Cze;
+  KHe(ne3,ne2)=+Cxe;
+  KHe(ne1,ne3)=+Cye;
+  KHe(ne2,ne3)=-Cxe;
+end
+
+if nsd==2
+  Kee(ne1,ne1)=epsilon*NweT*(((1i*omega+sigmayeg).*(1i*omega         )./(1i*omega+sigmaxeg)).*Ne);
+  Kee(ne2,ne2)=epsilon*NweT*(((1i*omega         ).*(1i*omega+sigmaxeg)./(1i*omega+sigmayeg)).*Ne);  
+else
+  Kee(ne1,ne1)=epsilon*NweT*(((1i*omega+sigmayeg).*(1i*omega+sigmazeg)./(1i*omega+sigmaxeg)).*Ne);
+  Kee(ne2,ne2)=epsilon*NweT*(((1i*omega+sigmazeg).*(1i*omega+sigmaxeg)./(1i*omega+sigmayeg)).*Ne);
+  Kee(ne3,ne3)=epsilon*NweT*(((1i*omega+sigmaxeg).*(1i*omega+sigmayeg)./(1i*omega+sigmazeg)).*Ne);
+end
+
+Kee(ne1,ne1)=Kee(ne1,ne1)+sigma*Me;
+Kee(ne2,ne2)=Kee(ne2,ne2)+sigma*Me;
+if nsd==3
+  Kee(ne3,ne3)=Kee(ne3,ne3)+sigma*Me;
+end
+
+% Compute rhs
+fe(ne1,1)=-NweT*(jxeg);
+fe(ne2,1)=-NweT*(jyeg);
+if nsd==3
+  fe(ne3,1)=-NweT*(jzeg);
+end
+
+% Faces loop
+for iFace=1:NumElementFaces
+  
+  % Check need to compute face
+  ComputeFace=true;
+  
+  % Compute face
+  if ComputeFace
+    % Compute weights at Gauss points
+    FaceNodes=RefElement.FaceNodesElem;
+    Xf=Xe(FaceNodes(iFace,:),:);
+    [Nf,nx,ny,nz,wfg]=mapShapeFunctionsLinear(0,RefElement,Xf(1:nsd,:),nsd);
+    
+    % Check boundary
+    isDirichlet=Faces.Dirichlet(iFace);
+    isAbsorbing=Faces.Absorbing(iFace);
+    
+    % Indices
+    nf1=FaceNodes(iFace,:);
+    nf2=nf1+NumElementNodes;
+    nf3=nf2+NumElementNodes;
+    nef1=(iFace-1)*(nsd-1)*NumFaceNodes+(1:NumFaceNodes);
+    nef2=nef1+NumFaceNodes;
+    nefR=1:nsd;
+    
+    % Flip face
+    Node2Match1stNode1=Faces.Interior(2,iFace);
+    FlipFace=max(Node2Match1stNode1);
+    if FlipFace
+      order=flipFace(nsd,Parameters.Degree,Node2Match1stNode1);
+      nef1=nef1(order);
+      nef2=nef2(order);
+      nefR=circshift(flip(nefR(1:nsd)),Node2Match1stNode1);
+    end
+    
+    % Flip face (periodic (slave))
+    isPeriodicSlave=0;
+    if matchField(Faces,'Periodic') && not(isempty(Faces.Periodic))
+      Node2Match1stNode1=Faces.Periodic(2,iFace);
+      FlipFace=max(Node2Match1stNode1);
+      if FlipFace
+        isPeriodicSlave=1;
+        order=flipFace(nsd,Parameters.Degree,Node2Match1stNode1);
+        nef1=nef1(order);
+        nef2=nef2(order);
+        nefR=circshift(flip(nefR(1:nsd)),Node2Match1stNode1);
+      end
+    end
+    
+    % Floquet function on periodic (slave) faces
+    if isPeriodicSlave
+      CFfun=CF;
+    else
+      CFfun=1;
+    end
+
+    % Gram-Schmidt orthonormalization (straight faces)
+    V=Xf(nefR,1:nsd)';
+    W=(V(:,2:end)-V(:,1))./vecnorm(V(:,2:end)-V(:,1));
+    R(:,1)=W(:,1);
+    if nsd==3
+      R(:,2)=(W(:,2)-(R(:,1)'*W(:,2))*R(:,1))/norm(W(:,2)-(R(:,1)'*W(:,2))*R(:,1));
+    end
+    
+    % Get rotation operator
+    if nsd==2
+      Rxt1=R(1,1);
+      Ryt1=R(2,1);
+    else
+      Rxt1=R(1,1); Rxt2=R(1,2);
+      Ryt1=R(2,1); Ryt2=R(2,2);
+      Rzt1=R(3,1); Rzt2=R(3,2);
+    end
+    
+    % Compute variables at Gauss points
+    Xfg=Nf*Xf;
+    if isDirichlet
+      eDfg=eD(Xfg(:,1),Xfg(:,2),Xfg(:,3),omega);
+      if nsd==2
+        eDt1fg=Rxt1*eDfg(:,1)+Ryt1*eDfg(:,2);
+      else
+        eDt1fg=Rxt1*eDfg(:,1)+Ryt1*eDfg(:,2)+Rzt1*eDfg(:,3);
+        eDt2fg=Rxt2*eDfg(:,1)+Ryt2*eDfg(:,2)+Rzt2*eDfg(:,3);
+      end
+      if nsd==2
+        eDtxfg=Rxt1*eDt1fg;
+        eDtyfg=Ryt1*eDt1fg;
+      else
+        eDtxfg=Rxt1*eDt1fg+Rxt2*eDt2fg;
+        eDtyfg=Ryt1*eDt1fg+Ryt2*eDt2fg;
+        eDtzfg=Rzt1*eDt1fg+Rzt2*eDt2fg;
+      end
+    elseif isAbsorbing
+      gfg=g(Xfg(:,1),Xfg(:,2),Xfg(:,3),omega);
+      gxfg=gfg(:,1);
+      gyfg=gfg(:,2);
+      if nsd==3
+        gzfg=gfg(:,3);
+      end
+    end
+    
+    % Compute basic matrices
+    NwfT=(wfg.*Nf)';
+    Mf=NwfT*Nf;
+    Mf=(Mf+Mf')/2;
+    Mfnx=Mf*nx;
+    Mfny=Mf*ny;
+    if nsd==3
+      Mfnz=Mf*nz;
+    end
+    if nsd==2
+      Mfnxnx=Mf*nx*nx;
+      Mfnxny=Mf*nx*ny;
+      Mfnyny=Mf*ny*ny;
+    else
+      Mfnxnx=Mf*nx*nx;
+      Mfnxny=Mf*nx*ny;
+      Mfnxnz=Mf*nx*nz;
+      Mfnyny=Mf*ny*ny;
+      Mfnynz=Mf*ny*nz;
+      Mfnznz=Mf*nz*nz;
+    end
+    
+    % Compute lhs
+    if nsd==2
+      Kee(nf1,nf1)=Kee(nf1,nf1)+tauE*Mfnyny;
+      Kee(nf2,nf1)=Kee(nf2,nf1)-tauE*Mfnxny;
+      Kee(nf1,nf2)=Kee(nf1,nf2)-tauE*Mfnxny;
+      Kee(nf2,nf2)=Kee(nf2,nf2)+tauE*Mfnxnx;
+    else
+      Kee(nf1,nf1)=Kee(nf1,nf1)+tauE*Mfnyny+tauE*Mfnznz;
+      Kee(nf2,nf1)=Kee(nf2,nf1)-tauE*Mfnxny;
+      Kee(nf3,nf1)=Kee(nf3,nf1)-tauE*Mfnxnz;
+      Kee(nf1,nf2)=Kee(nf1,nf2)-tauE*Mfnxny;
+      Kee(nf2,nf2)=Kee(nf2,nf2)+tauE*Mfnxnx+tauE*Mfnznz;
+      Kee(nf3,nf2)=Kee(nf3,nf2)-tauE*Mfnynz;
+      Kee(nf1,nf3)=Kee(nf1,nf3)-tauE*Mfnxnz;
+      Kee(nf2,nf3)=Kee(nf2,nf3)-tauE*Mfnynz;
+      Kee(nf3,nf3)=Kee(nf3,nf3)+tauE*Mfnxnx+tauE*Mfnyny;
+    end
+    
+    if not(isDirichlet)
+      if nsd==2
+        KHE(nf1,nef1)=KHE(nf1,nef1)+(+Rxt1*Mfny...
+                                     -Ryt1*Mfnx)*CFfun;
+      else
+        KHE(nf1,nef1)=KHE(nf1,nef1)+(-Rzt1*Mfny...
+                                     +Ryt1*Mfnz)*CFfun;
+        KHE(nf2,nef1)=KHE(nf2,nef1)+(-Rxt1*Mfnz...
+                                     +Rzt1*Mfnx)*CFfun;
+        KHE(nf3,nef1)=KHE(nf3,nef1)+(-Ryt1*Mfnx...
+                                     +Rxt1*Mfny)*CFfun;
+        KHE(nf1,nef2)=KHE(nf1,nef2)+(-Rzt2*Mfny...
+                                     +Ryt2*Mfnz)*CFfun;
+        KHE(nf2,nef2)=KHE(nf2,nef2)+(-Rxt2*Mfnz...
+                                     +Rzt2*Mfnx)*CFfun;
+        KHE(nf3,nef2)=KHE(nf3,nef2)+(-Ryt2*Mfnx...
+                                     +Rxt2*Mfny)*CFfun;
+      end
+      
+      if nsd==2
+        KeE(nf1,nef1)=KeE(nf1,nef1)-Rxt1*tauE*Mf*CFfun;
+        KeE(nf2,nef1)=KeE(nf2,nef1)-Ryt1*tauE*Mf*CFfun;
+      else
+        KeE(nf1,nef1)=KeE(nf1,nef1)-Rxt1*tauE*Mf*CFfun;
+        KeE(nf2,nef1)=KeE(nf2,nef1)-Ryt1*tauE*Mf*CFfun;
+        KeE(nf3,nef1)=KeE(nf3,nef1)-Rzt1*tauE*Mf*CFfun;
+        KeE(nf1,nef2)=KeE(nf1,nef2)-Rxt2*tauE*Mf*CFfun;
+        KeE(nf2,nef2)=KeE(nf2,nef2)-Ryt2*tauE*Mf*CFfun;
+        KeE(nf3,nef2)=KeE(nf3,nef2)-Rzt2*tauE*Mf*CFfun;
+      end
+      
+      if nsd==2
+        KEH(nef1,nf1)=KEH(nef1,nf1)+(+Rxt1*Mfny...
+                                     -Ryt1*Mfnx)/CFfun;
+      else
+        KEH(nef1,nf1)=KEH(nef1,nf1)+(-Rzt1*Mfny...
+                                     +Ryt1*Mfnz)/CFfun;
+        KEH(nef1,nf2)=KEH(nef1,nf2)+(-Rxt1*Mfnz...
+                                     +Rzt1*Mfnx)/CFfun;
+        KEH(nef1,nf3)=KEH(nef1,nf3)+(-Ryt1*Mfnx...
+                                     +Rxt1*Mfny)/CFfun;
+        KEH(nef2,nf1)=KEH(nef2,nf1)+(-Rzt2*Mfny...
+                                     +Ryt2*Mfnz)/CFfun;
+        KEH(nef2,nf2)=KEH(nef2,nf2)+(-Rxt2*Mfnz...
+                                     +Rzt2*Mfnx)/CFfun;
+        KEH(nef2,nf3)=KEH(nef2,nf3)+(-Ryt2*Mfnx...
+                                     +Rxt2*Mfny)/CFfun;
+      end
+      
+      if nsd==2
+        KEe(nef1,nf1)=KEe(nef1,nf1)-Rxt1*tauE*Mf/CFfun;
+        KEe(nef1,nf2)=KEe(nef1,nf2)-Ryt1*tauE*Mf/CFfun;
+      else
+        KEe(nef1,nf1)=KEe(nef1,nf1)-Rxt1*tauE*Mf/CFfun;
+        KEe(nef1,nf2)=KEe(nef1,nf2)-Ryt1*tauE*Mf/CFfun;
+        KEe(nef1,nf3)=KEe(nef1,nf3)-Rzt1*tauE*Mf/CFfun;
+        KEe(nef2,nf1)=KEe(nef2,nf1)-Rxt2*tauE*Mf/CFfun;
+        KEe(nef2,nf2)=KEe(nef2,nf2)-Ryt2*tauE*Mf/CFfun;
+        KEe(nef2,nf3)=KEe(nef2,nf3)-Rzt2*tauE*Mf/CFfun;
+      end
+      
+      if nsd==2
+        KEE(nef1,nef1)=KEE(nef1,nef1)+Rxt1*Rxt1*tauE*Mf...
+                                     +Ryt1*Ryt1*tauE*Mf;
+      else
+        KEE(nef1,nef1)=KEE(nef1,nef1)+Rxt1*Rxt1*tauE*Mf...
+                                     +Ryt1*Ryt1*tauE*Mf...
+                                     +Rzt1*Rzt1*tauE*Mf;
+        KEE(nef2,nef1)=KEE(nef2,nef1)+Rxt1*Rxt2*tauE*Mf...
+                                     +Ryt1*Ryt2*tauE*Mf...
+                                     +Rzt1*Rzt2*tauE*Mf;
+        KEE(nef1,nef2)=KEE(nef1,nef2)+Rxt1*Rxt2*tauE*Mf...
+                                     +Ryt1*Ryt2*tauE*Mf...
+                                     +Rzt1*Rzt2*tauE*Mf;
+        KEE(nef2,nef2)=KEE(nef2,nef2)+Rxt2*Rxt2*tauE*Mf...
+                                     +Ryt2*Ryt2*tauE*Mf...
+                                     +Rzt2*Rzt2*tauE*Mf;
+      end
+    end
+    
+    if isAbsorbing
+      if nsd==2
+        KEE(nef1,nef1)=KEE(nef1,nef1)+Rxt1*Rxt1*sqrt(epsilon/mu)*Mf...
+                                     +Ryt1*Ryt1*sqrt(epsilon/mu)*Mf;
+      else
+        KEE(nef1,nef1)=KEE(nef1,nef1)+Rxt1*Rxt1*sqrt(epsilon/mu)*Mf...
+                                     +Ryt1*Ryt1*sqrt(epsilon/mu)*Mf...
+                                     +Rzt1*Rzt1*sqrt(epsilon/mu)*Mf;
+        KEE(nef2,nef1)=KEE(nef2,nef1)+Rxt1*Rxt2*sqrt(epsilon/mu)*Mf...
+                                     +Ryt1*Ryt2*sqrt(epsilon/mu)*Mf...
+                                     +Rzt1*Rzt2*sqrt(epsilon/mu)*Mf;
+        KEE(nef1,nef2)=KEE(nef1,nef2)+Rxt1*Rxt2*sqrt(epsilon/mu)*Mf...
+                                     +Ryt1*Ryt2*sqrt(epsilon/mu)*Mf...
+                                     +Rzt1*Rzt2*sqrt(epsilon/mu)*Mf;
+        KEE(nef2,nef2)=KEE(nef2,nef2)+Rxt2*Rxt2*sqrt(epsilon/mu)*Mf...
+                                     +Ryt2*Ryt2*sqrt(epsilon/mu)*Mf...
+                                     +Rzt2*Rzt2*sqrt(epsilon/mu)*Mf;
+      end
+    end
+    
+    % Compute rhs
+    if isDirichlet      
+      if nsd==2
+        fH(nf1,1)=fH(nf1,1)+NwfT*(nx.*eDtyfg-ny.*eDtxfg);
+      else
+        fH(nf1,1)=fH(nf1,1)+NwfT*(ny.*eDtzfg-nz.*eDtyfg);
+        fH(nf2,1)=fH(nf2,1)+NwfT*(nz.*eDtxfg-nx.*eDtzfg);
+        fH(nf3,1)=fH(nf3,1)+NwfT*(nx.*eDtyfg-ny.*eDtxfg);
+      end
+      
+      fe(nf1,1)=fe(nf1,1)+tauE*NwfT*(eDtxfg);
+      fe(nf2,1)=fe(nf2,1)+tauE*NwfT*(eDtyfg);
+      if nsd==3
+        fe(nf3,1)=fe(nf3,1)+tauE*NwfT*(eDtzfg);
+      end
+    elseif isAbsorbing      
+      if nsd==2
+        fE(nef1,1)=fE(nef1,1)-NwfT*(Rxt1*gxfg+...
+                                    Ryt1*gyfg);
+      else
+        fE(nef1,1)=fE(nef1,1)-NwfT*(Rxt1*gxfg+...
+                                    Ryt1*gyfg+...
+                                    Rzt1*gzfg);
+        fE(nef2,1)=fE(nef2,1)-NwfT*(Rxt2*gxfg+...
+                                    Ryt2*gyfg+...
+                                    Rzt2*gzfg);
+      end
+    end
+    
+    % Remove undetermination
+    if isDirichlet
+      KEE(nef1,nef1)=eye(NumFaceNodes);
+      if nsd==3
+        KEE(nef2,nef2)=eye(NumFaceNodes);
+      end
+    end
+  end
+end
+
+% Compute elemental contributions to lhs and rhs
+
+% Indices
+iH=1:qsd*NumElementNodes;
+ie=iH(end)+(1:nsd*NumElementNodes);
+iE=1:(nsd-1)*NumElementFaces*NumFaceNodes;
+
+% Initialization of lhs
+LhsLL=zeros((qsd+nsd)*NumElementNodes,(qsd+nsd)*NumElementNodes);
+LhsLG=zeros((qsd+nsd)*NumElementNodes,(nsd-1)*NumElementFaces*NumFaceNodes);
+LhsGL=zeros((nsd-1)*NumElementFaces*NumFaceNodes,(qsd+nsd)*NumElementNodes);
+LhsGG=zeros((nsd-1)*NumElementFaces*NumFaceNodes,(nsd-1)*NumElementFaces*NumFaceNodes);
+RhsL=zeros((qsd+nsd)*NumElementNodes,1);
+RhsG=zeros((nsd-1)*NumElementFaces*NumFaceNodes,1);
+
+% Lhs local-local
+LhsLL(iH,iH)=KHH;
+LhsLL(iH,ie)=KHe;
+LhsLL(ie,iH)=KHe';
+LhsLL(ie,ie)=Kee;
+
+% Add missing term for axisymmetric formulation
+if nsd==2 && matchField(Parameters,'Axisymmetric','yes')
+  KeH_axisym=zeros(nsd*NumElementNodes,qsd*NumElementNodes);
+  KeH_axisym(ne1,ne1)=-NweT*((1./Xeg(:,2)).*Ne);
+  LhsLL(ie,iH)=LhsLL(ie,iH)+KeH_axisym;
+end
+
+% Lhs local-global
+LhsLG(iH,iE)=KHE;
+LhsLG(ie,iE)=KeE;
+
+% Rhs local
+RhsL(iH,1)=fH;
+RhsL(ie,1)=fe;
+
+% Lhs global-local
+LhsGL(iE,iH)=KEH;
+LhsGL(iE,ie)=KEe;
+
+% Lhs global-global
+LhsGG(iE,iE)=KEE;
+
+% Rhs global
+RhsG(iE,1)=fE;
+
+% Matrix and vector for local problem
+MatVecLocal=LhsLL\[LhsLG,RhsL];
+
+% Extract matrix for local problem
+MatLocal=MatVecLocal(:,1:end-1);
+
+% Extract vector for local problem
+VecLocal=MatVecLocal(:,end);
+
+% Lhs for global problem
+LhsGlobal=LhsGG-LhsGL*MatLocal;
+
+% Rhs for global problem
+RhsGlobal=RhsG-LhsGL*VecLocal;
+
+end
+
+%% Do post-process element
+function [LhsPost,RhsPost]=doPostProcessElement(...
+  Nodes,SolutionLocal,Parameters,Time,RefElement,Sizes)
+
+% Get general parameters
+nsd=Sizes.NumSpaceDim;
+msd=nsd*(nsd+1)/2;
+qsd=msd-nsd;
+NumElementNodes=Sizes.NumElementNodes;
+NumElementNodesPost=size(RefElement.Post.NodesCoordElem,1);
+NumElementNodesPostHigh=size(RefElement.PostHighHigh.NodesCoordElem,1);
+mu=Parameters.MagneticPermeability;
+Sigma=Parameters.DampingFunction;
+Xe=Nodes';
+omega=2*pi*Time.Frequency;
+
+% Get solution
+He=reshape(SolutionLocal(:,1:qsd),[],1);
+ee=reshape(SolutionLocal(:,qsd+(1:nsd)),[],1);
+
+% Initialize lhs
+Kpp=zeros(nsd*NumElementNodesPost,nsd*NumElementNodesPost);
+Khp=zeros(NumElementNodesPostHigh,nsd*NumElementNodesPost);
+
+% Initialize rhs
+fp=zeros(nsd*NumElementNodesPost,1);
+fh=zeros(NumElementNodesPostHigh,1);
+
+% Get reference data
+Nhe=RefElement.PostHigh.ShapeFunctionsElem;
+
+% Compute weights at Gauss points
+[~,Nex,Ney,Nez,weg,Nle]=mapShapeFunctions('Element',RefElement.PostLow,RefElement.Post,Xe,nsd);
+[~,Nhhex,Nhhey,Nhhez,wheg,Nlhe]=mapShapeFunctions('Element',RefElement.PostLowHigh,...
+                                                            RefElement.PostHighHigh,Xe,nsd);
+
+% Indices
+ne1=1:NumElementNodesPost;
+ne2=ne1+NumElementNodesPost;
+ne3=ne2+NumElementNodesPost;
+nle1=1:NumElementNodes;
+nle2=nle1+NumElementNodes;
+nle3=nle2+NumElementNodes;
+nhe1=1:NumElementNodesPostHigh;
+
+% Compute variables at nodes
+if nsd==2
+  Hze=He(nle1);
+else
+  Hxe=He(nle1);
+  Hye=He(nle2);
+  Hze=He(nle3);
+end
+exe=ee(nle1);
+eYe=ee(nle2);
+if nsd==3
+  eze=ee(nle3);
+end
+Sigmae=Sigma(Xe(nle1,1),Xe(nle1,2),Xe(nle1,3));
+sigmaxe=Sigmae(:,1);
+sigmaye=Sigmae(:,2);
+if nsd==3
+  sigmaze=Sigmae(:,3);
+end
+
+% Compute variables at Gauss points
+if nsd==2
+  Hzeg=Nle*Hze;
+else
+  Hxeg=Nle*Hxe;
+  Hyeg=Nle*Hye;
+  Hzeg=Nle*Hze;
+end
+exeg=Nlhe*exe;
+eyeg=Nlhe*eYe;
+if nsd==3
+  ezeg=Nlhe*eze;
+end
+sigmaxeg=Nle*sigmaxe;
+sigmayeg=Nle*sigmaye;
+if nsd==3
+  sigmazeg=Nle*sigmaze;
+end
+
+% Compute basic matrices
+NwexT=(weg.*Nex)';
+NweyT=(weg.*Ney)';
+if nsd==3
+  NwezT=(weg.*Nez)';
+end
+NwhhexT=(wheg.*Nhhex)';
+NwhheyT=(wheg.*Nhhey)';
+if nsd==3
+  NwhhezT=(wheg.*Nhhez)';
+end
+if nsd==2
+  Kxxe=NwexT*Nex; Kxye=NwexT*Ney;
+  Kyxe=NweyT*Nex; Kyye=NweyT*Ney;
+else
+  Kxxe=NwexT*Nex; Kxye=NwexT*Ney; Kxze=NwexT*Nez;
+  Kyxe=NweyT*Nex; Kyye=NweyT*Ney; Kyze=NweyT*Nez;
+  Kzxe=NwezT*Nex; Kzye=NwezT*Ney; Kzze=NwezT*Nez;
+end
+
+% Compute lhs
+if nsd==2
+  Kpp(ne1,ne1)=-Kyye;
+  Kpp(ne1,ne2)=+Kyxe;
+  Kpp(ne2,ne1)=+Kxye;
+  Kpp(ne2,ne2)=-Kxxe;
+else
+  Kpp(ne1,ne1)=-Kyye-Kzze;
+  Kpp(ne1,ne2)=+Kyxe;
+  Kpp(ne1,ne3)=+Kzxe;
+  Kpp(ne2,ne1)=+Kxye;
+  Kpp(ne2,ne2)=-Kxxe-Kzze;
+  Kpp(ne2,ne3)=+Kzye;
+  Kpp(ne3,ne1)=+Kxze;
+  Kpp(ne3,ne2)=+Kyze;
+  Kpp(ne3,ne3)=-Kxxe-Kyye;
+end
+
+Khp(nhe1,ne1)=NwhhexT*(Nhe);
+Khp(nhe1,ne2)=NwhheyT*(Nhe);
+if nsd==3
+  Khp(nhe1,ne3)=NwhhezT*(Nhe);
+end
+
+% Compute rhs
+if nsd==2
+  fp(ne1,1)=-NweyT*(mu*(1i*omega+sigmaxeg).*(1i*omega+sigmayeg)./(1i*omega).*Hzeg);
+  fp(ne2,1)=+NwexT*(mu*(1i*omega+sigmaxeg).*(1i*omega+sigmayeg)./(1i*omega).*Hzeg);
+else
+  fp(ne1,1)=+NwezT*(mu*(1i*omega+sigmazeg).*(1i*omega+sigmaxeg)./(1i*omega+sigmayeg).*Hyeg)...
+            -NweyT*(mu*(1i*omega+sigmaxeg).*(1i*omega+sigmayeg)./(1i*omega+sigmazeg).*Hzeg);
+  fp(ne2,1)=+NwexT*(mu*(1i*omega+sigmaxeg).*(1i*omega+sigmayeg)./(1i*omega+sigmazeg).*Hzeg)...
+            -NwezT*(mu*(1i*omega+sigmayeg).*(1i*omega+sigmazeg)./(1i*omega+sigmaxeg).*Hxeg);
+  fp(ne3,1)=+NweyT*(mu*(1i*omega+sigmayeg).*(1i*omega+sigmazeg)./(1i*omega+sigmaxeg).*Hxeg)...
+            -NwexT*(mu*(1i*omega+sigmazeg).*(1i*omega+sigmaxeg)./(1i*omega+sigmayeg).*Hyeg);
+end
+
+fh(nhe1,1)=NwhhexT*(exeg)...
+          +NwhheyT*(eyeg);
+if nsd==3
+  fh(nhe1,1)=fh(nhe1,1)+NwhhezT*(ezeg);
+end
+
+% Indices
+ip=1:nsd*NumElementNodesPost;
+ih=ip(end)+(1:NumElementNodesPostHigh);
+
+% Initialization of lhs and rhs
+LhsPost=zeros(nsd*NumElementNodesPost+NumElementNodesPostHigh,nsd*NumElementNodesPost);
+RhsPost=zeros(nsd*NumElementNodesPost+NumElementNodesPostHigh,1);
+
+% Lhs for post-processing
+LhsPost(ip,ip)=Kpp;
+LhsPost(ih,ip)=Khp;
+
+% Rhs for post-processing
+RhsPost(ip,1)=fp;
+RhsPost(ih,1)=fh;
+
+end
+
+%% Compute radiation element
+function [Radiation]=computeRadiationElement(...
+  iFace,Nodes,Results,RefElement,Sizes)
+
+% Get general parameters
+nsd=Sizes.NumSpaceDim;
+msd=nsd*(nsd+1)/2;
+qsd=msd-nsd;
+NumElementNodes=Sizes.NumElementNodes;
+Xe=Nodes';
+
+% Get solution
+Hwe=reshape(Results(:,1:qsd),[],1);
+ewe=reshape(Results(:,qsd+(1:nsd)),[],1);
+
+% Indices
+ne1=1:NumElementNodes;
+ne2=ne1+NumElementNodes;
+ne3=ne2+NumElementNodes;
+
+% Compute variables at nodes
+if nsd==2
+  Hwze=Hwe(ne1);
+else
+  Hwxe=Hwe(ne1);
+  Hwye=Hwe(ne2);
+  Hwze=Hwe(ne3);
+end
+ewxe=ewe(ne1);
+ewye=ewe(ne2);
+if nsd==3
+  ewze=ewe(ne3);
+end
+
+% Compute weights at Gauss points
+FaceNodes=RefElement.FaceNodesElem;
+Xf=Xe(FaceNodes(iFace,:),:);
+[Nf,nx,ny,nz,wfg]=mapShapeFunctionsLinear(0,RefElement,Xf(1:nsd,:),nsd);
+
+% Indices
+nf1=FaceNodes(iFace,:);
+
+% Compute variables at nodes
+if nsd==2
+  Hwzf=Hwze(nf1);
+else
+  Hwxf=Hwxe(nf1);
+  Hwyf=Hwye(nf1);
+  Hwzf=Hwze(nf1);
+end
+ewxf=ewxe(nf1);
+ewyf=ewye(nf1);
+if nsd==3
+  ewzf=ewze(nf1);
+end
+
+% Compute variables at Gauss points
+if nsd==2
+  Hwzfg=Nf*Hwzf;
+else
+  Hwxfg=Nf*Hwxf;
+  Hwyfg=Nf*Hwyf;
+  Hwzfg=Nf*Hwzf;
+end
+ewxfg=Nf*ewxf;
+ewyfg=Nf*ewyf;
+if nsd==3
+  ewzfg=Nf*ewzf;
+end
+
+% Poynting vector at Gauss points
+if nsd==2
+  Sxfg=real(+ewyfg.*conj(Hwzfg));
+  Syfg=real(-ewxfg.*conj(Hwzfg));
+else
+  Sxfg=real(ewyfg.*conj(Hwzfg)-ewzfg.*conj(Hwyfg));
+  Syfg=real(ewzfg.*conj(Hwxfg)-ewxfg.*conj(Hwzfg));
+  Szfg=real(ewxfg.*conj(Hwyfg)-ewyfg.*conj(Hwxfg));
+end
+
+% Compute radiation
+if nsd==2
+  Radiation=sum((Sxfg.*nx+Syfg.*ny).*wfg);
+else
+  Radiation=sum((Sxfg.*nx+Syfg.*ny+Szfg.*nz).*wfg);
+end
+
+end
+
+%% Compute divergence element
+function [MagneticFieldDiv,ElectricFieldDiv]=computeDivergenceElement(...
+  Nodes,SolutionLocal,Parameters,RefElement,Sizes)
+
+% Get general parameters
+nsd=Sizes.NumSpaceDim;
+msd=nsd*(nsd+1)/2;
+qsd=msd-nsd;
+NumElementNodes=Sizes.NumElementNodes;
+Xe=Nodes';
+
+% Get solution
+He=reshape(SolutionLocal(:,1:qsd),[],1);
+ee=reshape(SolutionLocal(:,qsd+(1:nsd)),[],1);
+
+% Compute weights at Gauss points
+[Ne,Nex,Ney,Nez,~,~,pinvNe]=mapShapeFunctions('Element',RefElement,RefElement,Xe,nsd);
+
+% Indices
+ne1=1:NumElementNodes;
+ne2=ne1+NumElementNodes;
+ne3=ne2+NumElementNodes;
+
+% Compute variables at nodes
+if nsd==2
+  Hze=He(ne1);
+else
+  Hxe=He(ne1);
+  Hye=He(ne2);
+  Hze=He(ne3);
+end
+exe=ee(ne1);
+eYe=ee(ne2);
+if nsd==3
+  eze=ee(ne3);
+end
+
+% Compute divergence of magnetic field
+if nsd==2
+  MagneticFieldDiv=zeros(NumElementNodes,1);
+else
+  MagneticFieldDiv=pinvNe*(Nex*Hxe+Ney*Hye+Nez*Hze);
+end
+
+% Compute divergence of electric field
+if nsd==2
+  ElectricFieldDiv=pinvNe*(Nex*exe+Ney*eYe);
+else
+  ElectricFieldDiv=pinvNe*(Nex*exe+Ney*eYe+Nez*eze);
+end
+
+% Add missing term for axisymmetric formulation
+if nsd==2 && matchField(Parameters,'Axisymmetric','yes')
+  ElectricFieldDiv=ElectricFieldDiv+pinvNe*(1./(Ne*Xe(:,2)).*(Ne*eYe));
+end
+
+end
