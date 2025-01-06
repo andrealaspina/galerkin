@@ -1,0 +1,70 @@
+clearvars -except Files Passed CPUTime Test;
+
+%% Input
+
+% Simulation ---------------------------------------------------------------------------------------
+Simulation.Type='SingleSimulation';              % Simulation type
+Simulation.Problem='Thermal';                    % Problem
+% --------------------------------------------------------------------------------------------------
+
+% Parameters ---------------------------------------------------------------------------------------
+Parameters.Formulation='Thermal_HDG';            % Formulation
+Parameters.Problem='Thermal';                    % Problem
+Parameters.PostProcessingHDG='yes';              % Perform HDG postprocessing
+Parameters.Degree=7;                             % Degree
+Parameters.StabTemperature=1;                    % Stabilization for temperature
+Parameters.Density=0;                            % Density
+Parameters.SpecificHeatCapacity=0;               % Specific heat capacity
+Parameters.ThermalConductivity=1;                % Thermal conductivity
+Parameters.ScaledTemperatureGradient=...         % Scaled temperature gradient
+  @(x,y,z,t) [-y.*z.*(y-1).*(y-1/2).*(z-1).*(z-1/2),...
+              -(x.*z.*(6.*y.^2-6.*y+1).*(2.*z.^2-3.*z+1))/4,...
+              -(x.*y.*(2.*y.^2-3.*y+1).*(6.*z.^2-6.*z+1))/4];
+Parameters.Temperature=...                       % Temperature
+  @(x,y,z,t) y.*(y-1/2).*(y-1).*z.*(z-1/2).*(z-1).*x;
+Parameters.ThermalFlux=@(x,y,t) 0*x;             % Thermal flux
+Parameters.HeatSource=...                        % Heat source
+  @(x,y,z,t) (3.*x.*(2.*y-1).*(2.*z-1).*(-y.^2+y-z.^2+z))/2;
+% --------------------------------------------------------------------------------------------------
+
+% Geometry and mesh --------------------------------------------------------------------------------
+MeshFile={'Mesh_cube_1'};                        % Mesh file
+% --------------------------------------------------------------------------------------------------
+
+% System -------------------------------------------------------------------------------------------
+System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
+System.Nonlinear='no';                           % Nonlinear
+% --------------------------------------------------------------------------------------------------
+
+% Time parameters ----------------------------------------------------------------------------------
+Time.TimeDependent='no';                         % Time dependent problem
+% --------------------------------------------------------------------------------------------------
+
+% Solver -------------------------------------------------------------------------------------------
+Solver.Type='backslash';                         % Type
+% --------------------------------------------------------------------------------------------------
+
+% Boundary splitting -------------------------------------------------------------------------------
+Boundaries.Dirichlet=[1,5];                      % Dirichlet portion
+Boundaries.Neumann=[];                           % Neumann portion
+Boundaries.PeriodicMaster=[2,3];                 % Periodic portion (master)
+Boundaries.PeriodicSlave=[4,6];                  % Periodic portion (slave)
+% --------------------------------------------------------------------------------------------------
+
+% Output options -----------------------------------------------------------------------------------
+Options.PlotGeometry='no';                       % Plot geometry
+Options.PlotMesh='no';                           % Plot mesh
+Options.Export2Paraview='no';                    % Export to Paraview
+Options.ComputeError=...                         % Compute error
+  {'ScaledTemperatureGradient';
+   'Temperature';
+   'TemperaturePost'};
+Options.Test=...                                 % Test
+  ['Results.ScaledTemperatureGradientErrorL2<1e-12 && ',...
+   'Results.TemperatureErrorL2              <1e-12 && ',...
+   'Results.TemperaturePostErrorL2          <1e-12'];
+% --------------------------------------------------------------------------------------------------
+
+%% Main
+
+main
