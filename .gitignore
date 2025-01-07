@@ -1,1 +1,2 @@
 # List of untracked files to ignore
+echo ".DS_Store" >> .gitignore
