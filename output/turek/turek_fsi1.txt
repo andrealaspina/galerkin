@@ -3,32 +3,32 @@
 Input file: turek_fsi1
 
 Pre-processing  started...
-Pre-processing  completed in 2.2 sec (5.2 MB)
+Pre-processing  completed in 2.5 sec (5.2 MB)
 Processing      started...
-  Iter = 1      |Res| = 3.0e+01      [te,ts,tl] = [0.3,0.1,0.0]
+  Iter = 1      |Res| = 3.0e+01      [te,ts,tl] = [1.0,0.1,0.0]
   Iter = 2      |Res| = 2.1e+01      [te,ts,tl] = [0.3,0.1,0.0]
-  Iter = 3      |Res| = 8.4e+01      [te,ts,tl] = [0.2,0.1,0.0]
-  Iter = 4      |Res| = 3.9e+01      [te,ts,tl] = [0.2,0.1,0.0]
-  Iter = 5      |Res| = 3.4e+00      [te,ts,tl] = [0.2,0.1,0.0]
+  Iter = 3      |Res| = 8.4e+01      [te,ts,tl] = [0.3,0.1,0.0]
+  Iter = 4      |Res| = 3.9e+01      [te,ts,tl] = [0.3,0.1,0.0]
+  Iter = 5      |Res| = 3.4e+00      [te,ts,tl] = [0.3,0.1,0.0]
   Iter = 6      |Res| = 6.9e+00      [te,ts,tl] = [0.2,0.1,0.0]
   Iter = 7      |Res| = 4.3e+00      [te,ts,tl] = [0.2,0.1,0.0]
   Iter = 8      |Res| = 7.0e-01      [te,ts,tl] = [0.2,0.1,0.0]
-  Iter = 9      |Res| = 5.9e-01      [te,ts,tl] = [0.2,0.1,0.0]
-  Iter = 10     |Res| = 4.6e-01      [te,ts,tl] = [0.2,0.1,0.0]
-  Iter = 11     |Res| = 1.0e-01      [te,ts,tl] = [0.2,0.1,0.0]
-  Iter = 12     |Res| = 4.6e-02      [te,ts,tl] = [0.3,0.1,0.0]
-  Iter = 13     |Res| = 4.7e-02      [te,ts,tl] = [0.3,0.1,0.0]
+  Iter = 9      |Res| = 5.9e-01      [te,ts,tl] = [0.3,0.1,0.0]
+  Iter = 10     |Res| = 4.6e-01      [te,ts,tl] = [0.3,0.1,0.0]
+  Iter = 11     |Res| = 1.0e-01      [te,ts,tl] = [0.3,0.1,0.0]
+  Iter = 12     |Res| = 4.6e-02      [te,ts,tl] = [0.2,0.1,0.0]
+  Iter = 13     |Res| = 4.7e-02      [te,ts,tl] = [0.2,0.1,0.0]
   Iter = 14     |Res| = 1.4e-02      [te,ts,tl] = [0.2,0.1,0.0]
   Iter = 15     |Res| = 3.0e-03      [te,ts,tl] = [0.2,0.1,0.0]
   Iter = 16     |Res| = 4.7e-03      [te,ts,tl] = [0.2,0.1,0.0]
   Iter = 17     |Res| = 1.9e-03      [te,ts,tl] = [0.2,0.1,0.0]
-  Iter = 18     |Res| = 2.2e-05      [te,ts,tl] = [0.2,0.1,0.0]
+  Iter = 18     |Res| = 2.2e-05      [te,ts,tl] = [0.3,0.1,0.0]
 
 TipDisplacement = [0.0222,0.7596]*1e-3
 
-Processing      completed in 5.4 sec (15.7 MB)
+Processing      completed in 6.8 sec (15.7 MB)
 Post-processing started...
-Post-processing completed in 5.3 sec (15.7 MB)
+Post-processing completed in 5.6 sec (15.7 MB)
 --------------------------------------------------------------------------------
 
 Saved output file in: output/turek/turek_fsi1.mat
