@@ -37,7 +37,7 @@ for Test=1:length(Files)
     Exitus='failed';
   end
 end
-fprintf('\n\nTest completed (%s) in %.0f sec\n',Exitus,sum(CPUTime));
+fprintf('\n\nTest completed (%s) in %.0f sec (CPU time)\n',Exitus,sum(CPUTime));
 
 % Show and close figures
 set(0,'DefaultFigureVisible','on');
