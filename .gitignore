@@ -1,2 +1,3 @@
 # List of untracked files to ignore
+resources/
 .DS_Store
