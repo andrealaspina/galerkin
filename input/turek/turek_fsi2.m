@@ -106,12 +106,21 @@ Boundaries(3).Fixed=1;                           % Fixed portion
 Options.PlotGeometry='yes';                      % Plot geometry
 Options.PlotMesh='yes';                          % Plot mesh
 Options.PlotMeshDistortion='yes';                % Plot mesh distortion
+Options.PlotSolution=...                         % Plot solution
+  {'ScaledStrainRate';
+   'Density';
+   'Momentum';
+   'Displacement'};
 Options.ComputeQuantity=...                      % Compute quantity of interest
   ['[~,Node]=ismembertol([0.6,0.2,0.0],Mesh(3).Nodes'',1e-6,''ByRows'',true);',...
    'Results(3).TipDisplacement(Time.TimeStep,:)=Block(3,3).SolutionGlobal(Node,:);',...
    'fprintf(''\n\nTipDisplacement = [%.4f,%.4f]*1e-3\n'',',...
    'Results(3).TipDisplacement(Time.TimeStep,1)*1e3,',...
    'Results(3).TipDisplacement(Time.TimeStep,2)*1e3)'];
+Options.ComputeQuantityEnd=...                   % Compute quantity of interest (end of simulation)
+  ['plot(Time.TimeStepSize:Time.TimeStepSize:Time.FinalTime,Results(3).TipDisplacement(:,2));',...
+   'xlabel(''Time [s]'');',...
+   'ylabel(''Tip vertical displacement [m]'');'];
 Options.Export2Paraview='yes';                   % Export to Paraview
 Options.Export2ParaviewTimeSteps='Time.TimeStep';% Export to Paraview time steps
 Options.StoreTimeSteps='Time.TimeStep';          % Store time steps
