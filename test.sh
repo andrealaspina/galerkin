@@ -17,12 +17,12 @@ matlab -nodisplay -nosplash -r                                                  
   "distcomp.feature('LocalUseMpiexec',false);                                             \
    delete(gcp);                                                                           \
    parpool(parcluster('local'),str2num(getenv('SLURM_CPUS_ON_NODE')),'IdleTimeout',6*60); \
-   addpath('/rigel/home/al4188/galerkin');                                                \
-   addpath('/rigel/home/al4188/galerkin/formulations');                                   \
-   addpath('/rigel/home/al4188/galerkin/functions');                                      \
-   addpath('/rigel/home/al4188/galerkin/geometry');                                       \
-   addpath('/rigel/home/al4188/galerkin/input');                                          \
-   addpath('/rigel/home/al4188/galerkin/output');                                         \
-   addpath('/rigel/home/al4188/galerkin/symbolic');                                       \
-   addpath('/rigel/home/al4188/galerkin/tests');                                          \
+   addpath('/galerkin');                                                                  \
+   addpath('/galerkin/formulations');                                                     \
+   addpath('/galerkin/functions');                                                        \
+   addpath('/galerkin/geometry');                                                         \
+   addpath('/galerkin/input');                                                            \
+   addpath('/galerkin/output');                                                           \
+   addpath('/galerkin/symbolic');                                                         \
+   addpath('/galerkin/tests');                                                            \
    run(sprintf('./%s.m',getenv('SLURM_JOB_NAME'))); quit"
