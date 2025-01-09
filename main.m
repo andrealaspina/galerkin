@@ -179,11 +179,8 @@ for iS=1:Simulation.NumSimulations
   end
   
   % Start parpool if needed
-  if not(matchField(Simulation,'NumProcessors'))
-    Simulation.NumProcessors=1;
-  end
   PoolAux=gcp; if isempty(PoolAux); PoolAux=[]; PoolAux.NumWorkers=1; end
-  if Simulation.NumProcessors~=PoolAux.NumWorkers
+  if matchField(Simulation,'NumProcessors') && Simulation.NumProcessors~=PoolAux.NumWorkers
     if PoolAux.NumWorkers>1
       fprintf('\n'); delete(PoolAux);
     end
