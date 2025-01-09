@@ -13,7 +13,7 @@ Parameters(1).Problem='Fluid';                   % Problem
 Parameters(1).PostProcessingHDG='no';            % Perform HDG postprocessing
 Parameters(1).ConvectiveFlow='yes';              % Convective flow
 Parameters(1).ArbitraryLagrangianEulerian='yes'; % Arbitrary Lagrangian-Eulerian description
-Parameters(1).Degree=1;                          % Degree
+Parameters(1).Degree=2;                          % Degree
 Parameters(1).StabVelocity=1;                    % Stabilization for velocity
 Parameters(1).StabPressure=10;                   % Stabilization for pressure
 Parameters(1).ReferenceDensity=1;                % Reference density
@@ -44,6 +44,12 @@ Parameters(1).Density=@(Pressure)...             % Equation of state
  (Pressure-Parameters(1).ReferencePressure)*Parameters(1).CompressibilityCoeff;
 Parameters(1).DDensityDPressure=@(Pressure)...   % dDensity/dPressure
   Parameters(1).CompressibilityCoeff;
+Parameters(1).ScaledStrainRateCenter=...         % Scaled strain rate at the center
+  @(t) Parameters(1).ScaledStrainRate(0.5,0.5,0,t);
+Parameters(1).VelocityCenter=...                 % Velocity at the center
+  @(t) Parameters(1).Velocity(0.5,0.5,0,t);
+Parameters(1).PressureCenter=...                 % Pressure at the center
+  @(t) Parameters(1).Pressure(0.5,0.5,0,t);
 Parameters(2).Formulation='Elasticity_CG';       % Formulation
 Parameters(2).Problem='Mesh';                    % Problem
 Parameters(2).Model='LinearElasticity';          % Model
@@ -60,6 +66,8 @@ Parameters(2).Traction=@(x,y,z,t) [0*x,0*x];     % Traction
 Parameters(2).Force=...                          % Force
   @(x,y,z,t) [-pi^2/16*sin(2*pi*x).*(6*cos(2*pi*y)+cos(2*pi*t)-4*cos(2*pi*y)*cos(2*pi*t)-3),...
               -pi^2/16*sin(2*pi*y).*(6*cos(2*pi*x)+cos(2*pi*t)-4*cos(2*pi*x)*cos(2*pi*t)-3)];
+Parameters(2).DisplacementCenter=...             % Displacement at the center
+  @(t) Parameters(2).Displacement(0.5,0.5,0,t);
 clear r0 p0 eps mu vx vy p
 % --------------------------------------------------------------------------------------------------
 
@@ -100,22 +108,23 @@ Boundaries(2).Neumann=[];                        % Neumann portion
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.Export2Paraview='no';                    % Export to Paraview
-Options.ComputeQuantityIteration=...             % Compute quantity of interest at each iteration
-  ['[~,Nodes12]=ismember(Mesh(1).NodesInitial'',Mesh(2).NodesInitial'',''Rows'');',...
-   'Mesh(1).Nodes=Mesh(1).NodesInitial+[Block(2,2).SolutionGlobal(Nodes12,:)'';',...
-   '                                    zeros(1,size(Mesh(1).NodesInitial,2))];',...
-   'Elements(1).Nodes=mat2cell(Mesh(1).Nodes(:,Mesh(1).Elements(:)),',...
-   '3,ones(Sizes(1).NumElements,1)*Sizes(1).NumElementNodes)'';'];
 Options.ComputeError=...                         % Compute error
-  {'ScaledStrainRate';
-   'Velocity';
-   'Pressure';
-   'Displacement'};
+  {'ScaledStrainRateCenter','Number';
+   'VelocityCenter'        ,'Number';
+   'PressureCenter'        ,'Number';
+   'DisplacementCenter'    ,'Number'};
+Options.ComputeQuantityError=...                 % Compute quantity of interest (error computation)
+  ['[~,Node1]=ismember([0.5,0.5,0],Mesh(1).Nodes'',''rows''); ',...
+   '[~,Node2]=ismember([0.5,0.5,0],Mesh(2).Nodes'',''rows''); ',...
+   'Results(1).ScaledStrainRateCenter=Results(1).ScaledStrainRate(Node1,:); ',...
+   'Results(1).VelocityCenter=Results(1).Velocity(Node1,:); ',...
+   'Results(1).PressureCenter=Results(1).Pressure(Node1,:); ',...
+   'Results(2).DisplacementCenter=Results(2).Displacement(Node2,:);'];
 Options.Test=...                                 % Test
-  ['abs(Results(1).ScaledStrainRateErrorL2-4.247474847925973e-01)<1e-12 && ',...
-   'abs(Results(1).VelocityErrorL2        -1.395975788997909e-01)<1e-12 && ',...
-   'abs(Results(1).PressureErrorL2        -2.066939939590204e-01)<1e-12 && ',...
-   'abs(Results(2).DisplacementErrorL2    -1.965976842183992e-02)<1e-12'];
+  ['abs(Results(1).ScaledStrainRateCenterErrorNumber-7.211563219379281e-02)<1e-12 && ',...
+   'abs(Results(1).VelocityCenterErrorNumber        -1.916622202939262e-02)<1e-12 && ',...
+   'abs(Results(1).PressureCenterErrorNumber        -2.023692030905807e-02)<1e-12 && ',...
+   'abs(Results(2).DisplacementCenterErrorNumber    -2.720808902910081e-17)<1e-12'];
 % --------------------------------------------------------------------------------------------------
 
 %% Main

@@ -543,7 +543,7 @@ fyeg=feg(:,2);
 if nsd==3
   fzeg=feg(:,3);
 end
-dpdereg=dpdr(reg);
+dpdreg=dpdr(reg);
 axeg=Ne*axe;
 ayeg=Ne*aye;
 if nsd==3
@@ -753,10 +753,10 @@ elseif nsd==3
   KwL(ne3,ne6)=Voigt3*CyeT;
 end
 
-Kwr(ne1,ne1)=Kwr(ne1,ne1)+NweT*((dpdereg).*Nex);
-Kwr(ne2,ne1)=Kwr(ne2,ne1)+NweT*((dpdereg).*Ney);
+Kwr(ne1,ne1)=Kwr(ne1,ne1)+NweT*((dpdreg).*Nex);
+Kwr(ne2,ne1)=Kwr(ne2,ne1)+NweT*((dpdreg).*Ney);
 if nsd==3
-  Kwr(ne3,ne1)=Kwr(ne3,ne1)+NweT*((dpdereg).*Nez);
+  Kwr(ne3,ne1)=Kwr(ne3,ne1)+NweT*((dpdreg).*Nez);
 end
 
 % Compute rhs
@@ -1209,7 +1209,7 @@ for iFace=1:NumElementFaces
                                      +Voigt3*NwfT*((Wzfg./Rfg.^2.*ny).*Nf);
       end
     end
-      
+    
     if not(isDirichlet_w_x)
       if nsd==2
         KLW(nf1,nefW1)=KLW(nf1,nefW1)-Voigt1*NwfT*((1./Rfg.*nx).*Nf);
@@ -1664,7 +1664,7 @@ end
 
 %% Do coupling element
 function [LhsCoup]=doCouplingElement(...
-  iFaceInterface,iD1,iD2,Block,Parameters,Mesh,Faces,Time,RefElement,Sizes)       
+  iFaceInterface,iD1,iD2,Block,Parameters,Mesh,Faces,Time,RefElement,Sizes)
 
 % Get general parameters
 isArbitraryLagrangianEulerian=strcmp(Parameters(iD1).ArbitraryLagrangianEulerian,'yes');
