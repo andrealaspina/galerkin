@@ -465,13 +465,10 @@ for iS=1:Simulation.NumSimulations
     
     % Define matrix pattern
     Block=defineMatrixPattern(Simulation,Parameters,Mesh,Faces,Sizes);
-
-    % Initialization of LHS and RHS
-    for iD1=1:Simulation.NumDiscretizations
-      Block(iD1,iD1).RhsGlobal=sparse(Block(iD1,iD1).RhsRowIndices,1,0);
-      for iD2=1:Simulation.NumDiscretizations
-        Block(iD1,iD2).LhsGlobal=sparse(Block(iD1,iD2).LhsRowIndices,Block(iD1,iD2).LhsColIndices,0);
-      end
+    
+    % Initialization of RHS
+    for iD=1:Simulation.NumDiscretizations
+      Block(iD,iD).RhsGlobal=sparse(Block(iD,iD).RhsRowIndices,1,0);
     end
     
     % Get fixed DOFs
