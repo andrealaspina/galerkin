@@ -466,17 +466,12 @@ for iS=1:Simulation.NumSimulations
     % Define matrix pattern
     Block=defineMatrixPattern(Simulation,Parameters,Mesh,Faces,Sizes);
     
-    % Initialization of RHS
-    for iD=1:Simulation.NumDiscretizations
-      Block(iD,iD).RhsGlobal=sparse(Block(iD,iD).RhsRowIndices,1,0);
-    end
-    
     % Get fixed DOFs
     Block=getFixedDofs(Block,Simulation,Mesh,Boundaries,Parameters,RefElement,Sizes);
     System.DOFsFixed=[];
     for iD=1:Simulation.NumDiscretizations
       System.DOFsFixed=[System.DOFsFixed,Block(iD,iD).DOFsFixed+...
-                                         size(vertcat(Block(1:iD-1,1:iD-1).RhsGlobal),1)];
+                        sum(arrayfun(@(S) S.NumGlobalNodes*S.NumGlobalComp,Sizes(1:iD-1)))];
     end
     
     % Get periodic DOFs
@@ -484,9 +479,9 @@ for iS=1:Simulation.NumSimulations
     System.DOFsMaster=[]; System.DOFsSlave=[];
     for iD=1:Simulation.NumDiscretizations
       System.DOFsMaster=[System.DOFsMaster,Block(iD,iD).DOFsMaster+...
-                         size(vertcat(Block(1:iD-1,1:iD-1).RhsGlobal),1)];
+                         sum(arrayfun(@(S) S.NumGlobalNodes*S.NumGlobalComp,Sizes(1:iD-1)))];
       System.DOFsSlave=[System.DOFsSlave,Block(iD,iD).DOFsSlave+...
-                        size(vertcat(Block(1:iD-1,1:iD-1).RhsGlobal),1)];
+                        sum(arrayfun(@(S) S.NumGlobalNodes*S.NumGlobalComp,Sizes(1:iD-1)))];
     end
         
     % Default settings
@@ -953,7 +948,8 @@ for iS=1:Simulation.NumSimulations
       Block(1,1).SysSolutionGlobal=System.Solution((1:size(Block(1,1).RhsGlobal,1)),1);
       for iD=2:Simulation.NumDiscretizations
         Block(iD,iD).SysSolutionGlobal=System.Solution(....
-          size(vertcat(Block(1:iD-1,1:iD-1).RhsGlobal),1)+(1:size(Block(iD,iD).RhsGlobal,1)),1);
+          sum(arrayfun(@(S) S.NumGlobalNodes*S.NumGlobalComp,Sizes(1:iD-1)))...
+          +(1:size(Block(iD,iD).RhsGlobal,1)),1);
       end
       %System=rmfield(System,'Solution');
       %Block=rmfield(Block,'RhsGlobal');
