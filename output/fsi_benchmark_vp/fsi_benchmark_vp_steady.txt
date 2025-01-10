@@ -1,0 +1,42 @@
+
+--------------------------------------------------------------------------------
+Input file: fsi_benchmark_vp_steady
+
+Pre-processing  started...
+Pre-processing  completed in 1.9 sec (5.2 MB)
+Processing      started...
+  Iter = 1      |Res| = 3.8e+01      [te,ts,tl] = [0.5,0.0,0.0]
+  Iter = 2      |Res| = 2.5e+02      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 3      |Res| = 7.5e+01      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 4      |Res| = 4.9e+01      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 5      |Res| = 2.3e+01      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 6      |Res| = 5.4e+00      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 7      |Res| = 1.1e-01      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 8      |Res| = 8.6e-01      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 9      |Res| = 4.9e-01      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 10     |Res| = 1.6e-01      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 11     |Res| = 2.3e-02      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 12     |Res| = 1.0e-02      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 13     |Res| = 9.2e-03      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 14     |Res| = 3.9e-03      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 15     |Res| = 9.6e-04      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 16     |Res| = 1.0e-05      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 17     |Res| = 1.5e-04      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 18     |Res| = 8.4e-05      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 19     |Res| = 2.8e-05      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 20     |Res| = 4.1e-06      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 21     |Res| = 1.7e-06      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 22     |Res| = 1.6e-06      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 23     |Res| = 6.8e-07      [te,ts,tl] = [0.3,0.0,0.0]
+  Iter = 24     |Res| = 1.7e-07      [te,ts,tl] = [0.4,0.0,0.0]
+  Iter = 25     |Res| = 6.8e-09      [te,ts,tl] = [0.4,0.0,0.0]
+
+TipDisplacement = [0.0218,0.7645]*1e-3
+
+Processing      completed in 10.5 sec (15.7 MB)
+Post-processing started...
+Post-processing completed in 4.4 sec (15.7 MB)
+--------------------------------------------------------------------------------
+
+Saved output file in: output/fsi_benchmark_vp/fsi_benchmark_vp_steady.mat
+Saved  diary file in: output/fsi_benchmark_vp/fsi_benchmark_vp_steady.txt

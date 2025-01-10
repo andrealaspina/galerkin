@@ -15,7 +15,7 @@ Parameters(1).ConvectiveFlow='yes';              % Convective flow
 Parameters(1).ArbitraryLagrangianEulerian='yes'; % Arbitrary Lagrangian-Eulerian description
 Parameters(1).Degree=4;                          % Degree
 Parameters(1).StabDensity=100/1e-5;              % Stabilization for density
-Parameters(1).StabMomentum=1;                    % Stabilization for momentum
+Parameters(1).StabMomentum=10;                   % Stabilization for momentum
 Parameters(1).ReferenceDensity=1e3;              % Reference density
 Parameters(1).ReferencePressure=0;               % Reference pressure
 Parameters(1).CompressibilityCoeff=1e-5;         % Compressibility coefficient
@@ -24,7 +24,7 @@ Parameters(1).ScaledStrainRate=...               % Scaled strain rate
   @(x,y,z,t) [0*x,0*x,0*x];
 Parameters(1).Density=@(x,y,z,t) 1e3*(x==x);     % Density
 Parameters(1).Momentum=...                       % Momentum
-  @(x,y,z,t) [(abs(x)<1e-3)*3/2.*y.*(0.41-y)/(0.41/2)^2*1e3*0.2,...
+  @(x,y,z,t) [(abs(x)<1e-3)*3/2.*y.*(0.41-y)/(0.41/2)^2*1e3*1*((1-cos(pi*t/2))/2*(t<=2)+(t>2)),...
               0*x];
 Parameters(1).Traction=@(x,y,z,t) [0*x, 0*x];    % Traction
 Parameters(1).ResidualContinuity=@(x,y,z,t) 0*x; % Residual of continuity equation
@@ -48,15 +48,14 @@ Parameters(2).PoissonsRatio=@(x,y,z) 0;          % Poisson's ratio
 Parameters(2).Displacement=@(x,y,z,t) [0*x,0*x]; % Displacement
 Parameters(2).Traction=@(x,y,z,t) [0*x,0*x];     % Traction
 Parameters(2).Force=@(x,y,z,t) [0*x,0*x];        % Force
-Parameters(2).RelaxationParameter=0.7;           % Relaxation parameter
 
 Parameters(3).Formulation='Elasticity_CG';       % Formulation
 Parameters(3).Problem='Structural';              % Problem
 Parameters(3).Model='StVenantKirchhoff';         % Model
 Parameters(3).Assumption='PlaneStrain';          % Assumption
 Parameters(3).Degree=4;                          % Degree
-Parameters(3).NitschePenalty=1e3;                % Nitsche's penalty parameter
-Parameters(3).Density=1e3;                       % Density
+Parameters(3).NitschePenalty=1e7;                % Nitsche's penalty parameter
+Parameters(3).Density=10e3;                      % Density
 Parameters(3).YoungsModulus=@(x,y,z) 1.4e6;      % Young's modulus
 Parameters(3).PoissonsRatio=@(x,y,z) 0.4;        % Poisson's ratio
 Parameters(3).Displacement=@(x,y,z,t) [0*x,0*x]; % Displacement
@@ -71,12 +70,16 @@ MeshFile={'Mesh_turek_fsi_unstructured'};        % Mesh file
 % System -------------------------------------------------------------------------------------------
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
-System.Tolerance=1e-4;                           % Tolerance
+System.Tolerance=1e-2;                           % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
 % --------------------------------------------------------------------------------------------------
 
 % Time parameters ----------------------------------------------------------------------------------
-Time.TimeDependent='no';                         % Time dependent problem
+Time.TimeDependent='yes';                        % Time dependent problem
+Time.InitialTime=0;                              % Initial time
+Time.FinalTime=15;                               % Final time
+Time.TimeStepSize=0.01;                          % Time step size
+Time.BDFOrder=2;                                 % BDF order
 % --------------------------------------------------------------------------------------------------
 
 % Solver -------------------------------------------------------------------------------------------
@@ -114,9 +117,15 @@ Options.ComputeQuantity=...                      % Compute quantity of interest
    'fprintf(''\n\nTipDisplacement = [%.4f,%.4f]*1e-3\n'',',...
    'Results(3).TipDisplacement(Time.TimeStep,1)*1e3,',...
    'Results(3).TipDisplacement(Time.TimeStep,2)*1e3)'];
+Options.ComputeQuantityEnd=...                   % Compute quantity of interest (end of simulation)
+  ['plot(Time.TimeStepSize:Time.TimeStepSize:Time.FinalTime,Results(3).TipDisplacement(:,2));',...
+   'xlabel(''Time [s]'');',...
+   'ylabel(''Tip vertical displacement [m]'');'];
 Options.Export2Paraview='yes';                   % Export to Paraview
+Options.Export2ParaviewTimeSteps='Time.TimeStep';% Export to Paraview time steps
+Options.StoreTimeSteps='Time.TimeStep';          % Store time steps
 Options.SaveResults='yes';                       % Save results
-Options.SaveResultsFolder='turek/';              % Save results folder
+Options.SaveResultsFolder='fsi_benchmark_dm/';   % Save results folder
 % --------------------------------------------------------------------------------------------------
 
 %% Main
