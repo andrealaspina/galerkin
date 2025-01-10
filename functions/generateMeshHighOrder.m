@@ -18,14 +18,14 @@ X1=Xg(1:N1,:);
 
 % Get shape functions
 Nga=RefElementGeometry.ShapeFunctionsElem;
-Naa=RefElementApproxim.ShapeFunctionsElem;
+pinvNaa=RefElementApproxim.PseudoinverseShapeFunctionsElem;
 
 % Insert additional nodes connectivity and coordinates
 Xa_add=cell(NumElements,1);
 parfor iElem=1:NumElements
   Cge=Cg(iElem,:);
   Xge=Xg(Cge,:); %#ok
-  Xae=Naa\(Nga*Xge);
+  Xae=pinvNaa*(Nga*Xge);
   Xa_add{iElem}=Xae(NumElementNodes1+1:end,:);
 end
 Xa_add=vertcat(Xa_add{:});
