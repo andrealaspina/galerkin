@@ -6,7 +6,7 @@ syms Fyx Fyy Fyz real
 syms Fzx Fzy Fzz real
 
 % Input
-nsd=2;
+nsd=3;
 Model='LinearElasticity';
 Transform='no';
 
@@ -43,27 +43,94 @@ elseif strcmp(Transform,'pull-back')
   s_mat=det(F)*s_mat*(F^(-1))';
 end
 
-s_mat=simplify(s_mat);
+%s_mat=simplify(s_mat);
+s_mat=s_mat;
 s=reshape(transpose(s_mat),1,nsd^2);
 
 % Linearization of stress
-dsdF_mat=simplify(mygradient(s,reshape(F',1,nsd^2)));
+%dsdF_mat=simplify(mygradient(s,reshape(F',1,nsd^2)));
+dsdF_mat=mygradient(s,reshape(F',1,nsd^2));
 dsdF=reshape(transpose(dsdF_mat),1,nsd^4);
 
-% Print stress
-fprintf('\n\nSTRESS')
-for i=1:size(s,2)
-  s_str=strrep(strrep(strrep(strrep(strrep(char(s(:,i)),...
-    ' ',''),'*','.*'),'/','./'),'^','.^'),',',', ');
-  fprintf('\ns(:,%d)=%s;',i,s_str)
+% Collect terms
+syms J real positive;
+s=subs(s,det(F),J);
+dsdF=subs(dsdF,det(F),J);
+if strcmp(Model,'LinearElasticity')
+  syms trEps real positive;
+  s=subs(s,trace(epsilon),trEps);
+  dsdF=subs(dsdF,trace(epsilon),trEps);
+elseif strcmp(Model,'StVenantKirchhoff')
+  syms trE real positive;
+  s=subs(s,trace(E),trE);
+  dsdF=subs(dsdF,trace(E),trE);
+elseif strcmp(Model,'NeoHook')
+  syms logJ real;
+  s=subs(s,log(J),logJ);
+  dsdF=subs(dsdF,log(J),logJ);
 end
 
-% Print linearization of stress
+% Print terms
+fprintf('\n\nCOLLECTED TERMS')
+J_str=strrep(strrep(strrep(strrep(strrep(char(det(F)),...
+  ' ',''),'*','.*'),'/','./'),'^','.^'),',',', ');
+fprintf('\nJ=%s;',J_str)
+if strcmp(Model,'LinearElasticity')
+  trEps_str=strrep(strrep(strrep(strrep(strrep(char(trace(epsilon)),...
+    ' ',''),'*','.*'),'/','./'),'^','.^'),',',', ');
+  fprintf('\ntrEps=%s;',strrep(strrep(strrep(strrep(strrep(char(trace(epsilon)),...
+    ' ',''),'*','.*'),'/','./'),'^','.^'),',',', '))
+elseif strcmp(Model,'StVenantKirchhoff')
+  trE_str=strrep(strrep(strrep(strrep(strrep(char(trace(E)),...
+    ' ',''),'*','.*'),'/','./'),'^','.^'),',',', ');
+  fprintf('\ntrE=%s;',trE_str)
+elseif strcmp(Model,'NeoHook')
+  logJ_str=strrep(strrep(strrep(strrep(strrep(char(log(J)),...
+    ' ',''),'*','.*'),'/','./'),'^','.^'),',',', ');
+  fprintf('\nlogJ=%s;',logJ_str)
+end
+
+% Simplify and print stress
+fprintf('\n\nSTRESS')
+for i=1:size(s,2)
+  % Simplify
+  s(:,i)=simplify(collect(s(:,i),[mu,lambda]),'Steps',1000);
+  s(:,i)=subs(s(:,i),det(F),J);
+  if strcmp(Model,'LinearElasticity')
+    s(:,i)=collect(subs(s(:,i),trace(epsilon),trEps),trEps);
+  elseif strcmp(Model,'StVenantKirchhoff')
+    s(:,i)=collect(subs(s(:,i),trace(E),trE),trE);
+  elseif strcmp(Model,'NeoHook')
+    s(:,i)=collect(subs(s(:,i),log(J),logJ),logJ);
+  end
+  s(:,i)=simplify(s(:,i),'Steps',1000);
+ 
+
+  % Print
+  s_str=strrep(strrep(strrep(strrep(strrep(char(s(:,i)),...
+    ' ',''),'*','.*'),'/','./'),'^','.^'),',',', ');
+  fprintf('\ns(:,%1d)=%s;',i,s_str)
+end
+
+% Simplify and print linearization of stress
 fprintf('\n\nLINEARIZATION OF STRESS')
 for i=1:size(dsdF,2)
+  % Simplify
+  dsdF(:,i)=simplify(collect(dsdF(:,i),[mu,lambda]),'Steps',1000);
+  dsdF(:,i)=subs(dsdF(:,i),det(F),J);
+  if strcmp(Model,'LinearElasticity')
+    dsdF(:,i)=collect(subs(dsdF(:,i),trace(epsilon),trEps),trEps);
+  elseif strcmp(Model,'StVenantKirchhoff')
+    dsdF(:,i)=collect(subs(dsdF(:,i),trace(E),trE),trE);
+  elseif strcmp(Model,'NeoHook')
+    dsdF(:,i)=collect(subs(dsdF(:,i),log(J),logJ),logJ);
+  end
+  dsdF(:,i)=simplify(dsdF(:,i),'Steps',1000);
+
+  % Print
   dsdF_str=strrep(strrep(strrep(strrep(strrep(char(dsdF(:,i)),...
     ' ',''),'*','.*'),'/','./'),'^','.^'),',',', ');
-  fprintf('\ndsdF(:,%d)=%s;',i,dsdF_str)
+  fprintf('\ndsdF(:,%2d)=%s;',i,dsdF_str)
 end
 
 fprintf('\n\n')
