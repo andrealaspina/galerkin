@@ -73,11 +73,11 @@ classdef Darcy2Phase_CG < Formulation
       SolutionOldElem=Elements(iD1).SolutionOld;
       LhsCoef=zeros(Sizes(iD1).NumElementLhsCoef,Sizes(iD1).NumElements);
       RhsCoef=zeros(Sizes(iD1).NumElementRhsCoef,Sizes(iD1).NumElements);
-      for iElem=1:Sizes(iD1).NumElements
+      parfor iElem=1:Sizes(iD1).NumElements
         [LhsGlobalElem,RhsGlobalElem]=...
           buildBlockElement(iElem,NodesElem{iElem},FacesElem(iElem),...
           SolutionGlobalElem{iElem},SolutionOldElem{iElem},...
-          Parameters,Time,RefElement,Sizes);
+          Parameters,Time,RefElement.Value,Sizes); %#ok
         LhsCoef(:,iElem)=reshape(LhsGlobalElem',[],1);
         RhsCoef(:,iElem)=reshape(RhsGlobalElem',[],1);
       end

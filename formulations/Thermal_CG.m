@@ -79,7 +79,7 @@ classdef Thermal_CG < Formulation
           buildBlockElement(iD1,NodesElem{iElem},FacesElem(iElem),...
           SolutionGlobalElem{iElem},SolutionOldElem{iElem},...
           SolutionGlobalElemCoupled(iElem,:),...
-          Parameters,Time,RefElement,Sizes);
+          Parameters,Time,RefElement.Value,Sizes); %#ok
         LhsCoef(:,iElem)=reshape(LhsGlobalElem',[],1);
         RhsCoef(:,iElem)=reshape(RhsGlobalElem',[],1);
       end
@@ -102,7 +102,7 @@ classdef Thermal_CG < Formulation
                              Sizes(iD1).NumFacesInterface(iD2));
         for iFaceInterface=1:Sizes(iD1).NumFacesInterface(iD2)
           [LhsCoupElem]=...
-            doCouplingElement(iFaceInterface,iD1,iD2,Parameters,Mesh,Faces,RefElement,Sizes);
+            doCouplingElement(iFaceInterface,iD1,iD2,Parameters,Mesh,Faces,RefElement.Value,Sizes);
           LhsCoupCoef(:,iFaceInterface)=reshape(LhsCoupElem',[],1);
         end
         if Simulation.Digits==16
