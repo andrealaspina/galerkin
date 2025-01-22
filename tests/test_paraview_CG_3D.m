@@ -47,8 +47,10 @@ Boundaries.Neumann=[];                           % Neumann portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='yes';                   % Export to Paraview
-Options.OpenParaview='no';                       % Open Paraview
+Options.Export2Paraview=...                      % Export to Paraview
+  {'ThermalConductivity';
+   'HeatSource';
+   'Temperature'};
 Options.ComputeError={'Temperature'};            % Compute error
 Options.SaveResultsFolder='tests/';              % Save results folder
 Options.Test=...                                 % Test

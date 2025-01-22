@@ -68,7 +68,6 @@ Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.PlotConvergence='no';                    % Plot convergence
 Options.CharacteristicElementSize='Min';         % Characteristic element size
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeError=...                         % Compute error
   {'ScaledTemperatureGradient';
    'Temperature';

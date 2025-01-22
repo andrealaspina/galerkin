@@ -54,7 +54,6 @@ Boundaries.PeriodicSlave=[5,6];                  % Periodic portion (slave)
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeError=...                         % Compute error
   {'ScaledTemperatureGradient';
    'Temperature';

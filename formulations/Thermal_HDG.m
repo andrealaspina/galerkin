@@ -181,48 +181,6 @@ classdef Thermal_HDG < Formulation
       end
     end
     
-    %% Data for Paraview
-    function [PointData,CellData]=dataForParaview(~,Results,Parameters,~,Sizes,isPostProcess)
-      
-      if not(isPostProcess)
-        
-        % Write scaled temperature gradient
-        q=Results.ScaledTemperatureGradient(:,:,end);
-        PointData=sprintf('\nVECTORS Scaled_temperature_gradient float\n');
-        if Sizes.NumSpaceDim==2
-          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[q';zeros(1,size(q,1))])];
-        elseif Sizes.NumSpaceDim==3
-          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',q')];
-        end
-        
-        % Write temperature
-        T=Results.Temperature(:,:,end);
-        PointData=[PointData,sprintf('\nSCALARS Temperature float\n'),...
-                   sprintf('LOOKUP_TABLE default\n'),...
-                   sprintf('%.12f\n',T')];
-        
-      elseif isPostProcess
-        
-        % Write postprocessed temperature
-        Tp=Results.TemperaturePost(:,:,end);
-        PointData=[sprintf('\nSCALARS Temperature_post float\n'),...
-                   sprintf('LOOKUP_TABLE default\n'),...
-                   sprintf('%.12f\n',Tp')];
-        
-      end
-      
-      % Write thermal conductivity
-      kappa=Parameters.ThermalConductivity;
-      kappa_DG=zeros(Sizes.NumElements,1);
-      for iElem=1:Sizes.NumElements
-        kappa_DG(iElem,:)=kappa;
-      end
-      CellData=[sprintf('\nSCALARS Thermal_conductivity float\n'),...
-                sprintf('LOOKUP_TABLE default\n'),...
-                sprintf('%.12f\n',kappa_DG')];
-      
-    end
-    
   end
   
 end

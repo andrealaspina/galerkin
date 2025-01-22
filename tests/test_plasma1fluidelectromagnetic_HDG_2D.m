@@ -86,7 +86,6 @@ Boundaries.Absorbing=[];                         % Absorbing portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeError=...                         % Compute error
   {'Density'          ,'L2';
    'Momentum'         ,'L2';

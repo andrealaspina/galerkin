@@ -82,7 +82,6 @@ Boundaries.Absorbing=[1,2,3,4];                  % Absorbing portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeError=...                         % Compute error
   {'Density'          ,'L2';
    'MagneticField'    ,'L2';

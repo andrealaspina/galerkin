@@ -133,26 +133,6 @@ classdef Thermal_CG < Formulation
       Results(iD).Temperature(:,:,iST)=Block(iD,iD).SolutionGlobal;
     end
     
-    %% Data for Paraview
-    function [PointData,CellData]=dataForParaview(~,Results,Parameters,~,Sizes,~)
-      
-      % Write temperature
-      T=Results.Temperature(:,:,end);
-      PointData=[sprintf('\nSCALARS Temperature float\n'),...
-                 sprintf('LOOKUP_TABLE default\n'),...
-                 sprintf('%.12f\n',T')];
-      
-      % Write thermal conductivity
-      kappa=Parameters.ThermalConductivity;
-      kappa_DG=zeros(Sizes.NumElements,1);
-      for iElem=1:Sizes.NumElements
-        kappa_DG(iElem,:)=kappa;
-      end
-      CellData=[sprintf('\nSCALARS Thermal_conductivity float\n'),...
-                sprintf('LOOKUP_TABLE default\n'),...
-                sprintf('%.12f\n',kappa_DG')];
-    end
-    
   end
   
 end

@@ -114,7 +114,11 @@ Options.ComputeQuantity=...                      % Compute quantity of interest
    'fprintf(''\n\nTipDisplacement = [%.4f,%.4f]*1e-3\n'',',...
    'Results(3).TipDisplacement(Time.TimeStep,1)*1e3,',...
    'Results(3).TipDisplacement(Time.TimeStep,2)*1e3)'];
-Options.Export2Paraview='yes';                   % Export to Paraview
+Options.Export2Paraview=...                      % Export to Paraview
+  {'ScaledStrainRate';
+   'Density';
+   'Momentum';
+   'Displacement'};
 Options.SaveResults='yes';                       % Save results
 Options.SaveResultsFolder='fsi_benchmark_dm/';   % Save results folder
 % --------------------------------------------------------------------------------------------------

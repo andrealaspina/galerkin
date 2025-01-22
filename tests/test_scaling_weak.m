@@ -99,7 +99,6 @@ Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.PlotEfficiency='yes';                    % Plot efficiency
 Options.CharacteristicTimer='Evaluation';        % Characteristic timer
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.Test='Results.Efficiency(1)==1';         % Test
 % --------------------------------------------------------------------------------------------------
 

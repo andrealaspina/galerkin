@@ -50,8 +50,12 @@ Boundaries.Neumann=[];                           % Neumann portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='yes';                   % Export to Paraview
-Options.OpenParaview='no';                       % Open Paraview
+Options.Export2Paraview=...                      % Export to Paraview
+  {'ThermalConductivity';
+   'HeatSource';
+   'ScaledTemperatureGradient';
+   'Temperature';
+   'TemperaturePost'};
 Options.ComputeError=...                         % Compute error
   {'ScaledTemperatureGradient';
    'Temperature';

@@ -97,7 +97,6 @@ Boundaries.Absorbing=[];                         % Absorbing portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeQuantityIterationEnd=...          % Compute quantity of interest at the iteration end
   ['[ResultsProjectionCorrection]=Parameters.ProjectionCorrection(Parameters,Block);',...
    'Block.SolutionLocal(:,6:7)=ResultsProjectionCorrection.ElectricFieldCorrected;'];
@@ -186,7 +185,6 @@ Boundaries.Neumann=[];                           % Neumann portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.SaveResults='no';                        % Save results
 Options.ComputeQuantityError=...                 % Compute quantity of interest (error computation)
   'Results.ElectricFieldInitial=Results.ScaledTemperatureGradient;';
@@ -267,7 +265,6 @@ Boundaries.Neumann=[];                           % Neumann portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.SaveResults='no';                        % Save results
 Options.ComputeQuantityStart=...                 % Compute quantity of interest (start of simulation)
   ['Density=BlockAux.SolutionLocal(:,1);',...

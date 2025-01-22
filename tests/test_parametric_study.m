@@ -53,7 +53,6 @@ Boundaries.Neumann=[];                           % Neumann portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeQuantityEnd=...                   % Compute quantity of interest (end of simulation)
   ['[~,NodesX]=find(Mesh.Nodes(1,:)==0);',...
    '[~,NodesY]=find(Mesh.Nodes(2,:)==0);',...

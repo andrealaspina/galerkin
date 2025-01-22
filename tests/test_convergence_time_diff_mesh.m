@@ -22,7 +22,7 @@ Parameters.HeatSource=@(x,y,z,t) (x+y)*3*t^2;    % Heat source
 
 % Geometry and mesh --------------------------------------------------------------------------------
 MeshFile=...                                     % Mesh file
-  {'Mesh_square_1','Mesh_square_2','Mesh_square_3';...
+  {'Mesh_square_2','Mesh_square_2','Mesh_square_3';...
    'Mesh_square_2','Mesh_square_3','Mesh_square_4'};
 % --------------------------------------------------------------------------------------------------
 
@@ -53,7 +53,6 @@ Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.PlotConvergence='yes';                    % Plot convergence
 Options.CharacteristicElementSize='Min';         % Characteristic element size
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeError={'Temperature'};            % Compute error
 Options.Test=...                                 % Test
   'abs(Results.TemperatureErrorL2Rate(end)-Time.BDFOrder(end))<6e-2';

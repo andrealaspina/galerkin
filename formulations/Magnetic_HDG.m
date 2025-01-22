@@ -130,63 +130,6 @@ classdef Magnetic_HDG < Formulation
       end
     end
     
-    %% Data for Paraview
-    function [PointData,CellData]=dataForParaview(~,Results,Parameters,~,Sizes,isPostProcess)
-      
-      if not(isPostProcess)
-        
-        % Write scaled magnetic gradient
-        G=Results.ScaledMagneticGradient(:,:,end);
-        PointData=sprintf('\nTENSORS Scaled_magnetic_gradient float\n');
-        if Sizes.NumSpaceDim==2
-          PointData=[PointData,sprintf(['%.12f %.12f %.12f ',...
-                                        '%.12f %.12f %.12f ',...
-                                        '%.12f %.12f %.12f\n'],[G';zeros(6,size(G,1))])];
-        elseif Sizes.NumSpaceDim==3
-          PointData=[PointData,sprintf(['%.12f %.12f %.12f ',...
-                                        '%.12f %.12f %.12f ',...
-                                        '%.12f %.12f %.12f\n'],[G';zeros(3,size(G,1))])];
-        end
-        
-        % Write magnetic induction
-        b=Results.MagneticInduction(:,:,end);
-        PointData=[PointData,sprintf('\nVECTORS Magnetic_induction float\n')];
-        if Sizes.NumSpaceDim==2
-          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[b';zeros(1,size(b,1))])];
-        elseif Sizes.NumSpaceDim==3
-          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',b')];
-        end
-        
-        % Write Lagrange multiplier
-        q=Results.LagrangeMultiplier(:,:,end);
-        PointData=[PointData,sprintf('\nSCALARS Lagrange_multiplier float\n'),...
-                   sprintf('LOOKUP_TABLE default\n'),...
-                   sprintf('%.12f\n',q')];
-        
-      elseif isPostProcess
-        
-        % Write postprocessed magnetic induction
-        bp=Results.MagneticInductionPost(:,:,end);
-        PointData=sprintf('\nVECTORS Magnetic_induction_post float\n');
-        if Sizes.NumSpaceDim==2
-          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[bp';zeros(1,size(bp,1))])];
-        elseif Sizes.NumSpaceDim==3
-          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',bp')];
-        end
-        
-      end
-      
-      % Write magnetic diffusivity
-      eta=Parameters.MagneticDiffusivity;
-      eta_DG=zeros(Sizes.NumElements,1);
-      for iElem=1:Sizes.NumElements
-        eta_DG(iElem,:)=eta;
-      end
-      CellData=[sprintf('\nSCALARS Magnetic_diffusivity float\n'),...
-                sprintf('LOOKUP_TABLE default\n'),...
-                sprintf('%.12f\n',eta_DG')];
-    end
-    
   end
   
 end

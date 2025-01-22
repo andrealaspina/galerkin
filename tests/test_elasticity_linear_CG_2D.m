@@ -58,7 +58,6 @@ Boundaries.Neumann=[];                           % Neumann portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeError={'Displacement'};           % Compute error
 Options.Test=...                                 % Test
   'abs(Results.DisplacementErrorL2-1.979147177254772e-01)<1e-12';

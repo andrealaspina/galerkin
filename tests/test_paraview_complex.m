@@ -8,7 +8,7 @@ Simulation.Problem='Electromagnetic';            % Problem
 % --------------------------------------------------------------------------------------------------
 
 % Parameters ---------------------------------------------------------------------------------------
-Parameters.Formulation='ElectromagneticPML_HDG_fast';% Formulation
+Parameters.Formulation='ElectromagneticPML_FD_HDG_fast';% Formulation
 Parameters.Problem='Electromagnetic';            % Problem
 Parameters.PostProcessingHDG='yes';              % Perform HDG postprocessing
 Parameters.Degree=4;                             % Degree
@@ -37,9 +37,11 @@ mu0=Parameters.MagneticPermeability;
 epsilon0=Parameters.ElectricPermittivity;
 f=Parameters.Frequency;
 omega=2*pi*f;
-Hz_inc=@(x,y,t) sqrt(epsilon0/mu0)*cos(sqrt(epsilon0*mu0)*omega*x-omega*t);
-Ex_inc=@(x,y,t) 0*x;
-Ey_inc=@(x,y,t) cos(sqrt(epsilon0*mu0)*omega*x-omega*t);
+Hz_inc=@(x,y,w) sqrt(epsilon0/mu0)*cos(sqrt(epsilon0*mu0)*omega*x)...
+            -1i*sqrt(epsilon0/mu0)*sin(sqrt(epsilon0*mu0)*omega*x);
+Ex_inc=@(x,y,w) 0*x;
+Ey_inc=@(x,y,w) cos(sqrt(epsilon0*mu0)*omega*x)...
+            -1i*sin(sqrt(epsilon0*mu0)*omega*x);
 tol=1e-9;
 nx=@(x) (abs(mean(x)-xf)<tol)-(abs(mean(x)-xi)<tol);
 ny=@(y) (abs(mean(y)-yf)<tol)-(abs(mean(y)-yi)<tol);
@@ -53,8 +55,8 @@ Parameters.MagneticFieldAux=@(x,y,z,t) 0*x;      % Auxiliary magnetic field for 
 Parameters.ElectricFieldAux=@(x,y,z,t) [0*x,0*x];% Auxiliary electric field for PML
 Parameters.CurrentDensity=@(x,y,z,t) [0*x,0*x];  % Current density
 Parameters.IncidentField=...                     % Incident field for absorbing boundary conditions
-  @(x,y,z,t) [-sqrt(epsilon0/mu0)*ny(y)*(Ex_inc(x,y,t)*ny(y)-Ey_inc(x,y,t)*nx(x))-Hz_inc(x,y,t)*ny(y),...
-              +sqrt(epsilon0/mu0)*nx(x)*(Ex_inc(x,y,t)*ny(y)-Ey_inc(x,y,t)*nx(x))+Hz_inc(x,y,t)*nx(x)];
+  @(x,y,z,w) [-sqrt(epsilon0/mu0)*ny(y)*(Ex_inc(x,y,w)*ny(y)-Ey_inc(x,y,w)*nx(x))-Hz_inc(x,y,w)*ny(y),...
+              +sqrt(epsilon0/mu0)*nx(x)*(Ex_inc(x,y,w)*ny(y)-Ey_inc(x,y,w)*nx(x))+Hz_inc(x,y,w)*nx(x)];
 % --------------------------------------------------------------------------------------------------
 
 % Geometry and mesh --------------------------------------------------------------------------------
@@ -65,17 +67,14 @@ clear xi xf yi yf dx dy m sigmax mu0 epsilon0 f omega Hz_inc Ex_inc Ey_inc tol n
 % --------------------------------------------------------------------------------------------------
 
 % System -------------------------------------------------------------------------------------------
-System.SymmetrizeMatrix='no';                    % Symmetrize matrix
+System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
 System.IncrementalForm='no';                     % Incremental form
 % --------------------------------------------------------------------------------------------------
 
 % Time parameters ----------------------------------------------------------------------------------
-Time.TimeDependent='yes';                        % Time dependent problem
-Time.InitialTime=0;                              % Initial time
-Time.FinalTime=2;                                % Final time
-Time.TimeStepSize=2^-6;                          % Time step size
-Time.BDFOrder=2;                                 % BDF order
+Time.TimeDependent='no';                         % Time dependent problem
+Time.Frequency=Parameters.Frequency;             % Frequency of time-harmonic problem
 % --------------------------------------------------------------------------------------------------
 
 % Solver -------------------------------------------------------------------------------------------
@@ -90,21 +89,24 @@ Boundaries.Absorbing=2;                          % Absorbing portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
+Options.Export2Paraview=...                      % Export to Paraview
+  {'DampingFunction';
+   'IncidentField';
+   'MagneticField';
+   'ElectricField';
+   'ElectricFieldPost'};
 Options.ComputeError=...                         % Compute error
   {'MagneticField'    ,'L2';
    'ElectricField'    ,'L2';
-   'MagneticFieldAux' ,'L2';
-   'ElectricFieldAux' ,'L2';
    'ElectricField'    ,'Hcurl';
    'ElectricFieldPost','Hcurl'};
+Options.SaveResultsFolder='tests/';              % Save results folder
 Options.Test=...                                 % Test
-  ['abs(Results.MagneticFieldErrorL2        -7.358305403201096e-01)<1e-12 && ',...
-   'abs(Results.ElectricFieldErrorL2        -7.118511885435059e-01)<1e-12 && ',...
-   'abs(Results.MagneticFieldAuxErrorL2     -0.000000000000000e+00)<1e-12 && ',...
-   'abs(Results.ElectricFieldAuxErrorL2     -1.316956604142880e+00)<1e-11 && ',...
-   'abs(Results.ElectricFieldErrorHcurl     -9.230037840818829e+00)<1e-12 && ',...
-   'abs(Results.ElectricFieldPostErrorHcurl -9.176473143819459e+00)<1e-12 && ',...
-   'abs(abs(max(Results.ElectricField(Mesh.Nodes(1,:)<1,2,end)))-1)<1e-02'];
+  ['abs(Results.MagneticFieldErrorL2       -5.167724958057509e-01)<1e-12 && ',...
+   'abs(Results.ElectricFieldErrorL2       -5.232052938104808e-01)<1e-12 && ',...
+   'abs(Results.ElectricFieldErrorHcurl    -6.178301799660463e+00)<1e-12 && ',...
+   'abs(Results.ElectricFieldPostErrorHcurl-6.140721105406652e+00)<1e-12 && ',...
+   'abs(abs(max(Results.ElectricField(Mesh.Nodes(1,:)<1,2)))-1)   <5e-02'];
 % --------------------------------------------------------------------------------------------------
 
 %% Main

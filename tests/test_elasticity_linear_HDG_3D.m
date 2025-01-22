@@ -54,7 +54,6 @@ Boundaries.Neumann=[1,3,4,5,6];                  % Neumann portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeQuantity=...                      % Compute quantity of interest
   ['[~,Node]=ismembertol([0,0,10],Mesh.Nodes'',1e-6,''ByRows'',true);',...
    'Results.TipDisplacement(Time.TimeStep,:)=',...

@@ -92,7 +92,6 @@ Boundaries.Neumann_t_z=[];                       % Neumann portion for z-tractio
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeError=...                         % Compute error
   {'ScaledStrainRate';
    'Velocity';

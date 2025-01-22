@@ -1,5 +1,5 @@
 function []=export2Paraview(...
-         Formulation,Mesh,Results,Parameters,Sizes,Options,FileName)
+         Mesh,Results,Parameters,Time,Sizes,Options,FileName)
          % Export solution to Paraview
 
 % Get general parameters
@@ -7,21 +7,16 @@ nsd=Sizes.NumSpaceDim;
 k=Parameters.Degree;
 C=Mesh.Elements';
 X=Mesh.Nodes';
+if matchField(Time,'Frequency')
+  t_or_f=Time.Frequency;
+else
+  t_or_f=Time.Time;
+end
 
 % Extrapolate mesh info
 NumElements=size(C,1);
 NumElementNodes=size(C,2);
 NumNodes=size(X,1);
-
-% Understand if it is a postprocessed solution on a k+1 mesh
-if     (nsd==2 && NumElementNodes==(k+1)*(k+2)/2)       || ...
-       (nsd==3 && NumElementNodes==(k+1)*(k+2)*(k+3)/6)
-  isPostProcess=false;
-elseif (nsd==2 && NumElementNodes==((k+1)+1)*((k+1)+2)/2)           || ...
-       (nsd==3 && NumElementNodes==((k+1)+1)*((k+1)+2)*((k+1)+3)/6)
-  isPostProcess=true;
-  k=k+1;
-end
 
 % Cell type (Lagrange triangle/tetrahedron)
 if nsd==2
@@ -87,7 +82,7 @@ vtkId=fopen(vtkFile,'w');
 
 % Write header
 fprintf(vtkId,'# vtk DataFile Version 3.0\n');
-fprintf(vtkId,'My problem\n');
+fprintf(vtkId,'%s\n',FileName);
 fprintf(vtkId,'\nASCII\n');
 
 % Unstructured grid
@@ -95,34 +90,80 @@ fprintf(vtkId,'\nDATASET UNSTRUCTURED_GRID\n');
 
 % Write coordinates
 fprintf(vtkId,'\nPOINTS %d float\n',NumNodes);
-fprintf(vtkId,'%.12f %.12f %.12f\n',X');
+fprintf(vtkId,'% .12f % .12f % .12f\n',X');
 
 % Write connectivity
 fprintf(vtkId,'\nCELLS %d %d\n',NumElements,NumElements*(NumElementNodes+1));
-fprintf(vtkId,sprintf('%s',['%d',repmat(' %d',1,NumElementNodes),'\n']),ConnecVTK');
+fprintf(vtkId,sprintf('%s',['%2d',repmat(sprintf('%%%dd',ceil(log10(max(ConnecVTK(:)))+eps)+1),1,...
+  NumElementNodes),'\n']),ConnecVTK');
 
 % Write cell types
 fprintf(vtkId,'\nCELL_TYPES %d\n',NumElements);
 fprintf(vtkId,'%d\n',CellType);
 
-% Get data
-[PointData,CellData]=Formulation.dataForParaview(Results,Parameters,Mesh,Sizes,isPostProcess);
-
 % Write point data
 fprintf(vtkId,'\nPOINT_DATA %d\n',NumNodes);
-fprintf(vtkId,'%c',PointData);
-
-% Write cell data
-fprintf(vtkId,'\nCELL_DATA %d\n',NumElements);
-fprintf(vtkId,'%c',CellData);
+for iP=1:length(Options.Export2Paraview)
+  
+  % Get data in nodal format
+  VariableName=Options.Export2Paraview{iP};
+  if matchField(Results,VariableName)
+    if size(Results.(VariableName)(:,:,end),1)==NumNodes
+      Variable=Results.(VariableName)(:,:,end);
+    else
+      continue;
+    end
+  elseif matchField(Parameters,VariableName) && isa(Parameters.(VariableName),'function_handle')
+    if nargin(Parameters.(VariableName))==3
+      Variable=Parameters.(VariableName)(X(:,1),X(:,2),X(:,3));
+    elseif nargin(Parameters.(VariableName))==4
+      Variable=Parameters.(VariableName)(X(:,1),X(:,2),X(:,3),t_or_f);
+    end
+  elseif matchField(Parameters,VariableName) && isnumeric(Parameters.(VariableName))
+    Variable=repmat(Parameters.(VariableName)(:)',NumNodes,1);
+  else
+    continue;
+  end
+  
+  % Format data in vtk format
+  isComplex=not(isreal(Variable));
+  for iRI=1:(1+isComplex)
+    RealImag='';
+    if isComplex && iRI==1
+      RealImag='_real';
+    elseif isComplex && iRI==2
+      RealImag='_imag';
+    end
+    if size(Variable,2)==1
+      fprintf(vtkId,'\nSCALARS %s%s float\nLOOKUP_TABLE default\n',VariableName,RealImag);
+      if iRI==1
+        fprintf(vtkId,'% .12e\n',real(Variable)');
+      elseif iRI==2
+        fprintf(vtkId,'% .12e\n',imag(Variable)');
+      end
+    elseif size(Variable,2)==nsd
+      fprintf(vtkId,'\nVECTORS %s%s float\n',VariableName,RealImag);
+      if iRI==1
+        fprintf(vtkId,'% .12e % .12e % .12e\n',...
+          [real(Variable)';zeros(3-size(Variable,2),NumNodes)]);
+      elseif iRI==2
+        fprintf(vtkId,'% .12e % .12e % .12e\n',...
+          [imag(Variable)';zeros(3-size(Variable,2),NumNodes)]);
+      end
+    else
+      fprintf(vtkId,'\nTENSORS %s%s float\n',VariableName,RealImag);
+      if iRI==1
+        fprintf(vtkId,'% .12e % .12e % .12e % .12e % .12e % .12e % .12e % .12e % .12e\n',...
+          [real(Variable)';zeros(9-size(Variable,2),NumNodes)]);
+      elseif iRI==2
+        fprintf(vtkId,'% .12e % .12e % .12e % .12e % .12e % .12e % .12e % .12e % .12e\n',...
+          [imag(Variable)';zeros(9-size(Variable,2),NumNodes)]);
+      end
+    end
+  end
+end
 
 % Close file
 fclose(vtkId);
-
-% Open paraview
-if matchField(Options,'OpenParaview','yes')
-  system(['/Applications/ParaView-5.10.0-RC1.app/Contents/MacOS/paraview',...
-          ' --data=','''',vtkFile,'''',' &']);
-end
 
 end

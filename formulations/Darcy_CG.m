@@ -59,18 +59,6 @@ classdef Darcy_CG < Formulation
       Results(iD).Pressure(:,:,iST)=Block(iD,iD).SolutionGlobal;
     end
     
-    %% Data for Paraview
-    function [PointData,CellData]=dataForParaview(~,Results,~,~,~,~)
-      
-      % Write pressure
-      p=Results.Pressure(:,:,end);
-      PointData=[sprintf('\nSCALARS Pressure float\n'),...
-                 sprintf('LOOKUP_TABLE default\n'),...
-                 sprintf('%.12f\n',p')];
-      
-      CellData='';
-    end
-    
   end
   
 end

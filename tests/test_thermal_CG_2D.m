@@ -51,7 +51,6 @@ Boundaries.Neumann=[];                           % Neumann portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeError={'Temperature'};            % Compute error
 Options.Test=...                                 % Test
   'abs(Results.TemperatureErrorL2-5.102135202210874e-02)<1e-12';

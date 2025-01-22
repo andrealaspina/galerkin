@@ -64,7 +64,6 @@ Options.PlotGeometry='yes';                      % Plot geometry
 Options.PlotMesh='yes';                          % Plot mesh
 Options.PlotMeshDistortion='yes';                % Plot mesh distortion
 Options.PlotSolution={'Temperature'};            % Plot solution
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeError=...                         % Compute error
   {'ScaledTemperatureGradient';
    'Temperature';

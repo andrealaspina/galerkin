@@ -122,7 +122,11 @@ Options.ComputeQuantityEnd=...                   % Compute quantity of interest 
   ['plot(Time.TimeStepSize:Time.TimeStepSize:Time.FinalTime,Results(3).TipDisplacement(:,2));',...
    'xlabel(''Time [s]'');',...
    'ylabel(''Tip vertical displacement [m]'');'];
-Options.Export2Paraview='yes';                   % Export to Paraview
+Options.Export2Paraview=...                      % Export to Paraview
+  {'ScaledStrainRate';
+   'Velocity';
+   'Pressure';
+   'Displacement'};
 Options.Export2ParaviewTimeSteps='Time.TimeStep';% Export to Paraview time steps
 Options.StoreTimeSteps='Time.TimeStep';          % Store time steps
 Options.SaveResults='yes';                       % Save results

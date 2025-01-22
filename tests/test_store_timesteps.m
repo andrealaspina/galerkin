@@ -49,7 +49,6 @@ Boundaries.Neumann=[];                           % Neumann portion
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeError={'Temperature'};            % Compute error
 Options.StoreTimeSteps='2:2:Time.NumTimeSteps';  % Store time steps
 Options.PlotSolutionTimeSteps='NaN';             % Plot solution at stored time steps

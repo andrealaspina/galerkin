@@ -133,63 +133,6 @@ classdef Elasticity_CG < Formulation
       Results(iD).Displacement(:,:,iST)=Block(iD,iD).SolutionGlobal;
     end
     
-    %% Data for Paraview
-    function [PointData,CellData]=dataForParaview(~,Results,Parameters,Mesh,Sizes,~)
-      
-      % Write displacement
-      u=Results.Displacement(:,:,end);
-      PointData=sprintf('\nVECTORS Displacement float\n');
-      if Sizes.NumSpaceDim==2
-        PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[u';zeros(1,size(u,1))])];
-      elseif Sizes.NumSpaceDim==3
-        PointData=[PointData,sprintf('%.12f %.12f %.12f\n',u')];
-      end
-      
-      % Write density
-      rho=Parameters.Density;
-      rho_DG=zeros(Sizes.NumElements,1);
-      for iElem=1:Sizes.NumElements
-        rho_DG(iElem,:)=rho;
-      end
-      CellData=[sprintf('\nSCALARS Density float\n'),...
-                sprintf('LOOKUP_TABLE default\n'),...
-                sprintf('%.12f\n',rho_DG')];
-      
-      % Write Young's modulus
-      E=Parameters.YoungsModulus;
-      E_DG=zeros(Sizes.NumElements,1);
-      if isa(E,'function_handle')
-        for iElem=1:Sizes.NumElements
-          Ce=Mesh.Elements(:,iElem);
-          Xe=Mesh.Nodes(:,Ce);
-          Xm=mean(Xe,2)';
-          E_DG(iElem,:)=E(Xm(:,1),Xm(:,2),Xm(:,3));
-        end
-      else
-        E_DG(:,:)=E;
-      end
-      CellData=[CellData,sprintf('\nSCALARS Youngs_modulus float\n'),...
-                sprintf('LOOKUP_TABLE default\n'),...
-                sprintf('%.12f\n',E_DG')];
-      
-      % Write Poisson's ratio
-      nu=Parameters.PoissonsRatio;
-      nu_DG=zeros(Sizes.NumElements,1);
-      if isa(nu,'function_handle')
-        for iElem=1:Sizes.NumElements
-          Ce=Mesh.Elements(:,iElem);
-          Xe=Mesh.Nodes(:,Ce);
-          Xm=mean(Xe,2)';
-          nu_DG(iElem,:)=nu(Xm(:,1),Xm(:,2),Xm(:,3));
-        end
-      else
-        nu_DG(:,:)=nu;
-      end
-      CellData=[CellData,sprintf('\nSCALARS Poissons_ratio float\n'),...
-                sprintf('LOOKUP_TABLE default\n'),...
-                sprintf('%.12f\n',nu_DG')];
-    end
-    
   end
   
 end

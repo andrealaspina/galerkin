@@ -60,12 +60,6 @@ classdef Formulation
       % Input: iD,iST,Results,Block,Simulation,Parameters,Mesh,Time,RefElement,Sizes
     end
     
-    % Data for Paraview
-    function [PointData,CellData]=dataForParaview(~,~,~,~,~,~)
-      % Input: Results,Parameters,Mesh,Sizes,isPostProcess
-      PointData=[]; CellData=[];
-    end 
-    
   end
   
 end

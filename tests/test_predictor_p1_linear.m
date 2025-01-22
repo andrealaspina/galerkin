@@ -57,7 +57,6 @@ Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.PlotConvergence='no';                    % Plot convergence
 Options.CharacteristicElementSize='Min';         % Characteristic element size
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeError={'Temperature'};            % Compute error
 Options.Test=...                                 % Test
   'Results.TemperatureErrorL2<1e-12';

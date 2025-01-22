@@ -85,7 +85,6 @@ Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.PlotSpeedup='yes';                       % Plot speedup
 Options.CharacteristicTimer='Evaluation';        % Characteristic timer
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.Test='Results.Speedup(1)==1';            % Test
 % --------------------------------------------------------------------------------------------------
 

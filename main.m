@@ -1070,7 +1070,7 @@ for iS=1:Simulation.NumSimulations
     end
     
     % Export to Paraview of current time step
-    if matchField(Options,'Export2Paraview','yes') && ...
+    if matchField(Options,'Export2Paraview') && ...
        matchField(Options,'StoreTimeSteps') && ...
        matchField(Options,'Export2ParaviewTimeSteps') && ...
        any(Time.TimeStep==eval(Options.Export2ParaviewTimeSteps))
@@ -1082,8 +1082,7 @@ for iS=1:Simulation.NumSimulations
           FileNameAux=sprintf('%s_discr_%d_step_%.*d',FileName,iD,...
             ceil(log10(Time.NumTimeSteps)+eps),Time.TimeStep);
         end
-        export2Paraview(Formulation{iD},Mesh(iD),Results(iD),Parameters(iD),Sizes(iD),Options,...
-          FileNameAux);
+        export2Paraview(Mesh(iD),Results(iD),Parameters(iD),Time,Sizes(iD),Options,FileNameAux);
       end
     end
   
@@ -1449,20 +1448,19 @@ for iS=1:Simulation.NumSimulations
   end
   
   % Export to Paraview
-  if matchField(Options,'Export2Paraview','yes')
+  if matchField(Options,'Export2Paraview')
     for iD=1:Simulation.NumDiscretizations
       if Simulation.NumDiscretizations==1
         FileNameAux=FileName;
       else
         FileNameAux=[FileName,'_discr_',num2str(iD)];
       end
-      export2Paraview(Formulation{iD},Mesh(iD),Results(iD),Parameters(iD),Sizes(iD),...
-        Options,FileNameAux);
+      export2Paraview(Mesh(iD),Results(iD),Parameters(iD),Time,Sizes(iD),Options,FileNameAux);
       if strcmp(Parameters(iD).DiscretizationType,'HDG') && ...
          strcmp(Parameters(iD).PostProcessingHDG,'yes')
         FileNamePostAux=[FileNameAux,'_post'];
-        export2Paraview(Formulation{iD},Mesh(iD).Post,Results(iD),Parameters(iD),Sizes(iD),...
-          Options,FileNamePostAux);
+        export2Paraview(Mesh(iD).Post,Results(iD),Parameters(iD),Time,Sizes(iD),Options,...
+          FileNamePostAux);
       end
     end
   end

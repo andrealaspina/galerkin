@@ -98,24 +98,6 @@ classdef Darcy2Phase_CG < Formulation
       Results(iD).Saturation(:,:,iST)=Block(iD,iD).SolutionGlobal(:,2);
     end
     
-    %% Data for Paraview
-    function [PointData,CellData]=dataForParaview(~,Results,~,~,~,~)
-      
-      % Write (modified) pressure
-      P=Results.Pressure(:,:,end);
-      PointData=[sprintf('\nSCALARS Pressure float\n'),...
-                 sprintf('LOOKUP_TABLE default\n'),...
-                 sprintf('%.12f\n',P')];
-      
-      % Write saturation (of phase 2)
-      S=Results.Saturation(:,:,end);
-      PointData=[PointData,sprintf('\nSCALARS Saturation float\n'),...
-                 sprintf('LOOKUP_TABLE default\n'),...
-                 sprintf('%.12f\n',S')];
-      
-      CellData='';
-    end
-    
   end
   
 end

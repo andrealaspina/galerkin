@@ -108,7 +108,6 @@ Boundaries.Neumann_s_y=[];                       % Neumann portion for y-pseudo-
 % Output options -----------------------------------------------------------------------------------
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
-Options.Export2Paraview='no';                    % Export to Paraview
 Options.ComputeError=...                         % Compute error
   {'ScaledStrainRate';
    'Velocity';

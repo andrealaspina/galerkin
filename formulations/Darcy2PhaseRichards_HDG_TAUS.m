@@ -155,61 +155,6 @@ classdef Darcy2PhaseRichards_HDG_TAUS < Formulation
       Results(iD).FillFactor(iST)=Block(iD,iD).FillFactor;
     end
     
-    %% Data for Paraview
-    function [PointData,CellData]=dataForParaview(~,Results,~,~,Sizes,isPostProcess)
-
-      if not(isPostProcess)
-        
-        % Write pressure gradient
-        Q=Results.PressureGradient(:,:,end);
-        PointData=sprintf('\nVECTORS Pressure_gradient float\n');
-        if Sizes.NumSpaceDim==2
-          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[Q';zeros(1,size(Q,1))])];
-        elseif Sizes.NumSpaceDim==3
-          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',Q')];
-        end
-      
-        % Write chemical potential gradient
-        H=Results.ChemicalPotentialGradient(:,:,end);
-        PointData=[PointData,sprintf('\nVECTORS Chemical_potential_gradient float\n')];
-        if Sizes.NumSpaceDim==2
-          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',[H';zeros(1,size(H,1))])];
-        elseif Sizes.NumSpaceDim==3
-          PointData=[PointData,sprintf('%.12f %.12f %.12f\n',H')];
-        end
-        
-        % Write (modified) pressure
-        p=Results.Pressure(:,:,end);
-        PointData=[PointData,sprintf('\nSCALARS Pressure float\n'),...
-                   sprintf('LOOKUP_TABLE default\n'),...
-                   sprintf('%.12f\n',p')];
-        
-        % Write saturation (of phase 2)
-        s=Results.Saturation(:,:,end);
-        PointData=[PointData,sprintf('\nSCALARS Saturation float\n'),...
-                   sprintf('LOOKUP_TABLE default\n'),...
-                   sprintf('%.12f\n',s')];
-      
-      elseif isPostProcess
-
-        % Write postprocessed pressure
-        pp=Results.PressurePost(:,:,end);
-        PointData=[sprintf('\nSCALARS Pressure_post float\n'),...
-                   sprintf('LOOKUP_TABLE default\n'),...
-                   sprintf('%.12f\n',pp')];
-
-        % Write postprocessed saturation
-        sp=Results.SaturationPost(:,:,end);
-        PointData=[PointData,sprintf('\nSCALARS Saturation_post float\n'),...
-                   sprintf('LOOKUP_TABLE default\n'),...
-                   sprintf('%.12f\n',sp')];
-
-      end
-      
-      CellData='';
-    
-    end
-    
   end
   
 end
