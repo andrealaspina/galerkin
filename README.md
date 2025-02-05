@@ -2,25 +2,25 @@
 
 ## Overview 🌍
 
-Galerkin is a powerful, adaptable, and extensible MATLAB framework designed for the development and testing of advanced finite element formulations. It provides an integrated environment for simulating 2D/3D linear/nonlinear problems across a diverse set of single/multi-physics and single/multi-scale applications in both the time and frequency domains.
+Galerkin is a powerful, adaptable, and extensible **MATLAB** framework designed for the development and testing of advanced **finite element** formulations. It provides an integrated environment for simulating **2D/3D** **linear/nonlinear** **single/multi-physics** **single/multi-scale** problems in the **time/frequency** domain.
 
-During my PhD, I grappled with the overwhelming complexity of a large-scale C++-based research code, facing major obstacles in implementing intricate hybrid finite element formulations for fluid-structure interaction. These frustrations fueled my determination to develop a more accessible and efficient approach to finite element research. My objective is therefore to provide a streamlined framework that enables rapid development, testing, and publication of new methodologies. This should be particularly beneficial for both early-career and experienced researchers striving to advance computational science and engineering.
+During my PhD, I grappled with the overwhelming complexity of a large-scale C++-based research code, facing major obstacles in implementing intricate hybrid finite element formulations for fluid-structure interaction. These frustrations fueled my determination to develop a more **accessible** and **efficient** approach to finite element research. My objective is therefore to provide a streamlined framework that enables rapid **development**, **testing**, and publication of new methodologies. This should be particularly beneficial for both early-career and experienced researchers striving to advance **computational science and engineering**.
 
 ## Features ✨
 
-Comprehensive workflow automation covering pre-processing, processing, and post-processing.
+Comprehensive workflow automation covering main **pre-processing**, **processing**, and **post-processing** tasks.
 
 Support for multiple finite element discretizations, including:
 
-Continuous Galerkin (CG)
+**Continuous Galerkin** (**CG**)
 
-Hybridizable Discontinuous Galerkin (HDG)
+**Hybridizable Discontinuous Galerkin** (**HDG**)
 
 Coupling between CG and HDG
 
 Broad applicability to various physics models.
 
-Coupling of an arbitrary number of physical problems
+Coupling of an arbitrary number of sub-problems.
 
 Flexible discretization, solver selection, and high-order methods.
 
