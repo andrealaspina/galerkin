@@ -1,15 +1,20 @@
 ## TODO
 
 - Project structure
-- Refer to mxl files and Google Scholar
+- Refer to mxl files and [**Google Scholar**](https://scholar.google.com/citations?user=5n7qnBgAAAAJ&hl=en)
 - Restart
+- Geometry and boundaries with PDE toolbox
+- Linear mesh increased in order or directly high-order mesh
 - Useful tests to check
+- Structs: `Simulation`, `Parameters`, `Geometry`, `Mesh`, (`MeshFile`), `System`, `Time`, `Solver`, `Boundaries`, `Options` + `BCs`, `Block`, `Elements`, `Faces`, `RefElement`, `Sizes`, `Timer`
+- Files: `test.m`, `main.m`
+- Folders: (`advanpix`), `formulations`, `functions`, `geometry`, `input`, `output`, `symbolic`, `tests`
 
 # Galerkin: A Flexible Finite Element Framework
 
 ## Overview 🌍
 
-Galerkin is a powerful, adaptable, and extensible **MATLAB** framework designed for the development and testing of advanced **finite element** formulations. It provides an integrated environment for simulating **2D/3D** **linear/nonlinear** **single/multi-physics** **single/multi-scale** problems in the **time/frequency** domain.
+Galerkin is a powerful, adaptable, and extensible [**MATLAB**](https://www.mathworks.com/products/matlab.html) framework designed for the development and testing of advanced **finite element** formulations. It provides an integrated environment for simulating **2D/3D** **linear/nonlinear** **single/multi-physics** **single/multi-scale** problems in the **time/frequency** domain.
 
 During my PhD, I grappled with the overwhelming complexity of a large-scale C++-based research code, facing major obstacles in implementing intricate hybrid finite element formulations for fluid-structure interaction. These frustrations fueled my determination to develop a more **accessible** approach to finite element research. My objective is therefore to provide a streamlined framework that enables rapid **development**, **testing**, and **publication** of new methodologies. This should be particularly beneficial for both early-career and experienced **researchers** striving to advance the field of **computational science and engineering**.
 
@@ -22,7 +27,7 @@ Support for multiple finite element discretizations, including:
 
 - **Hybridizable Discontinuous Galerkin** (**HDG**)
 
-- Coupling between CG and HDG
+- Coupling between **CG** and **HDG**
 
 Broad applicability to various physics models.
 
@@ -40,131 +45,148 @@ The framework currently incorporates multiple formulations tailored for a variet
 
 ### Thermal Problems 🌡️
 
-- `Thermal_CG.m`: solves the heat equation with the CG method.
+- `Thermal_CG`: solves the heat equation with the CG method (see [https://doi.org/10.1007/s00466-019-01770-8](https://doi.org/10.1007/s00466-019-01770-8)).
 
-- `Thermal_HDG.m`: solves the heat equation with the HDG method.
+- `Thermal_HDG`: solves the heat equation with the HDG method (see [https://doi.org/10.1007/s00466-019-01770-8](https://doi.org/10.1007/s00466-019-01770-8)).
 
 ### Structural Mechanics 🔩
 
-- `Elasticity_CG.m`: solves the equations of elastodynamics with the CG method and covers both linear and nonlinear elasticity models (St. Venant-Kirchhoff and Neo-Hookean).
+- `Elasticity_CG`: solves the equations of elastodynamics with the CG method and covers both linear and nonlinear elasticity models (St. Venant-Kirchhoff and Neo-Hookean) (see [https://doi.org/10.1007/s00466-019-01770-8](https://doi.org/10.1007/s00466-019-01770-8)).
 
-- `ElasticityLinear_HDG.m`: solves the equations of linear elastodynamics with the HDG method.
+- `ElasticityLinear_HDG`: solves the equations of linear elastodynamics with the HDG method (see [https://doi.org/10.1007/s00466-019-01770-8](https://doi.org/10.1007/s00466-019-01770-8)).
 
 ### Fluid Dynamics 🌊
 
-- `CompressibleFlow_HDG.m`: solves the compressible Euler equations with the HDG method.
+- `CompressibleFlow_HDG`: solves the compressible Euler equations with the HDG method.
 
-- `WeaklyCompressibleFlowDM_HDG.m`: solves the  Navier-Stokes equations for weakly compressible flows with the HDG method using a density-momentum-based formulation.
+- `WeaklyCompressibleFlowDM_HDG`: solves the  Navier-Stokes equations for weakly compressible flows with the HDG method using a density-momentum-based formulation (see [https://mediatum.ub.tum.de/1586346](https://mediatum.ub.tum.de/1586346)).
 
-- `WeaklyCompressibleFlowVP_HDG.m`: solves the  Navier-Stokes equations for weakly compressible flows with the HDG method using a velocity-pressure-based formulation.
+- `WeaklyCompressibleFlowVP_HDG`: solves the  Navier-Stokes equations for weakly compressible flows with the HDG method using a velocity-pressure-based formulation (see [https://mediatum.ub.tum.de/1586346](https://mediatum.ub.tum.de/1586346)).
 
 ### Electromagnetics 🧲
 
-- `Electromagnetic_HDG_fast.m`: solves the Maxwell equations in the time domain with the HDG method.
+- `Electromagnetic_HDG_fast`: solves the Maxwell equations in the time domain with the HDG method (see [https://doi.org/10.1016/j.cma.2022.115170](https://doi.org/10.1016/j.cma.2022.115170)).
 
-- `ElectromagneticPML_HDG_fast.m`: solves the Maxwell equations in the time domain with the HDG method including perfectly matched layers.
+- `ElectromagneticPML_HDG_fast`: solves the Maxwell equations in the time domain with the HDG method including perfectly matched layers (see [https://doi.org/10.1016/j.cma.2022.115170](https://doi.org/10.1016/j.cma.2022.115170)).
 
-- `ElectromagneticFD_HDG_fast.m`: solves the Maxwell equations in the frequency domain with the HDG method.
+- `ElectromagneticFD_HDG_fast`: solves the Maxwell equations in the frequency domain with the HDG method (see [https://doi.org/10.1016/j.cma.2022.115170](https://doi.org/10.1016/j.cma.2022.115170)).
 
-- `ElectromagneticPML_FD_HDG_fast.m`: solves the Maxwell equations in the frequency domain with the HDG method including perfectly matched layers.
+- `ElectromagneticPML_FD_HDG_fast`: solves the Maxwell equations in the frequency domain with the HDG method including perfectly matched layers (see [https://doi.org/10.1016/j.cma.2022.115170](https://doi.org/10.1016/j.cma.2022.115170)).
 
-- `Magnetic_HDG.m`: solves the magnetic induction equation with the HDG method.
+- `Magnetic_HDG`: solves the magnetic induction equation with the HDG method (see [https://doi.org/10.1016/j.cma.2021.114278](https://doi.org/10.1016/j.cma.2021.114278)).
 
-- `MagneticCURLCURL_HDG.m`: solves the magnetic induction equation with the HDG method and an alternative curl-curl formulation.
+- `MagneticCURLCURL_HDG`: solves the magnetic induction equation with the HDG method and an alternative curl-curl formulation (see [https://doi.org/10.1016/j.cma.2021.114278](https://doi.org/10.1016/j.cma.2021.114278)).
 
 ### Plasma Physics 🔥
 
-- `MagnetohydrodynamicsCURL_HDG.m`: solves the equations of magnetohydrodynamics (MHD) with the HDG method.
+- `MagnetohydrodynamicsCURL_HDG`: solves the equations of magnetohydrodynamics (MHD) with the HDG method (see [https://doi.org/10.1016/j.cma.2021.114278](https://doi.org/10.1016/j.cma.2021.114278)).
 
-- `MagnetohydrodynamicsCURLCURL_HDG.m`: solves the equations of magnetohydrodynamics (MHD) with the HDG method and an alternative curl-curl formulation.
+- `MagnetohydrodynamicsCURLCURL_HDG`: solves the equations of magnetohydrodynamics (MHD) with the HDG method and an alternative curl-curl formulation (see [https://doi.org/10.1016/j.cma.2021.114278](https://doi.org/10.1016/j.cma.2021.114278)).
 
-- `Plasma1FluidElectromagneticAdvanced_HDG.m`: solves the Euler–Maxwell plasma equations with the HDG method including an electrostatic initialization and a projection-based divergence correction method to enforce the Gauss laws.
+- `Plasma1FluidElectromagneticAdvanced_HDG`: solves the Euler–Maxwell plasma equations with the HDG method including an electrostatic initialization and a projection-based divergence correction method to enforce the Gauss laws (see [https://doi.org/10.1016/j.jcp.2023.112535](https://doi.org/10.1016/j.jcp.2023.112535)).
 
 ### Porous Media 🧽
 
-- `Darcy_CG.m`: solves the  Darcy law with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the Navier-Stokes equations with Comsol's LiveLink for Matlab.
+- `Darcy_CG`: solves the  Darcy law with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the Navier-Stokes equations with Comsol's LiveLink for Matlab (see [https://doi.org/10.1016/j.cma.2023.116405](https://doi.org/10.1016/j.cma.2023.116405)).
 
-- `Darcy2Phase_CG.m`: solves the two-phase Darcy law with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the Cahn-Hilliard-Navier-Stokes equations with Comsol's LiveLink for Matlab.
+- `Darcy2Phase_CG`: solves the two-phase Darcy law with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the Cahn-Hilliard-Navier-Stokes equations with Comsol's LiveLink for Matlab.
 
-- `Darcy2PhaseRichards_CG.m`: solves the Richards’ equation with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the Cahn-Hilliard-Navier-Stokes equations with Comsol's LiveLink for Matlab.
+- `Darcy2PhaseRichards_CG`: solves the Richards’ equation with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the Cahn-Hilliard-Navier-Stokes equations with Comsol's LiveLink for Matlab.
 
-- `Darcy2PhaseRichards_HDG.m`: solves the Richards’ equation with the HDG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the Cahn-Hilliard-Navier-Stokes equations with Comsol's LiveLink for Matlab.
+- `Darcy2PhaseRichards_HDG`: solves the Richards’ equation with the HDG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the Cahn-Hilliard-Navier-Stokes equations with Comsol's LiveLink for Matlab.
 
 ## Multiphysics Coupling 🔄
 
-Two key coupling strategies are implemented to facilitate multiphysics simulations:
+Two strategies are implemented to facilitate multiphysics simulations:
 
-- Volume-based coupling: Fully integrated physics within a single formulation (e.g., MHD, Plasma).
+- Volume-based coupling: Fully integrated physics within a single formulation (e.g., `MagnetohydrodynamicsCURL_HDG`, `MagnetohydrodynamicsCURLCURL_HDG`, `Plasma1FluidElectromagneticAdvanced_HDG`).
 
-- Surface-based coupling: Interaction between subsystems (e.g., Fluid-Structure Interaction).
+- Surface-based coupling: Interaction between subsystems. For instance, fluid-structure interaction (FSI) problems (see [https://doi.org/10.1016/j.cma.2020.113392](https://doi.org/10.1016/j.cma.2020.113392)) are solved by coupling:
 
-For instance, fluid-structure interaction (FSI) problems are solved by coupling:
+  - A formulation for the fluid sub-problem (`WeaklyCompressibleFlowDM_HDG` or `WeaklyCompressibleFlowVP_HDG`).
 
-- HDG-based formulations for weakly compressible flow.
+  - A formulation for the structural sub-problem (`Elasticity_CG`).
 
-- CG-based formulations for (non)linear elasticity.
+  - A formulation for the moving mesh algorithm (`Elasticity_CG`).
 
-- CG-based formulations for the fluid mesh motion according to the Arbitrary Lagrangian-Eulerian (ALE) description of motion.
-
+A key feature of **Galerkin** is the simplicity of monolithically coupling N different formulations, whose associated LHS and RHS are automatically combined as
+```math
+\begin{bmatrix}
+\mathbf{K}_{11} & \dots  & \mathbf{K}_{1N} \\
+\vdots          & \ddots & \vdots          \\
+\mathbf{K}_{N1} & \dots  & \mathbf{K}_{NN}
+\end{bmatrix}^{i}
+\begin{bmatrix}
+\Delta \mathbf{u}_{1} \\
+\vdots                \\
+\Delta \mathbf{u}_{N}
+\end{bmatrix}^{i+1}
+=
+\begin{bmatrix}
+\mathbf{f}_{1} \\
+\vdots         \\
+\mathbf{f}_{N}
+\end{bmatrix}^{i}
+```
 ## Simulation Types 📌
 
-A variety of simulation modes are supported:
+A variety of simulation types are supported:
 
-- `SingleSimulation`: Runs a single test case.
+- `SingleSimulation`: Runs a single simulation.
 
 - `ConvergenceSpace`: Conducts a spatial convergence study.
 
-- `ConvergenceTime`: Executes a temporal convergence study.
+- `ConvergenceTime`: Conducts a temporal convergence study.
 
-- `ParametricStudy`: Evaluates different parametric variations.
+- `ParametricStudy`: Conducts a parametric study by varying a parameter.
 
-- `ScalingStrong`: Analyzes strong scaling performance.
+- `ScalingStrong`: Assesses strong scaling performance.
 
 - `ScalingWeak`: Assesses weak scaling performance.
 
-## Numerical Methods & Solvers 🧮
+## Numerical Methods 🧮
 
 ### Spatial Discretization
 
-- Element types: Triangles & Tetrahedra.
+- Element types: Triangles in 2D & Tetrahedra in 3D.
 
 - Polynomial orders: Up to 8th order.
 
-- Node distributions: Uniform & Fekete points.
+- Node distributions: Uniform & Fekete.
 
 ### Time Integration
 
-- Backward Differentiation Formulas (BDF): Supports up to 6th order.
+- **Backward Differentiation Formulas** (BDF): Supports up to 6th order.
 
-- Predictors: Allows for high-order predictor schemes.
+- Predictor: Allows for high-order predictor schemes.
 
 ### Solvers & Preconditioners
 
 Solvers:
 
-- `backslash`: MATLAB’s \ operator to solve general linear systems of equations.
+- [`backslash`](https://www.mathworks.com/help/matlab/ref/double.mldivide.html): MATLAB’s \ operator to solve general linear systems of equations.
 
-- `pcg`: Preconditioned conjugate gradient method for symmetric positive definite matrices.
+- [`pcg`](https://www.mathworks.com/help/matlab/ref/pcg.html?s_tid=doc_ta): Preconditioned conjugate gradient method for symmetric positive definite matrices.
 
-- `minres`: Minimum residual method for symmetric and non-positive definite matrices.
+- [`minres`](https://www.mathworks.com/help/matlab/ref/minres.html?s_tid=doc_ta): Minimum residual method for symmetric and non-positive definite matrices.
 
-- `gmres`: Generalized minimum residual method for non-symmetric and non-positive definite matrices.
+- [`gmres`](https://www.mathworks.com/help/matlab/ref/gmres.html?s_tid=doc_ta): Generalized minimum residual method for non-symmetric and non-positive definite matrices.
 
 Preconditioners:
 
-- `ichol`: Incomplete Cholesky factorization.
+- [`ichol`](https://www.mathworks.com/help/matlab/ref/ichol.html?s_tid=doc_ta): Incomplete Cholesky factorization.
 
-- `ilu`: Incomplete LU factorization.
+- [`ilu`](https://www.mathworks.com/help/matlab/ref/ilu.html?s_tid=doc_ta): Incomplete LU factorization.
 
-## Parallel & High-Performance Computing ⚡
+## Parallel Computing ⚡
 
 Parallelized element computations utilizing `parfor`.
 
-Up to ~10x performance improvement on large-scale problems.
+Up to **~10x performance improvement** on relatively large-scale problems.
 
-Cluster execution support via test.sh for batch processing.
+Cluster execution support via `test.sh` for batch processing.
 
-## Error Analysis 📈
+## Error Norms 📈
 
 The framework supports multiple error norms:
 
