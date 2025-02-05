@@ -1,12 +1,12 @@
-Galerkin: A Flexible Finite Element Framework
+# Galerkin: A Flexible Finite Element Framework
 
-Overview 🌍
+## Overview 🌍
 
 Galerkin is a powerful, adaptable, and extensible MATLAB framework designed for the development and testing of advanced finite element formulations. It provides an integrated environment for simulating 2D/3D linear/nonlinear problems across a diverse set of single/multi-physics and single/multi-scale applications in both the time and frequency domains.
 
 During my PhD, I grappled with the overwhelming complexity of a large-scale C++-based research code, facing major obstacles in implementing intricate hybrid finite element formulations for fluid-structure interaction. These frustrations fueled my determination to develop a more accessible and efficient approach to finite element research. My objective is therefore to provide a streamlined framework that enables rapid development, testing, and publication of new methodologies. This should be particularly beneficial for both early-career and experienced researchers striving to advance computational science and engineering.
 
-Features ✨
+## Features ✨
 
 Comprehensive workflow automation covering pre-processing, processing, and post-processing.
 
@@ -28,23 +28,23 @@ Flexible discretization, solver selection, and high-order methods.
 
 Seamless integration with external tools like GMSH, ParaView, Comsol, and Advanpix.
 
-Implemented Formulations 📚
+## Implemented Formulations 📚
 
 The framework currently incorporates multiple formulations tailored for a variety of physics-based applications, making it a versatile tool for researchers and engineers. Here are listed the main (but not all!) formulations currently implemented.
 
-Thermal Problems 🌡️
+### Thermal Problems 🌡️
 
 Thermal_CG: solves the heat equation with the CG method.
 
 Thermal_HDG: solves the heat equation with the HDG method.
 
-Structural Mechanics 🔩
+### Structural Mechanics 🔩
 
 Elasticity_CG: solves the equations of elastodynamics with the CG method and covers both linear and nonlinear elasticity models (St. Venant-Kirchhoff and Neo-Hookean).
 
 ElasticityLinear_HDG: solves the equations of linear elastodynamics with the HDG method.
 
-Fluid Dynamics 🌊
+### Fluid Dynamics 🌊
 
 CompressibleFlow_HDG: solves the compressible Euler equations with the HDG method.
 
@@ -52,7 +52,7 @@ WeaklyCompressibleFlowDM_HDG: solves the  Navier-Stokes equations for weakly com
 
 WeaklyCompressibleFlowVP_HDG: solves the  Navier-Stokes equations for weakly compressible flows with the HDG method using a velocity-pressure-based formulation.
 
-Electromagnetics ⚡
+### Electromagnetics ⚡
 
 Electromagnetic_HDG_fast: solves the Maxwell equations in the time domain with the HDG method.
 
@@ -74,7 +74,7 @@ MagnetohydrodynamicsCURLCURL_HDG: solves the equations of magnetohydrodynamics (
 
 Plasma1FluidElectromagneticAdvanced_HDG: solves the Euler–Maxwell plasma equations with the HDG method including an electrostatic initialization and a projection-based divergence correction method to enforce the Gauss laws.
 
-Porous Media Flow 🏞️
+### Porous Media Flow 🏞️
 
 Darcy_CG: solves the  Darcy law with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the Navier-Stokes equations with Comsol's LiveLink for Matlab.
 
@@ -84,7 +84,7 @@ Darcy2PhaseRichards_CG: solves the Richards’ equation with the CG method for t
 
 Darcy2PhaseRichards_HDG: solves the Richards’ equation with the HDG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the Cahn-Hilliard-Navier-Stokes equations with Comsol's LiveLink for Matlab.
 
-Multiphysics Coupling 🔄
+## Multiphysics Coupling 🔄
 
 Two key coupling strategies are implemented to facilitate multiphysics simulations:
 
@@ -100,7 +100,7 @@ CG-based formulations for (non)linear elasticity.
 
 CG-based formulations for the fluid mesh motion according to the Arbitrary Lagrangian-Eulerian (ALE) description of motion.
 
-Simulation Types 🏃‍♂️
+## Simulation Types 🏃‍♂️
 
 A variety of simulation modes are supported:
 
@@ -118,7 +118,7 @@ ScalingWeak: Assesses weak scaling performance.
 
 Numerical Methods & Solvers 🧮
 
-Spatial Discretization
+## Spatial Discretization
 
 Element types: Triangles & Tetrahedra.
 
@@ -126,7 +126,7 @@ Polynomial orders: Up to 8th order.
 
 Node distributions: Uniform & Fekete points.
 
-Time Integration
+## Time Integration
 
 Backward Differentiation Formulas (BDF): Supports up to 6th order.
 
@@ -134,7 +134,7 @@ Standard choices: Includes BDF1 (Backward Euler) and BDF2 (BDF1 initialization).
 
 Predictors: Allows for high-order predictor schemes.
 
-Solvers & Preconditioners
+## Solvers & Preconditioners
 
 Solvers:
 
@@ -152,7 +152,7 @@ ichol: Incomplete Cholesky factorization.
 
 ilu: Incomplete LU factorization.
 
-Parallel & High-Performance Computing ⚡
+## Parallel & High-Performance Computing ⚡
 
 Parallelized element computations utilizing parfor.
 
@@ -160,7 +160,7 @@ Up to ~10x performance improvement on large-scale problems.
 
 Cluster execution support via test.sh for batch processing.
 
-Error Analysis 📏
+## Error Analysis 📏
 
 The framework supports multiple error norms:
 
@@ -172,7 +172,7 @@ H(div) norm.
 
 H(curl) norm.
 
-External Tool Integration 🔌
+## External Tool Integration 🔌
 
 Free tools:
 
@@ -186,7 +186,7 @@ Comsol Multiphysics: Used for multiscale modeling (e.g., unit cell problems).
 
 Advanpix: Arbitrary precision arithmetic (applied to thermal problems but extendable).
 
-Contributions & Feedback 🙌
+## Contributions & Feedback 🙌
 
 I encourage contributions and feedback! If this project proves helpful, consider starring ⭐ the repository, reporting issues, or submitting pull requests.
 
