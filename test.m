@@ -1,4 +1,4 @@
-%% galerkin test
+%% Galerkin test
 
 % Setup
 clear; clc; path(pathdef); close('all'); 
