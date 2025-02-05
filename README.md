@@ -192,15 +192,15 @@ The framework supports multiple error norms:
 
 Free tools:
 
-- **GMSH**: High-order mesh generation.
+- [**GMSH**](https://gmsh.info): High-order mesh generation.
 
-- **ParaView**: Advanced visualization.
+- [**ParaView**](https://www.paraview.org): Advanced visualization.
 
 Paid tools:
 
-- **Comsol Multiphysics**: Used for multiscale modeling (e.g., unit cell problems).
+- [**Comsol Multiphysics**](https://www.comsol.com): Used for multiscale modeling (e.g., unit cell problems).
 
-- **Advanpix**: Arbitrary precision arithmetic (applied to thermal problems but extendable).
+- [**Advanpix**](https://www.advanpix.com): Arbitrary precision arithmetic (applied to thermal problems but extendable).
 
 ## Contributions & Feedback 🙌
 
