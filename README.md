@@ -362,19 +362,17 @@ For a more complex example, I included input and output of a popular fluid-struc
   <img src="https://github.com/user-attachments/files/18719601/fsi.pdf" width="500">
 </p>
 
-## Contributions & Feedback 🙌🏼
+## Contact 📧
 
-I encourage contributions and feedback!
+***galerkin*** is solo-developed and maintained by Dr.-Ing. Andrea La Spina.
 
-If this project proves helpful, consider starring the repository, reporting issues, or submitting pull requests.
-
-Happy coding! 👨🏻‍💻
+For any questions, feedback, or inquiries, contact me at andrealaspina@me.com.
 
 ## My mantra 💬
 
 _If it doesn’t converge to machine precision, it’s simply wrong_.
 
-## References
+## References 📖
 
 [^1]: **A. La Spina**, M. Giacomini, A. Huerta, [_Hybrid coupling of CG and HDG discretizations based on Nitsche's method_](https://doi.org/10.1007/s00466-019-01770-8), Comput. Mech. (2020).
 [^2]: **A. La Spina**, M. Kronbichler, M. Giacomini, W. A. Wall, A. Huerta, [_A weakly compressible hybridizable discontinuous Galerkin formulation for fluid-structure interaction problems_](https://doi.org/10.1016/j.cma.2020.113392), CMAME (2020).
