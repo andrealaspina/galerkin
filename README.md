@@ -259,11 +259,7 @@ Here, a glimpse of the main numerical methods behind ***galerkin*** in given.
 
 	- [`ilu`](https://www.mathworks.com/help/matlab/ref/ilu.html?s_tid=doc_ta): **Incomplete LU** factorization.
 
-## Parallel Computing ⚡
-
-***galerkin*** supports (limited) **parallel** capabilities. For instance, it leverages MATLAB's `parfor` to parallelize some element computations. You can achieve up to **~10x speedup** on relatively large-scale problems. For running a simulation on a cluster, you can adapt the `test.sh` file located in the main folder.
-
-## Error Norms 📈
+### Error Norms 📈
 
 When developing novel finite element formulations, it is crucial to perform comprehensive error assessment to validate **model accuracy**. The framework supports multiple error norms:
 
@@ -286,6 +282,10 @@ When developing novel finite element formulations, it is crucial to perform comp
 ```math
 \|E\|_{H^\text{curl}(\Omega)} = \sqrt{\sum_{e=1}^{n_\text{el}}\int_{\Omega_e} \left(\|\boldsymbol{u}^h-\boldsymbol{u}^\text{ref}\|^2+\|\boldsymbol{\nabla}\times\boldsymbol{u}^h-\boldsymbol{\nabla}\times\boldsymbol{u}^\text{ref}\|^2\right)}
 ```
+
+## Parallel Computing ⚡
+
+***galerkin*** supports (limited) **parallel** capabilities. For instance, it leverages MATLAB's `parfor` to parallelize some element computations. You can achieve up to **~10x speedup** on relatively large-scale problems. For running a simulation on a cluster, you can adapt the `test.sh` file located in the main folder.
 
 ## External Tools 🛠️
 
