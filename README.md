@@ -7,23 +7,27 @@
 - Useful tests to check with a short explanation for each of them
 - Description of the main structs: `Simulation`, `Parameters`, `Geometry`, `Mesh`, (`MeshFile`), `System`, `Time`, `Solver`, `Boundaries`, `Options` + `BCs`, `Block`, `Elements`, `Faces`, `RefElement`, `Sizes`, `Timer`
 - Description of the most important files: `test.m`, `main.m`
-- Mantra: _If it doesn’t converge to machine precision, it’s simply wrong._
+- `fsparse()`
 
-# Galerkin: A Flexible Finite Element Framework
+# ***galerkin***: A Versatile Finite Element Framework for MATLAB
+
+<p align="center">
+  <img src="https://github.com/user-attachments/files/18719391/logo.pdf">
+</p>
 
 ## Overview 🌍
 
-Galerkin is a powerful and extensible [**MATLAB**](https://www.mathworks.com/products/matlab.html) framework designed for developing and testing advanced **finite element** formulations. It provides an integrated environment for simulating a variety of **2D/3D** **linear/nonlinear** **single/multi-physics** **single/multi-scale** problems in the **time/frequency** domain.
+***galerkin*** is a powerful and extensible [**MATLAB**](https://www.mathworks.com/products/matlab.html) framework designed for developing and testing advanced **finite element** formulations. It provides an integrated environment for simulating a variety of **2D/3D** **linear/nonlinear** **single/multi-physics** **single/multi-scale** problems in the **time/frequency** domain.
 
-At the beginning of my PhD, I struggled with the complexity of a large-scale research code, and I faced major obstacles in implementing complex finite element formulations for fluid-structure interaction. This motivated me to create an **accessible** and **flexible** framework to facilitate rapid **development**, **testing**, and **deployment** of novel numerical methods. This code should be particularly beneficial for both early-career and experienced **researchers** striving to advance the field of **computational science and engineering**.
+During the early stages of my PhD, I struggled with the complexity of a large-scale research code, and I faced major obstacles in implementing complex finite element formulations for fluid-structure interaction. This motivated me to create an **accessible** and **flexible** framework to facilitate rapid **development**, **testing**, and **deployment** of novel numerical methods. This code should be particularly beneficial for both early-career and experienced **researchers** striving to advance the field of **computational science and engineering**.
 
 ## Features ✨
 
-Galerkin comes with a range of features designed to streamline the finite element simulation process:
+***galerkin*** comes with a range of features designed to streamline the finite element simulation process:
 
 - Automated workflow covering the main **pre-processing**, **processing**, and **post-processing** tasks.
 
-- Support for multiple finite element **discretizations** (feel free to implement more!), including:
+- Support for multiple finite element **discretizations**, including:
 
 	- **Continuous Galerkin** (**CG**)
 
@@ -31,9 +35,9 @@ Galerkin comes with a range of features designed to streamline the finite elemen
 
 	- Coupling between **CG** and **HDG**
 
-- Broad applicability to various **physical models**.
+- Broad applicability to various **physical problems**.
 
-- **Coupling** of an arbitrary number of sub-problems.
+- Coupling of an arbitrary number of sub-problems for **multi-physics applications**.
 
 - Strong focus on **high-order** methods.
 
@@ -43,7 +47,7 @@ Galerkin comes with a range of features designed to streamline the finite elemen
 
 ## Implemented Formulations 📚
 
-Galerkin includes implementations for a variety of physics-based formulations. Here is a (not complete!) list:
+***galerkin*** includes implementations for a variety of physics-based formulations. Here is a (not comprehensive) list:
 
 ### Thermal Problems 🌡️
 
@@ -85,7 +89,7 @@ Galerkin includes implementations for a variety of physics-based formulations. H
 
 - `MagnetohydrodynamicsCURLCURL_HDG`: Solves the **equations of magnetohydrodynamics** with the HDG method using an alternative curl-curl formulation [^4].
 
-- `Plasma1FluidElectromagneticAdvanced_HDG`: Solves the **Euler–Maxwell plasma equations** with the HDG method including an electrostatic initialization and a projection-based divergence correction method to enforce the Gauss laws [^7].
+- `Plasma1FluidElectromagneticAdvanced_HDG`: Solves the **Euler–Maxwell plasma equations** with the HDG method including a projection-based divergence correction method to enforce the Gauss laws [^7].
 
 ### Porous Media 🧽
 
@@ -97,9 +101,9 @@ Galerkin includes implementations for a variety of physics-based formulations. H
 
 - `Darcy2PhaseRichards_HDG`: Solves the **Richards’ equation** with the HDG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the **Cahn-Hilliard-Navier-Stokes equations** with Comsol's LiveLink for Matlab.
 
-## Multiphysics Coupling 🔄
+## Multi-physics Coupling 🔄
 
-Two strategies are implemented to facilitate multiphysics simulations:
+Two strategies are implemented to facilitate **multi-physics** simulations:
 
 - **Volume-based coupling**: Fully integrated physics within a single formulation (e.g., `MagnetohydrodynamicsCURL_HDG`, `MagnetohydrodynamicsCURLCURL_HDG`, `Plasma1FluidElectromagneticAdvanced_HDG`, etc.).
 
@@ -111,24 +115,24 @@ Two strategies are implemented to facilitate multiphysics simulations:
 
   - A formulation for the **moving mesh** algorithm (`Elasticity_CG`).
 
-A key feature of Galerkin is the simplicity of **monolithically coupling** N different formulations, whose associated LHS and RHS are automatically combined at each Newton iteration as
+A key feature of ***galerkin*** is the simplicity of **monolithically coupling** $N$ different formulations, whose associated left-hand side matrix (LHS) and right hand side vector (RHS( are automatically combined at each Newton iteration as
 ```math
 \begin{bmatrix}
 \mathbf{K}_{11} & \dots  & \mathbf{K}_{1N} \\
 \vdots          & \ddots & \vdots          \\
 \mathbf{K}_{N1} & \dots  & \mathbf{K}_{NN}
-\end{bmatrix}^{i}
+\end{bmatrix}^{k}
 \begin{bmatrix}
 \Delta \mathbf{u}_{1} \\
 \vdots                \\
 \Delta \mathbf{u}_{N}
-\end{bmatrix}^{i+1}
+\end{bmatrix}^{k+1}
 =
 \begin{bmatrix}
 \mathbf{f}_{1} \\
 \vdots         \\
 \mathbf{f}_{N}
-\end{bmatrix}^{i}
+\end{bmatrix}^{k}
 ```
 
 ## Project Structure 📁
@@ -169,70 +173,103 @@ A variety of simulation types are readily supported:
 
 ## Formulation Class 🧩
 
-- Properties:
-	- `NumGlobalComp`
-  	- (`NumVoigtComp`)
-  	- `NumLocalComp`
-  	- `NumPostComp`
-  	- `TimeDerOrder`
-  	- `Domain`
-- Methods:
-	-  `initializeUnknowns()`
- 	-  `computeInitialConditions()`
-  	- (`evaluateSolutionFixedDofs()`)
-  	- `buildBlock()`
-  	- `doCoupling()`
-  	- `doPostProcess()`
-  	- `storeResults()`
-- `fsparse()`
+The ease the implementation of new finite element methods, you can declare a new class (this is likely the only part of the code would need to touch!) that inherits from the base `Formulation` class.
 
-## Numerical Methods 🧮
+Its main **properties** are:
 
-### Spatial Discretization
+- `NumGlobalComp`: Number of components for the global problem.
 
-- Element types: Triangles in 2D & Tetrahedra in 3D.
+- `NumLocalComp`: Number of components for the local problems (for the HDG method).
 
-- Polynomial Degree: Up to 8th order.
+- `NumPostComp`: Number of components of the post-processed variable(s) (for the HDG method).
 
-- Node distributions: Uniform & Fekete.
+- `DiscretizationType`: Discretization type ('CG' or 'HDG').
 
-### Time Integration
+- `TimeDerOrder`: Order of the time derivative (e.g. 1 for the heat equation and 2 for the elastodynamics equations).
 
-- [**Backward Differentiation Formulas**](https://en.wikipedia.org/wiki/Backward_differentiation_formula) (BDF): Supports up to 6th order.
+- `Domain`: Domain of the problem ('Time' of 'Frequency').
 
-- Predictor: Allows for high-order predictor schemes.
+Its main **methods** are:
 
-### Solvers & Preconditioners
+-  `initializeUnknowns()`: Initializes the unknowns of the problem.
 
-Solvers:
+-  `computeInitialConditions()`: Computes the initial conditions.
 
-- [`backslash`](https://www.mathworks.com/help/matlab/ref/double.mldivide.html): MATLAB’s **\** operator to solve general linear systems of equations.
+- `buildBlock()`: Builds the LHS (diagonal block) and RHS of the specific (sub-)problem as
+```math
+\begin{bmatrix}
+      & \vdots          &       \\
+\dots & \mathbf{K}_{ii} & \dots \\
+      & \vdots          &
+\end{bmatrix}^{k}
+\text{\quad and \quad}
+\begin{bmatrix}
+\vdots         \\
+\mathbf{f}_{i} \\
+\vdots
+\end{bmatrix}^{k}
+```
 
-- [`pcg`](https://www.mathworks.com/help/matlab/ref/pcg.html?s_tid=doc_ta): **Preconditioned conjugate gradient** method for symmetric positive definite matrices.
+- `doCoupling()`: Builds the coupling block (off-diagonal block) of the LHS as
+```math
+\begin{bmatrix}
+      & \vdots          &       \\
+\dots & \mathbf{K}_{ij} & \dots \\
+      & \vdots          &
+\end{bmatrix}^{k}
+```
 
-- [`minres`](https://www.mathworks.com/help/matlab/ref/minres.html?s_tid=doc_ta): **Minimum residual** method for symmetric and non-positive definite matrices.
+- `doPostProcess()`: Builds the LHS and RHS of the post-processing problem (for the HDG method).
 
-- [`gmres`](https://www.mathworks.com/help/matlab/ref/gmres.html?s_tid=doc_ta): **Generalized minimum residual** method for non-symmetric and non-positive definite matrices.
+- `storeResults()`: Stores the results for analysis and visualization purposes.
 
-Preconditioners:
+## Numerical Methods 🔢
 
-- [`ichol`](https://www.mathworks.com/help/matlab/ref/ichol.html?s_tid=doc_ta): **Incomplete Cholesky** factorization.
+Here, a glimpse of the main numerical methods behind ***galerkin*** in given.
 
-- [`ilu`](https://www.mathworks.com/help/matlab/ref/ilu.html?s_tid=doc_ta): **Incomplete LU** factorization.
+### Spatial Discretization 📐
+
+- Element types: Triangles in 2D and Tetrahedra in 3D.
+
+- Polynomial `Degree`: From order 1 to 8.
+
+- `NodesDistribution`: 'Uniform' (equally spaced) and 'Fekete' (for better numerical conditioning).
+
+### Time Integration ⏳
+
+- [Backward Differentiation Formulas](https://en.wikipedia.org/wiki/Backward_differentiation_formula) (BDF): From order 1 to 6. The BFD2 scheme is initialized with the backward Euler method (BDF1) at the first time step. Schemes with $\text{BDFOrder}$ > 2 can be merery used for convergence studies (when the analytical solution is available) and they are initialized with the solution at the times $t = −n\Delta t$ with $n = [1,2,\dots,\text{BDFOrder}−1]$.
+
+- Predictor: Supports arbitrary order (e.g. 0 for a constant predition, 1 for linear extrapolation, etc.).
+
+### Solvers & Preconditioners 🧮
+
+***galerkin*** allows the selection of various **solvers** and **preconditioners** to efficiently solve the resulting linear system.
+
+- **Solvers**:
+
+	- [`backslash`](https://www.mathworks.com/help/matlab/ref/double.mldivide.html): MATLAB’s popular **\** operator to solve general linear systems of equations.
+
+	- [`pcg`](https://www.mathworks.com/help/matlab/ref/pcg.html?s_tid=doc_ta): **Preconditioned conjugate gradient** method for symmetric positive definite matrices.
+
+	- [`minres`](https://www.mathworks.com/help/matlab/ref/minres.html?s_tid=doc_ta): **Minimum residual** method for symmetric and non-positive definite matrices.
+
+	- [`gmres`](https://www.mathworks.com/help/matlab/ref/gmres.html?s_tid=doc_ta): **Generalized minimum residual** method for non-symmetric and non-positive definite matrices.
+
+- **Preconditioners**:
+
+	- [`ichol`](https://www.mathworks.com/help/matlab/ref/ichol.html?s_tid=doc_ta): **Incomplete Cholesky** factorization.
+
+	- [`ilu`](https://www.mathworks.com/help/matlab/ref/ilu.html?s_tid=doc_ta): **Incomplete LU** factorization.
 
 ## Parallel Computing ⚡
 
-Parallelized element computations utilizing `parfor`.
-
-Up to **~10x performance improvement** on relatively large-scale problems.
-
-Cluster execution support via `test.sh` for batch processing.
+***galerkin*** supports (limited) **parallel** capabilities. For instance, it leverages MATLAB's `parfor` to parallelize some element computations. You can achieve up to **~10x speedup** on relatively large-scale problems. For running a simulation on a cluster, you can adapt the `test.sh` file located in the main folder.
 
 ## Error Norms 📈
 
-The framework supports multiple error norms:
+When developing novel finite element formulations, it is crucial to perform comprehensive error assessment to validate **model accuracy**. The framework supports multiple error norms:
 
-- `Number` (i.e. scalar norm) computed in relative terms as
+- `Number` (i.e. scalar) norm computed in relative terms as
 ```math
 \|E\| = \left|\dfrac{u^h-u^\text{ref}}{u^\text{ref}}\right|
 ```
@@ -254,15 +291,15 @@ The framework supports multiple error norms:
 
 ## External Tools 🛠️
 
-Although Galerkin is able to manage the main*pre-processing, processing, and post-processing tasks, it can also leverage the functionalities of some external software:
+Although ***galerkin*** is able to manage the main pre-processing, processing, and post-processing tasks, it can also leverage the functionalities of some external tools:
 
-- **Free** tools:
+- **Free** software:
 
 	- [**GMSH**](https://gmsh.info): An open-source software, ideal for **high-order mesh generation**.
 
 	- [**ParaView**](https://www.paraview.org): The world’s leading open source **post-processing visualization engine**.
 
-- **Licensed** tools:
+- **Licensed** software:
 
 	- [**Advanpix**](https://www.advanpix.com): A **multiprecision computing toolbox** for MATLAB (supported for thermal problems only, but easily extendable).
 
@@ -274,9 +311,15 @@ TODO
 
 ## Contributions & Feedback 🙌🏼
 
-I encourage contributions and feedback! If this project proves helpful, consider starring ⭐ the repository, reporting issues, or submitting pull requests.
+I encourage contributions and feedback!
+
+If this project proves helpful, consider starring the repository, reporting issues, or submitting pull requests.
 
 Happy coding! 👨🏻‍💻
+
+## My mantra 💬
+
+_If it doesn’t converge to machine precision, it’s simply wrong_.
 
 ## References
 
@@ -287,10 +330,3 @@ Happy coding! 👨🏻‍💻
 [^5]: **A. La Spina**, J. Fish, [_Time- and frequency-domain hybridizable discontinuous Galerkin solvers for the calculation of the Cherenkov radiation_](https://doi.org/10.1016/j.cma.2022.115170), CMAME (2022).
 [^6]: J. Cui, **A. La Spina**, J. Fish, [_Data-physics driven multiscale approach for high-pressure resin transfer molding (HP-RTM)_](https://doi.org/10.1016/j.cma.2023.116405), CMAME (2023).
 [^7]: **A. La Spina**, J. Fish, [_A hybridizable discontinuous Galerkin formulation for the Euler--Maxwell plasma model_](https://doi.org/10.1016/j.jcp.2023.112535), JCP (2024).
-
-
-
-
-
-
-	
