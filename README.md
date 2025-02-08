@@ -1,11 +1,7 @@
-README
-
 ## TODO
 
 - Geometry and boundaries leveraging Matlab PDE toolbox
 - Linear mesh increased in order or directly high-order mesh
-- Description of the main structs: `Simulation`, `Parameters`, `Geometry`, `Mesh`, (`MeshFile`), `System`, `Time`, `Solver`, `Boundaries`, `Options` + `BCs`, `Block`, `Elements`, `Faces`, `RefElement`, `Sizes`, `Timer`
-- `fsparse()`
 
 # ***galerkin***: A Versatile Finite Element Framework for MATLAB
 
@@ -168,6 +164,32 @@ A variety of simulation types are readily supported:
 - `ScalingStrong`: Assesses **strong scaling** performance.
 
 - `ScalingWeak`: Assesses **weak scaling** performance.
+
+## Data Types 📊
+
+The data are essentially organized in structure arrays.
+
+The structs defined in the **input file** are:
+- `Simulation`: Defines the simulation type, the physical problem at hand, as well as potential info for restart, parallel and multiprecision computing.
+- `Parameters(iD)`: Sets the main discretization-dependent parameters, such as the chosen formulation, the analytical solution, the polynomial degree of approximation, the physical coefficients (e.g. density, Young's modulus, etc.), as well as formulation-realted parameters (e.g. stabilization paramter, Nitsche's penalty parameter, etc.). If N discretizations are coupled, the parameters need to be set for each of them (`iD` = 1, ..., N).
+- `Geometry(iD)`: Stores the geometries of all discretizations as `DiscreteGeometry` objects, leveraging the wonderful MATLAB [Partial Differential Equation Toolbox](https://www.mathworks.com/help/pde/index.html).
+- `Mesh(iD)`: Stores the meshes data of all discretizations, including (but not limited to) the nodes coordinates and the elements connectivity.
+- `System`: Contains the global LHS matrix, the RHS vector, as well as the systems settings set by the user (tolerance, maximum number of iterations, etc.)
+- `Time`: Contains the main temporal data, including the initial, current and final time, the time step size and the chosen BDF order.
+- `Solver`: Contains the chosen solver and preconditioner, as well as solver-specific parameters.
+- `Boundaries(iD)`: Defines the boundary splitting (edges in 2D and faces in 3D) for each discretization for the imposition of the boundary conditions. To visualize the boundary ids (automatically created), set `Options.PlotMesh='yes'` in the input file.
+- `Options`: Allows to trigger several actions, for plotting the geometry, the mesh and the solution, for computing the numerical error, for saving and exporting the results, etc.
+
+The structs created in the **main file** are:
+- `BCs(iD)`: Contains the nodes of each discretization (w.r.t. the underlying linear mesh) to visualize the boundary conditions.
+- `Block`: Stores the block-dependent data, including the LHS and RHS, as well as the indices for matrix assembly.
+- `Elements`: Re-organizes the data in an element-wise fashion for a more effective use of `parfor`.
+- `Faces(iD1,iD2)`: Stores the faces information for each discretization and for the interface coupling with all other discretizations.
+- `Memory`: Stores tge memory occupied by the variables in the workspace during the simulation phases.
+- `RefElement(iD1,iD2)`: Contains all data of the reference element for each discretization (nodes coordinate, Gauss points coordinates and weigths, shape functions, etc.), as well as for the coupling with all other discretizations.
+- `Results(iD)`: Stores the results of each discretization (time, temperature, displacement, etc.) at the chosen time steps.
+- `Sizes(iD)`: Stores all discretization-dependent sizes, such as the number of global/local components, the number of elements/faces/nodes, etc.
+- `Timer`: Stores the time spent for the pre-processing, processing (evaluation, solution, local problems), and post-processing tasks.
 
 ## Formulation Class 🧩
 
