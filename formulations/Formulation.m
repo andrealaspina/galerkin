@@ -13,6 +13,9 @@ classdef Formulation
     
     % Number of post-processed components
     NumPostComp=@(NumSpaceDim) 1;
+
+    % Discretization type
+    DiscretizationType='';
     
     % Time derivative order
     TimeDerOrder=1;

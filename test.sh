@@ -13,7 +13,7 @@
 
 module load matlab
 
-matlab -nodisplay -nosplash -r                                                                      \
+matlab -nodisplay -nosplash -r                                                            \
   "distcomp.feature('LocalUseMpiexec',false);                                             \
    delete(gcp);                                                                           \
    parpool(parcluster('local'),str2num(getenv('SLURM_CPUS_ON_NODE')),'IdleTimeout',6*60); \
