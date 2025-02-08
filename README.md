@@ -1,5 +1,3 @@
-
-
 ## TODO
 
 - Add a picture
@@ -9,7 +7,22 @@
 - Useful tests to check with a short explanation for each of them
 - Description of the main structs: `Simulation`, `Parameters`, `Geometry`, `Mesh`, (`MeshFile`), `System`, `Time`, `Solver`, `Boundaries`, `Options` + `BCs`, `Block`, `Elements`, `Faces`, `RefElement`, `Sizes`, `Timer`
 - Description of the most important files: `test.m`, `main.m`
-- Elements computations (core of each formulation) in `computeBlockElement()`
+- `Formulation`'s properties:
+	- `NumGlobalComp`
+  	- (`NumVoigtComp`)
+  	- `NumLocalComp`
+  	- `NumPostComp`
+  	- `TimeDerOrder`
+  	- `Domain`
+- `Formulation`'s methods:
+	-  `initializeUnknowns()`
+ 	-  `computeInitialConditions()`
+  	- (`evaluateSolutionFixedDofs()`)
+  	- `buildBlock()`
+  	- `doCoupling()`
+  	- `doPostProcess()`
+  	- `storeResults()`
+- `fsparse()`
 
 # Galerkin: A Flexible Finite Element Framework
 
@@ -17,7 +30,7 @@
 
 Galerkin is a powerful and extensible [**MATLAB**](https://www.mathworks.com/products/matlab.html) framework designed for developing and testing advanced **finite element** formulations. It provides an integrated environment for simulating a variety of **2D/3D** **linear/nonlinear** **single/multi-physics** **single/multi-scale** problems in the **time/frequency** domain.
 
-At the beginning of my PhD, I struggled with the complexity of a large-scale research code, and I faced major obstacles in implementing complex finite element formulations for fluid-structure interaction. This motivated me to create an **accessible** and **flexible** framework to facilitate rapid **development**, **testing**, and **deployment** of novel numerical methods. This should be particularly beneficial for both early-career and experienced **researchers** striving to advance the field of **computational science and engineering**.
+At the beginning of my PhD, I struggled with the complexity of a large-scale research code, and I faced major obstacles in implementing complex finite element formulations for fluid-structure interaction. This motivated me to create an **accessible** and **flexible** framework to facilitate rapid **development**, **testing**, and **deployment** of novel numerical methods. This code should be particularly beneficial for both early-career and experienced **researchers** striving to advance the field of **computational science and engineering**.
 
 ## Features ✨
 
@@ -41,7 +54,7 @@ Galerkin comes with a range of features designed to streamline the finite elemen
 
 - (Limited) **parallel computing** capabilities leveraging MATLAB’s `parfor`.
 
-- Seamless integration with **external tools** like [**GMSH**](https://gmsh.info), [**ParaView**](https://www.paraview.org), [**Comsol Multiphysics**](https://www.comsol.com), and [**Advanpix**](https://www.advanpix.com).
+- Seamless integration with **external tools** like [**GMSH**](https://gmsh.info), [**ParaView**](https://www.paraview.org), [**Advanpix**](https://www.advanpix.com), and [**Comsol**](https://www.comsol.com).
 
 ## Project Structure 📁
 
@@ -180,7 +193,7 @@ A variety of simulation types are readily supported:
 
 ### Time Integration
 
-- **Backward Differentiation Formulas** (BDF): Supports up to 6th order.
+- [**Backward Differentiation Formulas**](https://en.wikipedia.org/wiki/Backward_differentiation_formula) (BDF): Supports up to 6th order.
 
 - Predictor: Allows for high-order predictor schemes.
 
