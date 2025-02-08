@@ -1,6 +1,7 @@
+README
+
 ## TODO
 
-- Add a picture
 - For more info on the formulations, refer to the associated .mlx files or my publications in the references
 - Geometry and boundaries leveraging Matlab PDE toolbox
 - Linear mesh increased in order or directly high-order mesh
@@ -47,7 +48,7 @@ During the early stages of my PhD, I struggled with the complexity of a large-sc
 
 ## Implemented Formulations 📚
 
-***galerkin*** includes implementations for a variety of physics-based formulations. Here is a (not comprehensive) list:
+***galerkin*** includes implementations for an extensive range of physics-based formulations. For those interested in the mathematical details, further information can be found in the `.mlx` files in the `formulations` folder or in the references listed at the bottom of this file. Here is a non-exhaustive list of the currently implemented formulations.
 
 ### Thermal Problems 🌡️
 
@@ -307,7 +308,21 @@ Although ***galerkin*** is able to manage the main pre-processing, processing, a
 
 ## Getting Started 🚀
 
-TODO
+From the main folder, run:
+```matlab
+run test.m
+```
+This command will execute all the scripts located in the `tests` folder, taking approximately 3 minutes to complete.
+
+If all tests pass successfully, you could do worse than taking a look at the `main.m` file. This is organized in three sections: **Pre-processing**, **Processing** and **Post-processing**. Although quite lengthy (~1500 lines), it helps tracking the sequence of tasks from start to finish of the simulation.
+
+You are then encouraged to have a look at some test files. Self-explanatory names are assigned to them to allow the user to easily find the features of interest. For example, `test_thermal_CG_2D.m` shows how to write the input file for a simple 2D thermal problem; `test_convergence_space_structured.m` can help in conducting a spatial convergence study; `test_plot_3D.m` shows how to generate plots to display the geometry, the mesh and the solution of a 3D problem; `test_error_norms.m` reveals how to consider different error norms; `test_paraview_timestep.m` shows how to export the solution computed at various time steps to paraview...
+
+For a more complex example, I included the input and output of a popular fluid-structure interaction benchmark using two different formulations in `input/fsi_benchmark` and `output/fsi_benchmark`, respectively. When refining the mesh and reducing the time step size, you can reproduce the results in my PhD thesis[^3] and obtain this beautiful picture:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/files/18719601/fsi.pdf">
+</p>
 
 ## Contributions & Feedback 🙌🏼
 
@@ -325,7 +340,7 @@ _If it doesn’t converge to machine precision, it’s simply wrong_.
 
 [^1]: **A. La Spina**, M. Giacomini, A. Huerta, [_Hybrid coupling of CG and HDG discretizations based on Nitsche's method_](https://doi.org/10.1007/s00466-019-01770-8), Comput. Mech. (2020).
 [^2]: **A. La Spina**, M. Kronbichler, M. Giacomini, W. A. Wall, A. Huerta, [_A weakly compressible hybridizable discontinuous Galerkin formulation for fluid-structure interaction problems_](https://doi.org/10.1016/j.cma.2020.113392), CMAME (2020).
-[^3]: **A. La Spina**, [_Coupling of continuous and hybridizable discontinuous Galerkin methods for weakly compressible fluid-structure interaction_](https://mediatum.ub.tum.de/1586346), Ph.D. thesis (2021).
+[^3]: **A. La Spina**, [_Coupling of continuous and hybridizable discontinuous Galerkin methods for weakly compressible fluid-structure interaction_](https://mediatum.ub.tum.de/1586346), PhD thesis (2021).
 [^4]: **A. La Spina**, J. Fish, [_A superconvergent hybridizable discontinuous Galerkin method for weakly compressible magnetohydrodynamics_](https://doi.org/10.1016/j.cma.2021.114278), CMAME (2022).
 [^5]: **A. La Spina**, J. Fish, [_Time- and frequency-domain hybridizable discontinuous Galerkin solvers for the calculation of the Cherenkov radiation_](https://doi.org/10.1016/j.cma.2022.115170), CMAME (2022).
 [^6]: J. Cui, **A. La Spina**, J. Fish, [_Data-physics driven multiscale approach for high-pressure resin transfer molding (HP-RTM)_](https://doi.org/10.1016/j.cma.2023.116405), CMAME (2023).
