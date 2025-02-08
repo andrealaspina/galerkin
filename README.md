@@ -3,14 +3,12 @@
 ## TODO
 
 - Add a picture
-- Project structure: (`advanpix`), `formulations`, `functions`, `geometry`, `input`, `output`, `symbolic`, `tests`
 - For more info on the formulations, refer to the associated .mlx files or my publications in the references
 - Geometry and boundaries leveraging Matlab PDE toolbox
 - Linear mesh increased in order or directly high-order mesh
 - Useful tests to check with a short explanation for each of them
 - Description of the main structs: `Simulation`, `Parameters`, `Geometry`, `Mesh`, (`MeshFile`), `System`, `Time`, `Solver`, `Boundaries`, `Options` + `BCs`, `Block`, `Elements`, `Faces`, `RefElement`, `Sizes`, `Timer`
 - Description of the most important files: `test.m`, `main.m`
-- References: [^1], [^2], [^3], [^4], [^5], [^6], [^7], [^8], [^9], [^10]
 - Elements computations (core of each formulation) in `computeBlockElement()`
 
 # Galerkin: A Flexible Finite Element Framework
@@ -49,7 +47,7 @@ Galerkin comes with a range of features designed to streamline the finite elemen
 
 The project is organized into the following directories:
 
-- `advanpix`: Contains a comprehensive library of routines for arbitrary precision computations using [**Advanpix**](https://www.advanpix.com) (you need to purchase the product).
+- `advanpix`: Contains a comprehensive library of routines for arbitrary precision computations using [**Advanpix**](https://www.advanpix.com) (you would need to purchase the product to use its functionalities).
 
 - `formulation`: Collects the implemented finite element formulations.
 
@@ -71,49 +69,49 @@ Galerkin includes implementations for a variety of physics-based formulations. H
 
 ### Thermal Problems 🌡️
 
-- `Thermal_CG`: Solves the **heat equation** with the CG method [^2].
+- `Thermal_CG`: Solves the **heat equation** with the CG method [^1].
 
-- `Thermal_HDG`: Solves the **heat equation** with the HDG method [^2].
+- `Thermal_HDG`: Solves the **heat equation** with the HDG method [^1].
 
 ### Structural Mechanics 🔩
 
-- `Elasticity_CG`: Solves the **equations of elastodynamics** with the CG method and covers both linear and nonlinear elasticity models (St. Venant-Kirchhoff and Neo-Hookean) [^2].
+- `Elasticity_CG`: Solves the **equations of elastodynamics** with the CG method and covers both linear and nonlinear elasticity models (St. Venant-Kirchhoff and Neo-Hookean) [^1].
 
-- `ElasticityLinear_HDG`: Solves the **equations of linear elastodynamics** with the HDG method [^2].
+- `ElasticityLinear_HDG`: Solves the **equations of linear elastodynamics** with the HDG method [^1].
 
 ### Fluid Dynamics 🌊
 
 - `CompressibleFlow_HDG`: Solves the **compressible Euler equations** with the HDG method.
 
-- `WeaklyCompressibleFlowDM_HDG`: Solves the **Navier-Stokes equations** for weakly compressible flows with the HDG method using a density-momentum-based formulation [^4].
+- `WeaklyCompressibleFlowDM_HDG`: Solves the **Navier-Stokes equations** for weakly compressible flows with the HDG method using a density-momentum-based formulation [^3].
 
-- `WeaklyCompressibleFlowVP_HDG`: Solves the **Navier-Stokes equations** for weakly compressible flows with the HDG method using a velocity-pressure-based formulation [^4].
+- `WeaklyCompressibleFlowVP_HDG`: Solves the **Navier-Stokes equations** for weakly compressible flows with the HDG method using a velocity-pressure-based formulation [^3].
 
 ### Electromagnetics 🧲
 
-- `Electromagnetic_HDG_fast`: Solves the **Maxwell equations** in the time domain with the HDG method [^6].
+- `Electromagnetic_HDG_fast`: Solves the **Maxwell equations** in the time domain with the HDG method [^5].
 
-- `ElectromagneticPML_HDG_fast`: Solves the **Maxwell equations** in the time domain with the HDG method including perfectly matched layers [^6].
+- `ElectromagneticPML_HDG_fast`: Solves the **Maxwell equations** in the time domain with the HDG method including perfectly matched layers [^5].
 
-- `ElectromagneticFD_HDG_fast`: Solves the **Maxwell equations** in the frequency domain with the HDG method [^6].
+- `ElectromagneticFD_HDG_fast`: Solves the **Maxwell equations** in the frequency domain with the HDG method [^5].
 
-- `ElectromagneticPML_FD_HDG_fast`: Solves the **Maxwell equations** in the frequency domain with the HDG method including perfectly matched layers [^6].
+- `ElectromagneticPML_FD_HDG_fast`: Solves the **Maxwell equations** in the frequency domain with the HDG method including perfectly matched layers [^5].
 
-- `Magnetic_HDG`: Solves the **magnetic induction equation** with the HDG method [^5].
+- `Magnetic_HDG`: Solves the **magnetic induction equation** with the HDG method [^4].
 
-- `MagneticCURLCURL_HDG`: Solves the **magnetic induction equation** with the HDG method using an alternative curl-curl formulation [^5].
+- `MagneticCURLCURL_HDG`: Solves the **magnetic induction equation** with the HDG method using an alternative curl-curl formulation [^4].
 
 ### Plasma Physics 🔥
 
-- `MagnetohydrodynamicsCURL_HDG`: Solves the **equations of magnetohydrodynamics** with the HDG method [^5].
+- `MagnetohydrodynamicsCURL_HDG`: Solves the **equations of magnetohydrodynamics** with the HDG method [^4].
 
-- `MagnetohydrodynamicsCURLCURL_HDG`: Solves the **equations of magnetohydrodynamics** with the HDG method using an alternative curl-curl formulation [^5].
+- `MagnetohydrodynamicsCURLCURL_HDG`: Solves the **equations of magnetohydrodynamics** with the HDG method using an alternative curl-curl formulation [^4].
 
-- `Plasma1FluidElectromagneticAdvanced_HDG`: Solves the **Euler–Maxwell plasma equations** with the HDG method including an electrostatic initialization and a projection-based divergence correction method to enforce the Gauss laws [^9].
+- `Plasma1FluidElectromagneticAdvanced_HDG`: Solves the **Euler–Maxwell plasma equations** with the HDG method including an electrostatic initialization and a projection-based divergence correction method to enforce the Gauss laws [^7].
 
 ### Porous Media 🧽
 
-- `Darcy_CG`: Solves the **Darcy law** with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the **Navier-Stokes equations** with Comsol's LiveLink for Matlab [^8].
+- `Darcy_CG`: Solves the **Darcy law** with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the **Navier-Stokes equations** with Comsol's LiveLink for Matlab [^6].
 
 - `Darcy2Phase_CG`: Solves the **two-phase Darcy law** with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the **Cahn-Hilliard-Navier-Stokes equations** with Comsol's LiveLink for Matlab.
 
@@ -127,7 +125,7 @@ Two strategies are implemented to facilitate multiphysics simulations:
 
 - **Volume-based coupling**: Fully integrated physics within a single formulation (e.g., `MagnetohydrodynamicsCURL_HDG`, `MagnetohydrodynamicsCURLCURL_HDG`, `Plasma1FluidElectromagneticAdvanced_HDG`, etc.).
 
-- **Surface-based coupling**: Interaction between sub-problems exchanging information on the interface. For instance, fluid-structure interaction problems are solved by coupling [^3]:
+- **Surface-based coupling**: Interaction between sub-problems exchanging information on the interface. For instance, fluid-structure interaction problems are solved by coupling [^2]:
 
   - A formulation for the **fluid** sub-problem (`WeaklyCompressibleFlowDM_HDG` or `WeaklyCompressibleFlowVP_HDG`).
 
@@ -135,7 +133,7 @@ Two strategies are implemented to facilitate multiphysics simulations:
 
   - A formulation for the **moving mesh** algorithm (`Elasticity_CG`).
 
-A key feature of Galerkin is the simplicity of **monolithically coupling** N different formulations, whose associated LHS and RHS are automatically combined as
+A key feature of Galerkin is the simplicity of **monolithically coupling** N different formulations, whose associated LHS and RHS are automatically combined at each Newton iteration as
 ```math
 \begin{bmatrix}
 \mathbf{K}_{11} & \dots  & \mathbf{K}_{1N} \\
@@ -156,7 +154,7 @@ A key feature of Galerkin is the simplicity of **monolithically coupling** N dif
 ```
 ## Simulation Types 📌
 
-A variety of simulation types are supported:
+A variety of simulation types are readily supported:
 
 - `SingleSimulation`: Runs a **single simulation**.
 
@@ -238,36 +236,39 @@ The framework supports multiple error norms:
 
 ## External Tools 🛠️
 
-Free tools:
+Although Galerkin is able to manage the main*pre-processing, processing, and post-processing tasks, it can also leverage the functionalities of some external software:
 
-- [**GMSH**](https://gmsh.info): High-order mesh generation.
+- **Free** tools:
 
-- [**ParaView**](https://www.paraview.org): Advanced visualization.
+	- [**GMSH**](https://gmsh.info): An open-source software, ideal for **high-order mesh generation**.
 
-Paid tools:
+	- [**ParaView**](https://www.paraview.org): The world’s leading open source **post-processing visualization engine**.
 
-- [**Comsol Multiphysics**](https://www.comsol.com): Used for multiscale modeling (e.g., unit cell problems).
+- **Paid** tools:
 
-- [**Advanpix**](https://www.advanpix.com): Arbitrary precision arithmetic (applied to thermal problems but extendable).
+	- [**Advanpix**](https://www.advanpix.com): A **multiprecision computing toolbox** for MATLAB (supported for thermal problems only, but easily extendable).
 
-## Contributions & Feedback 🙌
+	- [**Comsol Multiphysics**](https://www.comsol.com): A powerful and versatile **simulation software** (used for the solution of the unit cell problems for multi-scale computations).
+
+## Getting Started 🚀
+
+TODO
+
+## Contributions & Feedback 🙌🏼
 
 I encourage contributions and feedback! If this project proves helpful, consider starring ⭐ the repository, reporting issues, or submitting pull requests.
 
-Happy coding! 🚀
+Happy coding! 👨🏻‍💻
 
 ## References
 
-[^1]: **A. La Spina**, C. Förster, M. Kronbichler, W. A. Wall, [_On the role of (weak) compressibility for fluid-structure interaction solvers_](https://doi.org/10.1002/fld.4776), IJNMF (2020).
-[^2]: **A. La Spina**, M. Giacomini, A. Huerta, [_Hybrid coupling of CG and HDG discretizations based on Nitsche's method_](https://doi.org/10.1007/s00466-019-01770-8), Comput. Mech. (2020).
-[^3]: **A. La Spina**, M. Kronbichler, M. Giacomini, W. A. Wall, A. Huerta, [_A weakly compressible hybridizable discontinuous Galerkin formulation for fluid-structure interaction problems_](https://doi.org/10.1016/j.cma.2020.113392), CMAME (2020).
-[^4]: **A. La Spina**, [_Coupling of continuous and hybridizable discontinuous Galerkin methods for weakly compressible fluid-structure interaction_](https://mediatum.ub.tum.de/1586346), Ph.D. thesis (2021).
-[^5]: **A. La Spina**, J. Fish, [_A superconvergent hybridizable discontinuous Galerkin method for weakly compressible magnetohydrodynamics_](https://doi.org/10.1016/j.cma.2021.114278), CMAME (2022).
-[^6]: **A. La Spina**, J. Fish, [_Time- and frequency-domain hybridizable discontinuous Galerkin solvers for the calculation of the Cherenkov radiation_](https://doi.org/10.1016/j.cma.2022.115170), CMAME (2022).
-[^7]: **A. La Spina**, A. C. Fletcher, J. Fish, [_Semi-analytic model for plasma production and Cherenkov radiation emission from hypervelocity impacts on soda-lime glass_](https://doi.org/10.1063/5.0129519), PoP (2023).
-[^8]: J. Cui, **A. La Spina**, J. Fish, [_Data-physics driven multiscale approach for high-pressure resin transfer molding (HP-RTM)_](https://doi.org/10.1016/j.cma.2023.116405), CMAME (2023).
-[^9]: **A. La Spina**, J. Fish, [_A hybridizable discontinuous Galerkin formulation for the Euler--Maxwell plasma model_](https://doi.org/10.1016/j.jcp.2023.112535), JCP (2024).
-[^10]: J. Cui, **A. La Spina**, J. Fish, [_Data-physics driven three-scale approach for ultra-fast resin transfer molding (UF-RTM)_](https://doi.org/10.1016/j.cma.2024.116912), CMAME (2024).
+[^1]: **A. La Spina**, M. Giacomini, A. Huerta, [_Hybrid coupling of CG and HDG discretizations based on Nitsche's method_](https://doi.org/10.1007/s00466-019-01770-8), Comput. Mech. (2020).
+[^2]: **A. La Spina**, M. Kronbichler, M. Giacomini, W. A. Wall, A. Huerta, [_A weakly compressible hybridizable discontinuous Galerkin formulation for fluid-structure interaction problems_](https://doi.org/10.1016/j.cma.2020.113392), CMAME (2020).
+[^3]: **A. La Spina**, [_Coupling of continuous and hybridizable discontinuous Galerkin methods for weakly compressible fluid-structure interaction_](https://mediatum.ub.tum.de/1586346), Ph.D. thesis (2021).
+[^4]: **A. La Spina**, J. Fish, [_A superconvergent hybridizable discontinuous Galerkin method for weakly compressible magnetohydrodynamics_](https://doi.org/10.1016/j.cma.2021.114278), CMAME (2022).
+[^5]: **A. La Spina**, J. Fish, [_Time- and frequency-domain hybridizable discontinuous Galerkin solvers for the calculation of the Cherenkov radiation_](https://doi.org/10.1016/j.cma.2022.115170), CMAME (2022).
+[^6]: J. Cui, **A. La Spina**, J. Fish, [_Data-physics driven multiscale approach for high-pressure resin transfer molding (HP-RTM)_](https://doi.org/10.1016/j.cma.2023.116405), CMAME (2023).
+[^7]: **A. La Spina**, J. Fish, [_A hybridizable discontinuous Galerkin formulation for the Euler--Maxwell plasma model_](https://doi.org/10.1016/j.jcp.2023.112535), JCP (2024).
 
 
 
