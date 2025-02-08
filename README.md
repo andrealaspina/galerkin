@@ -7,6 +7,7 @@
 - Useful tests to check with a short explanation for each of them
 - Description of the main structs: `Simulation`, `Parameters`, `Geometry`, `Mesh`, (`MeshFile`), `System`, `Time`, `Solver`, `Boundaries`, `Options` + `BCs`, `Block`, `Elements`, `Faces`, `RefElement`, `Sizes`, `Timer`
 - Description of the most important files: `test.m`, `main.m`
+- Mantra: _If it doesn’t converge to machine precision, it’s simply wrong._
 
 # Galerkin: A Flexible Finite Element Framework
 
@@ -261,7 +262,7 @@ Although Galerkin is able to manage the main*pre-processing, processing, and pos
 
 	- [**ParaView**](https://www.paraview.org): The world’s leading open source **post-processing visualization engine**.
 
-- **Paid** tools:
+- **Licensed** tools:
 
 	- [**Advanpix**](https://www.advanpix.com): A **multiprecision computing toolbox** for MATLAB (supported for thermal problems only, but easily extendable).
 
