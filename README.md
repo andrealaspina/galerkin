@@ -2,18 +2,15 @@ README
 
 ## TODO
 
-- For more info on the formulations, refer to the associated .mlx files or my publications in the references
 - Geometry and boundaries leveraging Matlab PDE toolbox
 - Linear mesh increased in order or directly high-order mesh
-- Useful tests to check with a short explanation for each of them
 - Description of the main structs: `Simulation`, `Parameters`, `Geometry`, `Mesh`, (`MeshFile`), `System`, `Time`, `Solver`, `Boundaries`, `Options` + `BCs`, `Block`, `Elements`, `Faces`, `RefElement`, `Sizes`, `Timer`
-- Description of the most important files: `test.m`, `main.m`
 - `fsparse()`
 
 # ***galerkin***: A Versatile Finite Element Framework for MATLAB
 
 <p align="center">
-  <img src="https://github.com/user-attachments/files/18719391/logo.pdf">
+  <img src="https://github.com/user-attachments/files/18719391/logo.pdf" width="500">
 </p>
 
 ## Overview 🌍
@@ -94,13 +91,13 @@ During the early stages of my PhD, I struggled with the complexity of a large-sc
 
 ### Porous Media 🧽
 
-- `Darcy_CG`: Solves the **Darcy law** with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the **Navier-Stokes equations** with Comsol's LiveLink for Matlab [^6].
+- `Darcy_CG`: Solves the **Darcy law** with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the **Navier-Stokes equations** with Comsol's LiveLink for MATLAB [^6].
 
-- `Darcy2Phase_CG`: Solves the **two-phase Darcy law** with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the **Cahn-Hilliard-Navier-Stokes equations** with Comsol's LiveLink for Matlab.
+- `Darcy2Phase_CG`: Solves the **two-phase Darcy law** with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the **Cahn-Hilliard-Navier-Stokes equations** with Comsol's LiveLink for MATLAB.
 
-- `Darcy2PhaseRichards_CG`: Solves the **Richards’ equation** with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the **Cahn-Hilliard-Navier-Stokes equations** with Comsol's LiveLink for Matlab.
+- `Darcy2PhaseRichards_CG`: Solves the **Richards’ equation** with the CG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the **Cahn-Hilliard-Navier-Stokes equations** with Comsol's LiveLink for MATLAB.
 
-- `Darcy2PhaseRichards_HDG`: Solves the **Richards’ equation** with the HDG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the **Cahn-Hilliard-Navier-Stokes equations** with Comsol's LiveLink for Matlab.
+- `Darcy2PhaseRichards_HDG`: Solves the **Richards’ equation** with the HDG method for the macroscopic problem, informed by the effective properties derived from a unit cell problem solving the **Cahn-Hilliard-Navier-Stokes equations** with Comsol's LiveLink for MATLAB.
 
 ## Multi-physics Coupling 🔄
 
@@ -294,11 +291,15 @@ When developing novel finite element formulations, it is crucial to perform comp
 
 Although ***galerkin*** is able to manage the main pre-processing, processing, and post-processing tasks, it can also leverage the functionalities of some external tools:
 
-- **Free** software:
+- **Free** tools:
 
 	- [**GMSH**](https://gmsh.info): An open-source software, ideal for **high-order mesh generation**.
 
-	- [**ParaView**](https://www.paraview.org): The world’s leading open source **post-processing visualization engine**.
+	- [**ParaView**](https://www.paraview.org): The world’s leading open-source **post-processing visualization engine**.
+ 
+	- [**distmesh()**](https://doi.org/10.1016/j.parco.2016.04.001): A simple yet powerful **mesh generator** for MATLAB.
+
+	- [**fsparse()**](https://doi.org/10.1137/S0036144503429121): A fast **sparse assembly function** surpassing the built-in MATLAB `sparse()` counterpart.
 
 - **Licensed** software:
 
@@ -321,7 +322,7 @@ You are then encouraged to have a look at some test files. Self-explanatory name
 For a more complex example, I included the input and output of a popular fluid-structure interaction benchmark using two different formulations in `input/fsi_benchmark` and `output/fsi_benchmark`, respectively. When refining the mesh and reducing the time step size, you can reproduce the results in my PhD thesis[^3] and obtain this beautiful picture:
 
 <p align="center">
-  <img src="https://github.com/user-attachments/files/18719601/fsi.pdf">
+  <img src="https://github.com/user-attachments/files/18719601/fsi.pdf" width="500">
 </p>
 
 ## Contributions & Feedback 🙌🏼
