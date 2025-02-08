@@ -1,8 +1,3 @@
-## TODO
-
-- Geometry and boundaries leveraging Matlab PDE toolbox
-- Linear mesh increased in order or directly high-order mesh
-
 # ***galerkin***: A Versatile Finite Element Framework for MATLAB
 
 <p align="center">
@@ -37,11 +32,13 @@ During the early stages of my PhD, I struggled with the complexity of a large-sc
 
 - (Limited) **parallel computing** capabilities leveraging MATLAB’s `parfor`.
 
-- Seamless integration with **external tools** like [**GMSH**](https://gmsh.info), [**ParaView**](https://www.paraview.org), [**Advanpix**](https://www.advanpix.com), and [**Comsol**](https://www.comsol.com).
+- Seamless integration with **external tools** like [**GMSH**](https://gmsh.info), [**ParaView**](https://www.paraview.org), [**distmesh**](https://doi.org/10.1016/j.parco.2016.04.001), [**fsparse**](https://doi.org/10.1137/S0036144503429121), [**Advanpix**](https://www.advanpix.com), and [**Comsol**](https://www.comsol.com).
 
 ## Implemented Formulations 📚
 
-***galerkin*** includes implementations for an extensive range of physics-based formulations. For those interested in the mathematical details, further information can be found in the `.mlx` files in the `formulations` folder or in the references listed at the bottom of this file. Here is a non-exhaustive list of the currently implemented formulations.
+***galerkin*** includes implementations for an extensive range of physics-based formulations. For those interested in the mathematical details, further information can be found in the `.mlx` files in the `formulations` folder or in the references listed at the bottom of this file.
+
+Here is a non-exhaustive list of the currently implemented formulations.
 
 ### Thermal Problems 🌡️
 
@@ -109,7 +106,7 @@ Two strategies are implemented to facilitate **multi-physics** simulations:
 
   - A formulation for the **moving mesh** algorithm (`Elasticity_CG`).
 
-A key feature of ***galerkin*** is the simplicity of **monolithically coupling** $N$ different formulations, whose associated left-hand side matrix (LHS) and right hand side vector (RHS( are automatically combined at each Newton iteration as
+A key feature of ***galerkin*** is the simplicity of **monolithically coupling** $N$ different formulations, whose associated left-hand side matrix (LHS) and right hand side vector (RHS) are automatically combined at each Newton iteration as
 ```math
 \begin{bmatrix}
 \mathbf{K}_{11} & \dots  & \mathbf{K}_{1N} \\
@@ -170,25 +167,43 @@ A variety of simulation types are readily supported:
 The data are essentially organized in structure arrays.
 
 The structs defined in the **input file** are:
+
 - `Simulation`: Defines the simulation type, the physical problem at hand, as well as potential info for restart, parallel and multiprecision computing.
-- `Parameters(iD)`: Sets the main discretization-dependent parameters, such as the chosen formulation, the analytical solution, the polynomial degree of approximation, the physical coefficients (e.g. density, Young's modulus, etc.), as well as formulation-realted parameters (e.g. stabilization paramter, Nitsche's penalty parameter, etc.). If N discretizations are coupled, the parameters need to be set for each of them (`iD` = 1, ..., N).
-- `Geometry(iD)`: Stores the geometries of all discretizations as `DiscreteGeometry` objects, leveraging the wonderful MATLAB [Partial Differential Equation Toolbox](https://www.mathworks.com/help/pde/index.html).
-- `Mesh(iD)`: Stores the meshes data of all discretizations, including (but not limited to) the nodes coordinates and the elements connectivity.
-- `System`: Contains the global LHS matrix, the RHS vector, as well as the systems settings set by the user (tolerance, maximum number of iterations, etc.)
+
+- `Parameters(iD)`: Sets the main discretization-dependent parameters, such as the chosen formulation, the analytical solution, the polynomial degree of approximation, the physical coefficients (e.g. density, Young's modulus, etc.), as well as formulation-related parameters (e.g. stabilization paramter, Nitsche's penalty parameter, etc.). If N discretizations are coupled, the parameters need to be set for each of them (i.e. `iD` = 1, ..., N).
+
+- `Geometry(iD)`: Stores the geometry of all discretizations as `DiscreteGeometry` objects, leveraging the powerful MATLAB [Partial Differential Equation Toolbox](https://www.mathworks.com/help/pde/index.html).
+
+- `Mesh(iD)`: Stores the mesh data of all discretizations, including (but not limited to) the nodes coordinates and the elements connectivity.
+
+- `System`: Contains the global LHS matrix and RHS vector, as well as the systems settings chosen by the user (tolerance, maximum number of iterations, etc.)
+
 - `Time`: Contains the main temporal data, including the initial, current and final time, the time step size and the chosen BDF order.
+
 - `Solver`: Contains the chosen solver and preconditioner, as well as solver-specific parameters.
-- `Boundaries(iD)`: Defines the boundary splitting (edges in 2D and faces in 3D) for each discretization for the imposition of the boundary conditions. To visualize the boundary ids (automatically created), set `Options.PlotMesh='yes'` in the input file.
-- `Options`: Allows to trigger several actions, for plotting the geometry, the mesh and the solution, for computing the numerical error, for saving and exporting the results, etc.
+
+- `Boundaries(iD)`: Defines the boundary splitting (edges in 2D and faces in 3D) for each discretization for the imposition of the boundary conditions. To visualize the boundary ids, set `Options.PlotMesh='yes'` in the input file.
+
+- `Options`: Allows to trigger several actions, for plotting the geometry (set `Options.PlotGeometry='yes'`), the mesh and the boundary conditions (set `Options.PlotMesh='yes'`) and the solution (set `Options.PlotSolution={'VariableName'}`), for computing the numerical error (set `Options.ComputeError={'VariableName'}`), for saving and exporting the results, etc.
 
 The structs created in the **main file** are:
+
 - `BCs(iD)`: Contains the nodes of each discretization (w.r.t. the underlying linear mesh) to visualize the boundary conditions.
+
 - `Block`: Stores the block-dependent data, including the LHS and RHS, as well as the indices for matrix assembly.
+
 - `Elements`: Re-organizes the data in an element-wise fashion for a more effective use of `parfor`.
+
 - `Faces(iD1,iD2)`: Stores the faces information for each discretization and for the interface coupling with all other discretizations.
+
 - `Memory`: Stores tge memory occupied by the variables in the workspace during the simulation phases.
+
 - `RefElement(iD1,iD2)`: Contains all data of the reference element for each discretization (nodes coordinate, Gauss points coordinates and weigths, shape functions, etc.), as well as for the coupling with all other discretizations.
+
 - `Results(iD)`: Stores the results of each discretization (time, temperature, displacement, etc.) at the chosen time steps.
+
 - `Sizes(iD)`: Stores all discretization-dependent sizes, such as the number of global/local components, the number of elements/faces/nodes, etc.
+
 - `Timer`: Stores the time spent for the pre-processing, processing (evaluation, solution, local problems), and post-processing tasks.
 
 ## Formulation Class 🧩
@@ -319,9 +334,9 @@ Although ***galerkin*** is able to manage the main pre-processing, processing, a
 
 	- [**ParaView**](https://www.paraview.org): The world’s leading open-source **post-processing visualization engine**.
  
-	- [**distmesh()**](https://doi.org/10.1016/j.parco.2016.04.001): A simple yet powerful **mesh generator** for MATLAB.
+	- [**distmesh**](https://doi.org/10.1016/j.parco.2016.04.001): A simple yet powerful unstructured **mesh generator** for MATLAB.
 
-	- [**fsparse()**](https://doi.org/10.1137/S0036144503429121): A fast **sparse assembly function** surpassing the built-in MATLAB `sparse()` counterpart.
+	- [**fsparse**](https://doi.org/10.1137/S0036144503429121): A fast **sparse assembly function** surpassing the built-in MATLAB `sparse()` counterpart.
 
 - **Licensed** software:
 
@@ -339,9 +354,9 @@ This command will execute all the scripts located in the `tests` folder, taking 
 
 If all tests pass successfully, you could do worse than taking a look at the `main.m` file. This is organized in three sections: **Pre-processing**, **Processing** and **Post-processing**. Although quite lengthy (~1500 lines), it helps tracking the sequence of tasks from start to finish of the simulation.
 
-You are then encouraged to have a look at some test files. Self-explanatory names are assigned to them to allow the user to easily find the features of interest. For example, `test_thermal_CG_2D.m` shows how to write the input file for a simple 2D thermal problem; `test_convergence_space_structured.m` can help in conducting a spatial convergence study; `test_plot_3D.m` shows how to generate plots to display the geometry, the mesh and the solution of a 3D problem; `test_error_norms.m` reveals how to consider different error norms; `test_paraview_timestep.m` shows how to export the solution computed at various time steps to paraview...
+You are then encouraged to have a look at some test files. Self-explanatory names are assigned to them to allow the user to easily find the features of interest. For example, `test_thermal_CG_2D.m` showcases a simple 2D thermal problem; `test_convergence_space_structured.m` can help in conducting a spatial convergence study; `test_plot_3D.m` shows how to generate plots to display the geometry, the mesh and the solution of a 3D problem; `test_error_norms.m` reveals how to consider different error norms; `test_paraview_timestep.m` shows how to export the solution computed at various time steps to ParaView, etc.
 
-For a more complex example, I included the input and output of a popular fluid-structure interaction benchmark using two different formulations in `input/fsi_benchmark` and `output/fsi_benchmark`, respectively. When refining the mesh and reducing the time step size, you can reproduce the results in my PhD thesis[^3] and obtain this beautiful picture:
+For a more complex example, I included input and output of a popular fluid-structure interaction benchmark using two different formulations in `input/fsi_benchmark` and `output/fsi_benchmark`, respectively. When refining the mesh and reducing the time step size, you can reproduce the results in my PhD thesis[^3] and obtain this beautiful picture:
 
 <p align="center">
   <img src="https://github.com/user-attachments/files/18719601/fsi.pdf" width="500">
