@@ -7,22 +7,6 @@
 - Useful tests to check with a short explanation for each of them
 - Description of the main structs: `Simulation`, `Parameters`, `Geometry`, `Mesh`, (`MeshFile`), `System`, `Time`, `Solver`, `Boundaries`, `Options` + `BCs`, `Block`, `Elements`, `Faces`, `RefElement`, `Sizes`, `Timer`
 - Description of the most important files: `test.m`, `main.m`
-- `Formulation`'s properties:
-	- `NumGlobalComp`
-  	- (`NumVoigtComp`)
-  	- `NumLocalComp`
-  	- `NumPostComp`
-  	- `TimeDerOrder`
-  	- `Domain`
-- `Formulation`'s methods:
-	-  `initializeUnknowns()`
- 	-  `computeInitialConditions()`
-  	- (`evaluateSolutionFixedDofs()`)
-  	- `buildBlock()`
-  	- `doCoupling()`
-  	- `doPostProcess()`
-  	- `storeResults()`
-- `fsparse()`
 
 # Galerkin: A Flexible Finite Element Framework
 
@@ -55,26 +39,6 @@ Galerkin comes with a range of features designed to streamline the finite elemen
 - (Limited) **parallel computing** capabilities leveraging MATLAB’s `parfor`.
 
 - Seamless integration with **external tools** like [**GMSH**](https://gmsh.info), [**ParaView**](https://www.paraview.org), [**Advanpix**](https://www.advanpix.com), and [**Comsol**](https://www.comsol.com).
-
-## Project Structure 📁
-
-The project is organized into the following directories:
-
-- `advanpix`: Contains a comprehensive library of routines for arbitrary precision computations using [**Advanpix**](https://www.advanpix.com) (you would need to purchase the product to use its functionalities).
-
-- `formulation`: Collects the implemented finite element formulations.
-
-- `functions`: Collects a variety of auxiliary functions.
-
-- `geometry`: Stores all geometries and meshes and the scripts to generate them.
-
-- `input`: Stores the simulation input files.
-
-- `output`: Stores the simulation output files.
-
-- `symbolic`: Collects symbolic computations for specific applications.
-
-- `tests`: Collects all test cases for validation and verification.
 
 ## Implemented Formulations 📚
 
@@ -165,6 +129,27 @@ A key feature of Galerkin is the simplicity of **monolithically coupling** N dif
 \mathbf{f}_{N}
 \end{bmatrix}^{i}
 ```
+
+## Project Structure 📁
+
+The project is organized into the following directories:
+
+- `advanpix`: Contains a comprehensive library of routines for arbitrary precision computations using [**Advanpix**](https://www.advanpix.com) (you would need to purchase the product to use its functionalities).
+
+- `formulation`: Collects the implemented finite element formulations.
+
+- `functions`: Collects a variety of auxiliary functions.
+
+- `geometry`: Stores all geometries and meshes and the scripts to generate them.
+
+- `input`: Stores the simulation input files.
+
+- `output`: Stores the simulation output files.
+
+- `symbolic`: Collects symbolic computations for specific applications.
+
+- `tests`: Collects all test cases for validation and verification.
+
 ## Simulation Types 📌
 
 A variety of simulation types are readily supported:
@@ -180,6 +165,25 @@ A variety of simulation types are readily supported:
 - `ScalingStrong`: Assesses **strong scaling** performance.
 
 - `ScalingWeak`: Assesses **weak scaling** performance.
+
+## Formulation Class 🧩
+
+- Properties:
+	- `NumGlobalComp`
+  	- (`NumVoigtComp`)
+  	- `NumLocalComp`
+  	- `NumPostComp`
+  	- `TimeDerOrder`
+  	- `Domain`
+- Methods:
+	-  `initializeUnknowns()`
+ 	-  `computeInitialConditions()`
+  	- (`evaluateSolutionFixedDofs()`)
+  	- `buildBlock()`
+  	- `doCoupling()`
+  	- `doPostProcess()`
+  	- `storeResults()`
+- `fsparse()`
 
 ## Numerical Methods 🧮
 
