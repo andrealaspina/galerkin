@@ -158,9 +158,9 @@ The following simulation types are supported:
 
 - `ParametricStudy`: Conducts a **parametric study** by varying a single parameter.
 
-- `ScalingStrong`: Assesses **strong scaling** (increasing number of processors, constant problem size) performance.
+- `ScalingStrong`: Assesses **strong scaling** performance.
 
-- `ScalingWeak`: Assesses **weak scaling** (simultaneously increasing number of processors and problem size) performance.
+- `ScalingWeak`: Assesses **weak scaling** performance.
 
 ## Data Types 📊
 
@@ -170,7 +170,7 @@ The structs defined in the **input file** are:
 
 - `Simulation`: Defines the simulation type and the physical problem, including optional settings for restart, parallel execution, and multiprecision computing.
 
-- `Parameters(iD)`: Specifies the main discretization-dependent parameters, such as the formulation, the analytical solution, the polynomial degree, the physical coefficients (e.g., density, Young's modulus, etc.), and formulation-related parameters (e.g., stabilization parameter, Nitsche's penalty parameter, etc.). If $N$ discretizations are coupled, the parameters must be set for each ($\text{iD} = 1,\dots,N$).
+- `Parameters(iD)`: Specifies the main discretization-dependent parameters, such as the formulation, the analytical solution, the polynomial degree, the physical coefficients, and formulation-related parameters. If $N$ discretizations are coupled, the parameters must be set for each ($\text{iD} = 1,\dots,N$).
 
 - `Geometry(iD)`: Stores the geometry of all discretizations as `DiscreteGeometry` objects, leveraging MATLAB's [Partial Differential Equation Toolbox](https://www.mathworks.com/help/pde/index.html).
 
