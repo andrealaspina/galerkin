@@ -353,7 +353,7 @@ Clone the **repository** by running:
 git clone https://github.com/andrealaspina/galerkin.git
 ```
 
-From the main folder, execute the following command in MATLAB's Command Window:
+From the main folder, execute the following command in MATLAB's **Command Window**:
 ```matlab
 run test.m
 ```
