@@ -100,30 +100,30 @@ Two strategies are implemented to tackle **multi-physics** problems:
 
 - **Surface-based coupling**: Interaction between sub-problems exchanging information at interfaces. For example, fluid-structure interaction problems couple [^2]:
 
-  - A **fluid** formulation (`WeaklyCompressibleFlowDM_HDG`/`WeaklyCompressibleFlowVP_HDG`).
+  - A **fluid** formulation (`WeaklyCompressibleFlowDM_HDG` or `WeaklyCompressibleFlowVP_HDG`).
 
   - A **structure** formulation (`Elasticity_CG`).
 
   - A **moving mesh** formulation (`Elasticity_CG`).
 
-A key feature of ***galerkin*** is the ability to **monolithically couple** $N$ different formulations, automatically assembling their left-hand side matrix (LHS) and right-hand side vector (RHS) at each Newton iteration as:
+A key feature of ***galerkin*** is the ability to **monolithically couple** $N$ different formulations, by automatically assembling their left-hand side matrix (LHS) and right-hand side vector (RHS) at each Newton iteration as:
 ```math
 \begin{bmatrix}
 \mathbf{K}_{11} & \dots  & \mathbf{K}_{1N} \\
 \vdots          & \ddots & \vdots          \\
 \mathbf{K}_{N1} & \dots  & \mathbf{K}_{NN}
-\end{bmatrix}^{k}
+\end{bmatrix}
 \begin{bmatrix}
 \Delta \mathbf{u}_{1} \\
 \vdots                \\
 \Delta \mathbf{u}_{N}
-\end{bmatrix}^{k+1}
+\end{bmatrix}
 =
 \begin{bmatrix}
 \mathbf{f}_{1} \\
 \vdots         \\
 \mathbf{f}_{N}
-\end{bmatrix}^{k}
+\end{bmatrix}
 ```
 
 ## Project Structure 📁
@@ -236,13 +236,13 @@ Its main **methods** are:
       & \vdots          &       \\
 \dots & \mathbf{K}_{ii} & \dots \\
       & \vdots          &
-\end{bmatrix}^{k}
+\end{bmatrix}
 \text{\quad and \quad}
 \begin{bmatrix}
 \vdots         \\
 \mathbf{f}_{i} \\
 \vdots
-\end{bmatrix}^{k}
+\end{bmatrix}
 ```
 
 - `doCoupling()`: Constructs the LHS coupling block (off-diagonal block) as
@@ -251,7 +251,7 @@ Its main **methods** are:
       & \vdots          &       \\
 \dots & \mathbf{K}_{ij} & \dots \\
       & \vdots          &
-\end{bmatrix}^{k}
+\end{bmatrix}
 ```
 
 - `doPostProcess()`: Constructs the LHS and RHS of the post-processing problem (for the HDG method).
