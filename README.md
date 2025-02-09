@@ -220,7 +220,7 @@ Its main **properties** are:
 
 - `DiscretizationType`: Discretization type (CG or HDG).
 
-- `TimeDerOrder`: Time derivative order (e.g., 1 for the heat equation and 2 for elastic problems).
+- `TimeDerOrder`: Time derivative order (e.g., 1 for thermal problems and 2 for elastic problems).
 
 - `Domain`: Problem domain (time of frequency).
 
