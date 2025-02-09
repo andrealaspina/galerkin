@@ -28,7 +28,7 @@ During the early stages of my PhD, I struggled with the complexity of large-scal
 
 - Seamless coupling of an arbitrary number of sub-problems for **multi-physics applications**.
 
-- Strong emphasis on **high-order** methods.
+- Strong emphasis on **high-order methods**.
 
 - **Parallel computing** capabilities (limited) via MATLAB's `parfor`.
 
@@ -38,7 +38,7 @@ During the early stages of my PhD, I struggled with the complexity of large-scal
 
 ***galerkin*** includes implementations for an extensive range of physics-based formulations. For mathematical details, refer to the `*.mlx` files in the `formulations/` folder or the references at the bottom of this file.
 
-Here is a non-exhaustive list of the currently implemented formulations:
+Here is a non-exhaustive list of the currently implemented **formulations**:
 
 ### Thermal Problems 🌡️
 
@@ -48,7 +48,7 @@ Here is a non-exhaustive list of the currently implemented formulations:
 
 ### Structural Mechanics 🔩
 
-- `Elasticity_CG`: Solves the **equations of elastodynamics** with the CG method and covers both linear and nonlinear elasticity models (St. Venant-Kirchhoff and Neo-Hookean) [^1].
+- `Elasticity_CG`: Solves the **equations of elastodynamics** with the CG method for linear and nonlinear (St. Venant-Kirchhoff and Neo-Hookean) elasticity models [^1].
 
 - `ElasticityLinear_HDG`: Solves the **equations of linear elastodynamics** with the HDG method [^1].
 
