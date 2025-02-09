@@ -72,13 +72,13 @@ Here is a non-exhaustive list of the currently implemented **formulations**:
 
 - `Magnetic_HDG`: Solves the **magnetic induction equation** with the HDG method [^4].
 
-- `MagneticCURLCURL_HDG`: Solves the **magnetic induction equation** with the HDG method using an alternative curl-curl formulation [^4].
+- `MagneticCURLCURL_HDG`: Solves the **magnetic induction equation** with the HDG method using a curl-curl formulation [^4].
 
 ### Plasma Physics 🔥
 
 - `MagnetohydrodynamicsCURL_HDG`: Solves the **equations of magnetohydrodynamics** with the HDG method [^4].
 
-- `MagnetohydrodynamicsCURLCURL_HDG`: Solves the **equations of magnetohydrodynamics** with the HDG method using an alternative curl-curl formulation [^4].
+- `MagnetohydrodynamicsCURLCURL_HDG`: Solves the **equations of magnetohydrodynamics** with the HDG method using a curl-curl formulation [^4].
 
 - `Plasma1FluidElectromagneticAdvanced_HDG`: Solves the **Euler–Maxwell plasma equations** with the HDG method including a projection-based divergence correction method to enforce the Gauss laws [^7].
 
