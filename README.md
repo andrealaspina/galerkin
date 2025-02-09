@@ -80,7 +80,7 @@ Here is a non-exhaustive list of the currently implemented **formulations**:
 
 - `MagnetohydrodynamicsCURLCURL_HDG`: Solves the **equations of magnetohydrodynamics** with the HDG method using a curl-curl formulation [^4].
 
-- `Plasma1FluidElectromagneticAdvanced_HDG`: Solves the **Euler–Maxwell plasma equations** with the HDG method including a projection-based divergence correction method to enforce the Gauss laws [^7].
+- `Plasma1FluidElectromagneticAdvanced_HDG`: Solves the **Euler–Maxwell plasma equations** with the HDG method including an electrostatic initialization and a projection-based divergence correction method to enforce the Gauss laws [^7].
 
 ### Porous Media 🧽
 
