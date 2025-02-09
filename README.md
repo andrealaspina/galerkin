@@ -1,7 +1,7 @@
 # ***galerkin***: A Versatile Finite Element Framework for MATLAB
 
 <p align="center">
-  <img src="https://github.com/user-attachments/files/18724002/logo.pdf" width="500">
+  <img src="https://github.com/user-attachments/files/18724203/logo.pdf" width="500">
 </p>
 
 ## Overview 🌍
