@@ -254,7 +254,7 @@ Its main **methods** are:
 \end{bmatrix}
 ```
 
-- `doPostProcess()`: Constructs the LHS and RHS of the post-processing problem (for the HDG method).
+- `doPostProcess()`: Constructs the LHS and RHS of the post-processing problem.
 
 - `storeResults()`: Stores results for analysis and visualization.
 
