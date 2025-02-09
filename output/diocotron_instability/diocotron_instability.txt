@@ -1,0 +1,2010 @@
+
+--------------------------------------------------------------------------------
+Input file: diocotron_instability
+
+Pre-processing  started...
+Pre-processing  completed in 2.0 sec (4.5 MB)
+Processing      started...
+
+--------------------------------------------------------------------------------
+Input file: electrostaticInitialization
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (0.8 MB)
+Processing      started...
+Processing      completed in 0.4 sec (1.5 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (1.6 MB)
+--------------------------------------------------------------------------------
+
+Time integration ...............................................................
+Time = 1.25e-01 Step = 01/32
+  Iter = 1      |Res| = 1.0e-02      [te,ts,tl] = [1.0,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.4 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 3.9e-03      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.8 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.4 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.6e-03      [te,ts,tl] = [0.5,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.4 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 6.0e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.4 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 2.4e-04      [te,ts,tl] = [0.5,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.4 MB)
+--------------------------------------------------------------------------------
+
+Time = 2.50e-01 Step = 02/32
+  Iter = 1      |Res| = 8.1e-02      [te,ts,tl] = [0.7,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.6e-03      [te,ts,tl] = [0.5,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.1e-03      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 3.9e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 1.1e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 3.75e-01 Step = 03/32
+  Iter = 1      |Res| = 6.0e-01      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.3e-03      [te,ts,tl] = [0.5,0.1,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 3.4e-04      [te,ts,tl] = [0.5,0.1,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.5 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.5e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 2.0e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 5.00e-01 Step = 04/32
+  Iter = 1      |Res| = 6.6e-02      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 9.3e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.5e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.5 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 2.1e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 2.4e-06      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 6.25e-01 Step = 05/32
+  Iter = 1      |Res| = 2.8e-02      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.2e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.3e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.3e-06      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 2.5e-07      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 7.50e-01 Step = 06/32
+  Iter = 1      |Res| = 5.0e-03      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 6.4e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 8.0e-06      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.5 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.5e-06      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 1.8e-06      [te,ts,tl] = [0.5,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 8.75e-01 Step = 07/32
+  Iter = 1      |Res| = 1.9e-03      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 5.4e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 4.5e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.6e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 1.8e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 1.00e+00 Step = 08/32
+  Iter = 1      |Res| = 1.3e-03      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.6e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 8.2e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 2.0e-05      [te,ts,tl] = [0.5,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 6.2e-06      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 1.12e+00 Step = 09/32
+  Iter = 1      |Res| = 1.4e-03      [te,ts,tl] = [0.5,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 3.2e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 4.5e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 7.1e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 4.8e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 1.25e+00 Step = 10/32
+  Iter = 1      |Res| = 1.6e-02      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 8.6e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 4.0e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 2.1e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 1.5e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 1.38e+00 Step = 11/32
+  Iter = 1      |Res| = 2.4e-03      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 2.2e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 2.3e-04      [te,ts,tl] = [0.4,0.1,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.0e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 9.6e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 1.50e+00 Step = 12/32
+  Iter = 1      |Res| = 3.2e-03      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 4.2e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.7e-04      [te,ts,tl] = [0.5,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 7.2e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.5 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 5.9e-05      [te,ts,tl] = [0.5,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 1.62e+00 Step = 13/32
+  Iter = 1      |Res| = 2.1e-03      [te,ts,tl] = [0.5,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.3 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.5 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 2.0e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 8.1e-05      [te,ts,tl] = [0.6,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 3.0e-05      [te,ts,tl] = [0.6,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 1.6e-05      [te,ts,tl] = [0.6,0.1,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.5 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 1.75e+00 Step = 14/32
+  Iter = 1      |Res| = 8.0e-04      [te,ts,tl] = [0.4,0.1,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.3e-04      [te,ts,tl] = [0.5,0.1,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 5.4e-05      [te,ts,tl] = [0.5,0.1,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.3 sec (7.6 MB)
+Processing      started...
+Processing      completed in 1.0 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.7e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 1.2e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 1.88e+00 Step = 15/32
+  Iter = 1      |Res| = 5.1e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.3e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 4.2e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.5 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.3e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 1.1e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 2.00e+00 Step = 16/32
+  Iter = 1      |Res| = 3.7e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.4e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 2.5e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 7.6e-06      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 3.6e-06      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 2.12e+00 Step = 17/32
+  Iter = 1      |Res| = 6.2e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.4e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 2.9e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 9.4e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 8.9e-06      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 2.25e+00 Step = 18/32
+  Iter = 1      |Res| = 1.2e-02      [te,ts,tl] = [0.4,0.1,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 3.9e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.9e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.1e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 2.3e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 2.38e+00 Step = 19/32
+  Iter = 1      |Res| = 7.6e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 6.3e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 4.0e-06      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 5.5e-07      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 2.50e+00 Step = 20/32
+  Iter = 1      |Res| = 7.5e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.1e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 5.7e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.7e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 5.7e-06      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 2.62e+00 Step = 21/32
+  Iter = 1      |Res| = 8.5e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 4.9e-05      [te,ts,tl] = [0.5,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 4.4e-06      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.8e-06      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.5 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 7.5e-07      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 2.75e+00 Step = 22/32
+  Iter = 1      |Res| = 6.8e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 3.8e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 4.8e-06      [te,ts,tl] = [0.5,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 2.8e-06      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 1.2e-06      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 2.88e+00 Step = 23/32
+  Iter = 1      |Res| = 6.9e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 3.0e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 4.1e-06      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.1e-06      [te,ts,tl] = [0.6,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 5      |Res| = 2.8e-07      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 3.00e+00 Step = 24/32
+  Iter = 1      |Res| = 6.7e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 2.5e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 2.0e-06      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 3.7e-07      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 3.12e+00 Step = 25/32
+  Iter = 1      |Res| = 6.3e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 2.2e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.9e-06      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 2.5e-07      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 3.25e+00 Step = 26/32
+  Iter = 1      |Res| = 6.0e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.9e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.7e-06      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 2.2e-07      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 3.38e+00 Step = 27/32
+  Iter = 1      |Res| = 5.9e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.7e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.9e-06      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 3.2e-07      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 3.50e+00 Step = 28/32
+  Iter = 1      |Res| = 5.7e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.5e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.5e-06      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.7e-07      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.5 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 3.62e+00 Step = 29/32
+  Iter = 1      |Res| = 5.5e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.3e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.4e-06      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.6e-07      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 3.75e+00 Step = 30/32
+  Iter = 1      |Res| = 5.4e-04      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.2e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.3e-06      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.4 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.6e-07      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 3.88e+00 Step = 31/32
+  Iter = 1      |Res| = 5.3e-04      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.1e-05      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.3e-06      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.5e-07      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.2 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.6 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+Time = 4.00e+00 Step = 32/32
+  Iter = 1      |Res| = 5.2e-04      [te,ts,tl] = [0.6,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 2      |Res| = 1.0e-05      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.2 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 3      |Res| = 1.2e-06      [te,ts,tl] = [0.4,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.5 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+  Iter = 4      |Res| = 1.5e-07      [te,ts,tl] = [0.3,0.0,0.0]
+
+--------------------------------------------------------------------------------
+Input file: projectionCorrection
+
+Pre-processing  started...
+Pre-processing  completed in 0.1 sec (7.6 MB)
+Processing      started...
+Processing      completed in 0.3 sec (8.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (8.5 MB)
+--------------------------------------------------------------------------------
+
+................................................................................
+Processing      completed in 164.9 sec (12.4 MB)
+Post-processing started...
+Post-processing completed in 0.0 sec (12.4 MB)
+--------------------------------------------------------------------------------
+
+Saved output file in: output/diocotron_instability/diocotron_instability.mat
+Saved  diary file in: output/diocotron_instability/diocotron_instability.txt
