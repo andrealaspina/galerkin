@@ -230,7 +230,7 @@ Its main **methods** are:
 
 -  `computeInitialConditions()`: Computes the initial conditions.
 
-- `buildBlock()`: Constructs the LHS (diagonal block) and RHS of the (sub-)problem as
+- `buildBlock()`: Constructs the LHS (diagonal block) and RHS of the sub-problem as
 ```math
 \begin{bmatrix}
       & \vdots          &       \\
