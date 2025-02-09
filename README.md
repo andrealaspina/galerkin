@@ -369,7 +369,7 @@ For a more advanced example, refer to the **fluid-structure interaction** benchm
   <img src="https://github.com/user-attachments/files/18719601/fsi.pdf" width="500">
 </p>
 
-For another multi-physics example, check out the **diocotron instability** problem in `input/diocotron_instability`. Similarly, you should be able to reproduce the results from this paper[^7]:
+For another Machiavellian multi-physics example, check out the **diocotron instability** problem in `input/diocotron_instability`. Similarly, you should be able to reproduce the results from this paper[^7]:
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/6b5da1c5-2d57-48a8-9f96-79411d220962" width="500">
