@@ -96,15 +96,15 @@ Here is a non-exhaustive list of the currently implemented **formulations**:
 
 Two strategies are implemented to tackle **multi-physics** problems:
 
-- **Volume-based coupling**: Fully integrated physics within a single formulation (e.g., `MagnetohydrodynamicsCURLCURL_HDG`, `Plasma1FluidElectromagneticAdvanced_HDG`).
+- **Volume-based coupling**: Fully integrated physics within a single formulation (e.g., `MagnetohydrodynamicsCURL_HDG`, `MagnetohydrodynamicsCURLCURL_HDG`, `Plasma1FluidElectromagneticAdvanced_HDG`).
 
 - **Surface-based coupling**: Interaction between sub-problems exchanging information at interfaces. For example, fluid-structure interaction problems couple [^2]:
 
-  - A **fluid** formulation (`WeaklyCompressibleFlowDM_HDG` or `WeaklyCompressibleFlowVP_HDG`).
+  - A **fluid** formulation (`WeaklyCompressibleFlowDM_HDG` or `WeaklyCompressibleFlowVP_HDG`)
 
-  - A **structure** formulation (`Elasticity_CG`).
+  - A **structure** formulation (`Elasticity_CG`)
 
-  - A **moving mesh** formulation (`Elasticity_CG`).
+  - A **moving mesh** formulation (`Elasticity_CG`)
 
 A key feature of ***galerkin*** is the ability to **monolithically couple** $N$ different formulations, by automatically assembling their left-hand side matrix (LHS) and right-hand side vector (RHS) at each Newton iteration as:
 ```math
@@ -130,21 +130,21 @@ A key feature of ***galerkin*** is the ability to **monolithically couple** $N$ 
 
 The project is organized into the following directories:
 
-- `advanpix/`: Routines for arbitrary precision computations using [**Advanpix**](https://www.advanpix.com).
+- `advanpix/`: Routines for arbitrary precision computations using [**Advanpix**](https://www.advanpix.com)
 
-- `formulations/`: Implemented finite element formulations.
+- `formulations/`: Implemented finite element formulations
 
-- `functions/`: Auxiliary functions.
+- `functions/`: Auxiliary functions
 
-- `geometry/`: Geometries, meshes, and generation scripts.
+- `geometry/`: Geometries, meshes, and generation scripts
 
-- `input/`: Simulation input files.
+- `input/`: Simulation input files
 
-- `output/`: Simulation results.
+- `output/`: Simulation results
 
-- `symbolic/`: Symbolic computations.
+- `symbolic/`: Symbolic computations
 
-- `tests/`: Test cases for validation and verification.
+- `tests/`: Test cases for validation and verification
 
 ## Simulation Types 📌
 
@@ -212,17 +212,17 @@ The facilitate the implementation of new finite element methods, ***galerkin*** 
 
 Its main **properties** are:
 
-- `NumGlobalComp`: Number of components for the global problem.
+- `NumGlobalComp`: Number of components for the global problem
 
-- `NumLocalComp`: Number of components for the local problems (for the HDG method).
+- `NumLocalComp`: Number of components for the local problems (for the HDG method)
 
-- `NumPostComp`: Number of components of the post-processed variable(s) (for the HDG method).
+- `NumPostComp`: Number of components of the post-processed variable(s) (for the HDG method)
 
-- `DiscretizationType`: Discretization type (CG or HDG).
+- `DiscretizationType`: Discretization type (CG or HDG)
 
-- `TimeDerOrder`: Time derivative order (e.g., 1 for thermal problems and 2 for elastic problems).
+- `TimeDerOrder`: Time derivative order (e.g., 1 for thermal problems and 2 for elastic problems)
 
-- `Domain`: Problem domain (time of frequency).
+- `Domain`: Problem domain (time of frequency)
 
 Its main **methods** are:
 
@@ -264,17 +264,17 @@ Here, a glimpse of the main numerical methods behind ***galerkin*** is given.
 
 ### Spatial Discretization 📐
 
-- **Element type**: Triangles (2D) and Tetrahedra (3D).
+- **Element type**: Triangles (2D) and Tetrahedra (3D)
 
-- **Polynomial degree**: From order 1 to 8.
+- **Polynomial degree**: From order 1 to 8
 
-- **Nodes distribution**: Uniform (equally spaced) and Fekete (for better numerical conditioning).
+- **Nodes distribution**: Uniform (equally spaced) and Fekete (for better numerical conditioning)
 
 ### Time Integration ⏳
 
-- **Backward Differentiation Formulas** (BDF): From order 1 to 6. BFD2 is initialized with the backward Euler method (BDF1) at the first time step. Schemes with $\text{BDFOrder}$ > 2 are initialized (the analytical solution needs to be available!) with the solution at the times $t = −n\Delta t$ with $n = [1,2,\dots,\text{BDFOrder}−1]$.
+- **Backward Differentiation Formulas** (BDF): From order 1 to 6. BFD2 is initialized with the backward Euler method (BDF1) at the first time step. Schemes with $\text{BDFOrder}$ > 2 are initialized (the analytical solution needs to be available!) with the solution at the times $t = −n\Delta t$ with $n = [1,2,\dots,\text{BDFOrder}−1]$
 
-- **Predictor**: Arbitrary order (e.g., 0 for constant prediction, 1 for linear extrapolation, etc.).
+- **Predictor**: Arbitrary order (0 for constant prediction, 1 for linear extrapolation, etc.)
 
 ### Solvers & Preconditioners 🧮
 
@@ -282,19 +282,19 @@ Here, a glimpse of the main numerical methods behind ***galerkin*** is given.
 
 - **Solvers**:
 
-	- [`backslash`](https://www.mathworks.com/help/matlab/ref/double.mldivide.html): MATLAB’s popular **\ operator** for general linear systems of equations.
+	- [`backslash`](https://www.mathworks.com/help/matlab/ref/double.mldivide.html): MATLAB’s popular **\ operator** for general linear systems of equations
 
-	- [`pcg`](https://www.mathworks.com/help/matlab/ref/pcg.html?s_tid=doc_ta): **Preconditioned conjugate gradient** method for symmetric positive definite matrices.
+	- [`pcg`](https://www.mathworks.com/help/matlab/ref/pcg.html?s_tid=doc_ta): **Preconditioned conjugate gradient** method for symmetric positive definite matrices
 
-	- [`minres`](https://www.mathworks.com/help/matlab/ref/minres.html?s_tid=doc_ta): **Minimum residual** method for symmetric and non-positive definite matrices.
+	- [`minres`](https://www.mathworks.com/help/matlab/ref/minres.html?s_tid=doc_ta): **Minimum residual** method for symmetric and non-positive definite matrices
 
-	- [`gmres`](https://www.mathworks.com/help/matlab/ref/gmres.html?s_tid=doc_ta): **Generalized minimum residual** method for non-symmetric and non-positive definite matrices.
+	- [`gmres`](https://www.mathworks.com/help/matlab/ref/gmres.html?s_tid=doc_ta): **Generalized minimum residual** method for non-symmetric and non-positive definite matrices
 
 - **Preconditioners**:
 
-	- [`ichol`](https://www.mathworks.com/help/matlab/ref/ichol.html?s_tid=doc_ta): **Incomplete Cholesky** factorization.
+	- [`ichol`](https://www.mathworks.com/help/matlab/ref/ichol.html?s_tid=doc_ta): **Incomplete Cholesky** factorization
 
-	- [`ilu`](https://www.mathworks.com/help/matlab/ref/ilu.html?s_tid=doc_ta): **Incomplete LU** factorization.
+	- [`ilu`](https://www.mathworks.com/help/matlab/ref/ilu.html?s_tid=doc_ta): **Incomplete LU** factorization
 
 ### Error Norms 📈
 
@@ -332,19 +332,19 @@ Although ***galerkin*** can manage the main pre-processing, processing, and post
 
 - **Free** tools:
 
-	- [**GMSH**](https://gmsh.info): An open-source software, ideal for **high-order mesh generation**.
+	- [**GMSH**](https://gmsh.info): An open-source software, ideal for **high-order mesh generation**
 
-	- [**ParaView**](https://www.paraview.org): The world’s leading open-source **post-processing visualization engine**.
+	- [**ParaView**](https://www.paraview.org): The world’s leading open-source **post-processing visualization engine**
  
-	- [**DistMesh**](https://doi.org/10.1137/S0036144503429121): A simple yet powerful unstructured **mesh generator** for MATLAB.
+	- [**DistMesh**](https://doi.org/10.1137/S0036144503429121): A simple yet powerful unstructured **mesh generator** for MATLAB
 
-	- [**fsparse**](https://doi.org/10.1016/j.parco.2016.04.001): A fast **sparse assembly function** outperforming the built-in MATLAB `sparse()` counterpart.
+	- [**fsparse**](https://doi.org/10.1016/j.parco.2016.04.001): A fast **sparse assembly function** outperforming the built-in MATLAB `sparse()` counterpart
 
 - **Licensed** software:
 
-	- [**Advanpix**](https://www.advanpix.com): A **multiprecision computing toolbox** for MATLAB.
+	- [**Advanpix**](https://www.advanpix.com): A **multiprecision computing toolbox** for MATLAB
 
-	- [**Comsol Multiphysics**](https://www.comsol.com): A powerful and versitle **simulation software**.
+	- [**Comsol Multiphysics**](https://www.comsol.com): A powerful and versitle **simulation software**
 
 ## Getting Started 🚀
 
