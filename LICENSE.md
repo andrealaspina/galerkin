@@ -1,4 +1,5 @@
 galerkin: A Versatile Finite Element Framework for MATLAB
+
 Copyright (C) 2025 Andrea La Spina
 
 Contact: andrealaspina@me.com
