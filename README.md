@@ -56,7 +56,7 @@ Here is a non-exhaustive list of the currently implemented **formulations**:
 
 - `CompressibleFlow_HDG`: Solves the **compressible Euler equations** with the HDG method.
 
-- `WeaklyCompressibleFlowDM_HDG`: Solves the **Navier-Stokes equations** for weakly compressible flows with the HDG method with a density-momentum formulation [^3].
+- `WeaklyCompressibleFlowDM_HDG`: Solves the **Navier-Stokes equations** for weakly compressible flows with the HDG method using a density-momentum formulation [^3].
 
 - `WeaklyCompressibleFlowVP_HDG`: Solves the **Navier-Stokes equations** for weakly compressible flows with the HDG method using a velocity-pressure formulation [^3].
 
