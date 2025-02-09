@@ -156,11 +156,11 @@ The following simulation types are supported:
 
 - `ConvergenceTime`: Conducts a **temporal convergence** study.
 
-- `ParametricStudy`: Conducts a **parametric study** by varying a parameter.
+- `ParametricStudy`: Conducts a **parametric study** by varying a single parameter.
 
-- `ScalingStrong`: Assesses **strong scaling** performance.
+- `ScalingStrong`: Assesses **strong scaling** (increasing number of processors, constant problem size) performance.
 
-- `ScalingWeak`: Assesses **weak scaling** performance.
+- `ScalingWeak`: Assesses **weak scaling** (simultaneously increasing number of processors and problem size) performance.
 
 ## Data Types 📊
 
