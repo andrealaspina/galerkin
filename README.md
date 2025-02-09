@@ -94,13 +94,13 @@ Here is a non-exhaustive list of the currently implemented **formulations**:
 
 ## Multi-physics Coupling 🔄
 
-Two strategies are implemented to facilitate **multi-physics** simulations:
+Two strategies are implemented to tackle **multi-physics** problems:
 
-- **Volume-based coupling**: Fully integrated physics within a single formulation (e.g., `MagnetohydrodynamicsCURL_HDG`, `MagnetohydrodynamicsCURLCURL_HDG`, `Plasma1FluidElectromagneticAdvanced_HDG`).
+- **Volume-based coupling**: Fully integrated physics within a single formulation (e.g., `MagnetohydrodynamicsCURLCURL_HDG`, `Plasma1FluidElectromagneticAdvanced_HDG`).
 
 - **Surface-based coupling**: Interaction between sub-problems exchanging information at interfaces. For example, fluid-structure interaction problems couple [^2]:
 
-  - A **fluid** formulation (`WeaklyCompressibleFlowDM_HDG` or `WeaklyCompressibleFlowVP_HDG`).
+  - A **fluid** formulation (`WeaklyCompressibleFlowDM_HDG`/`WeaklyCompressibleFlowVP_HDG`).
 
   - A **structure** formulation (`Elasticity_CG`).
 
