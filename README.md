@@ -363,7 +363,7 @@ If all tests pass successfully, start by exploring `main.m`, which is structured
 
 Next, check out some **test files**, which are named descriptively for easy navigation.
 
-For a more advanced example, refer to the **fluid-structure interaction benchmark** in `input/fsi_benchmark*`. By refining the mesh and decreasing the time step, you can reproduce results from my PhD thesis[^3] and obtain this beautiful picture:
+For a more advanced example, refer to the **fluid-structure interaction benchmark** in `input/fsi_benchmark*`. By refining the mesh and decreasing the time step, you can reproduce the results from my PhD thesis[^3]:
 
 <p align="center">
   <img src="https://github.com/user-attachments/files/18719601/fsi.pdf" width="500">
@@ -371,7 +371,7 @@ For a more advanced example, refer to the **fluid-structure interaction benchmar
 
 ## Contact 📧
 
-***galerkin*** is solo-developed and maintained by Dr.-Ing. Andrea La Spina.
+***galerkin*** is solo-developed and maintained by **Dr.-Ing. Andrea La Spina**.
 
 For any questions, feedback, or inquiries, contact me at andrealaspina@me.com.
 
