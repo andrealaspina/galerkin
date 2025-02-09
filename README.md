@@ -8,7 +8,7 @@
 
 ***galerkin*** is a powerful and extensible [**MATLAB**](https://www.mathworks.com/products/matlab.html) framework designed for developing and testing advanced **finite element** formulations. It provides an integrated environment for simulating a variety of **2D/3D** **linear/nonlinear** **single/multi-physics** **single/multi-scale** problems in the **time/frequency** domain.
 
-During the early stages of my PhD, I struggled with the complexity of a large-scale research code, and I faced major obstacles in implementing complex finite element formulations for fluid-structure interaction. This motivated me to create an **accessible** and **flexible** framework to facilitate rapid **development**, **testing**, and **deployment** of novel numerical methods. This code should be particularly beneficial for both early-career and experienced **researchers** striving to advance the field of **computational science and engineering**.
+During the early stages of my PhD, I struggled with the complexity of large-scale research codes and faced major significant challenges in implementing complex finite element formulations for fluid-structure interaction. This motivated me to create an **accessible** and **flexible** framework that facilitates rapid **development**, **testing**, and **deployment** of novel numerical methods. This code is particularly beneficial for both early-career and experienced **researchers** striving to advance the field of **computational science and engineering**.
 
 ## Features ✨
 
@@ -22,23 +22,23 @@ During the early stages of my PhD, I struggled with the complexity of a large-sc
 
 	- **Hybridizable Discontinuous Galerkin** (**HDG**)
 
-	- Coupling between **CG** and **HDG**
+	- Coupled **CG-HDG** discretizations
 
-- Broad applicability to various **physical problems**.
+- Applicability to a broad range of **physical problems**.
 
-- Coupling of an arbitrary number of sub-problems for **multi-physics applications**.
+- Seamless coupling of an arbitrary number of sub-problems for **multi-physics applications**.
 
-- Strong focus on **high-order** methods.
+- Strong emphasis on **high-order** methods.
 
-- (Limited) **parallel computing** capabilities leveraging MATLAB’s `parfor`.
+- **Parallel computing** capabilities (limited) via MATLAB's `parfor`.
 
-- Seamless integration with **external tools** like [**GMSH**](https://gmsh.info), [**ParaView**](https://www.paraview.org), [**distmesh**](https://doi.org/10.1016/j.parco.2016.04.001), [**fsparse**](https://doi.org/10.1137/S0036144503429121), [**Advanpix**](https://www.advanpix.com), and [**Comsol**](https://www.comsol.com).
+- Easy integration with **external tools** such [**GMSH**](https://gmsh.info), [**ParaView**](https://www.paraview.org), [**distmesh**](https://doi.org/10.1016/j.parco.2016.04.001), [**fsparse**](https://doi.org/10.1137/S0036144503429121), [**Advanpix**](https://www.advanpix.com), and [**Comsol**](https://www.comsol.com).
 
 ## Implemented Formulations 📚
 
-***galerkin*** includes implementations for an extensive range of physics-based formulations. For those interested in the mathematical details, further information can be found in the `.mlx` files in the `formulations` folder or in the references listed at the bottom of this file.
+***galerkin*** includes implementations for an extensive range of physics-based formulations. For mathematical details, refer to the `*.mlx` files in the `formulations/` folder or the references at the bottom of this file.
 
-Here is a non-exhaustive list of the currently implemented formulations.
+Here is a non-exhaustive list of the currently implemented formulations:
 
 ### Thermal Problems 🌡️
 
@@ -96,17 +96,17 @@ Here is a non-exhaustive list of the currently implemented formulations.
 
 Two strategies are implemented to facilitate **multi-physics** simulations:
 
-- **Volume-based coupling**: Fully integrated physics within a single formulation (e.g., `MagnetohydrodynamicsCURL_HDG`, `MagnetohydrodynamicsCURLCURL_HDG`, `Plasma1FluidElectromagneticAdvanced_HDG`, etc.).
+- **Volume-based coupling**: Fully integrated physics within a single formulation (e.g., `MagnetohydrodynamicsCURL_HDG`, `MagnetohydrodynamicsCURLCURL_HDG`, `Plasma1FluidElectromagneticAdvanced_HDG`).
 
-- **Surface-based coupling**: Interaction between sub-problems exchanging information on the interface. For instance, fluid-structure interaction problems are solved by coupling [^2]:
+- **Surface-based coupling**: Interaction between sub-problems exchanging information at interfaces. For example, fluid-structure interaction problems couple [^2]:
 
-  - A formulation for the **fluid** sub-problem (`WeaklyCompressibleFlowDM_HDG` or `WeaklyCompressibleFlowVP_HDG`).
+  - A **fluid** formulation (`WeaklyCompressibleFlowDM_HDG` or `WeaklyCompressibleFlowVP_HDG`).
 
-  - A formulation for the **structure** sub-problem (`Elasticity_CG`).
+  - A **structure** formulation (`Elasticity_CG`).
 
-  - A formulation for the **moving mesh** algorithm (`Elasticity_CG`).
+  - A **moving mesh** formulation (`Elasticity_CG`).
 
-A key feature of ***galerkin*** is the simplicity of **monolithically coupling** $N$ different formulations, whose associated left-hand side matrix (LHS) and right hand side vector (RHS) are automatically combined at each Newton iteration as
+A key feature of ***galerkin*** is the ability to **monolithically couple** $N$ different formulations, automatically assembling their left-hand side matrix (LHS) and right-hand side vector (RHS) at each Newton iteration as:
 ```math
 \begin{bmatrix}
 \mathbf{K}_{11} & \dots  & \mathbf{K}_{1N} \\
@@ -130,25 +130,25 @@ A key feature of ***galerkin*** is the simplicity of **monolithically coupling**
 
 The project is organized into the following directories:
 
-- `advanpix`: Contains a comprehensive library of routines for arbitrary precision computations using [**Advanpix**](https://www.advanpix.com) (you would need to purchase the product to use its functionalities).
+- `advanpix/`: Routines for arbitrary precision computations using [**Advanpix**](https://www.advanpix.com).
 
-- `formulation`: Collects the implemented finite element formulations.
+- `formulations/`: Implemented finite element formulations.
 
-- `functions`: Collects a variety of auxiliary functions.
+- `functions/`: Auxiliary functions.
 
-- `geometry`: Stores all geometries and meshes and the scripts to generate them.
+- `geometry/`: Geometries, meshes, and generation scripts.
 
-- `input`: Stores the simulation input files.
+- `input/`: Simulation input files.
 
-- `output`: Stores the simulation output files.
+- `output/`: Simulation results.
 
-- `symbolic`: Collects symbolic computations for specific applications.
+- `symbolic/`: Symbolic computations.
 
-- `tests`: Collects all test cases for validation and verification.
+- `tests/`: Test cases for validation and verification.
 
 ## Simulation Types 📌
 
-A variety of simulation types are readily supported:
+The following simulation types are supported:
 
 - `SingleSimulation`: Runs a **single simulation**.
 
@@ -168,47 +168,47 @@ The data are essentially organized in structure arrays.
 
 The structs defined in the **input file** are:
 
-- `Simulation`: Defines the simulation type, the physical problem at hand, as well as potential info for restart, parallel and multiprecision computing.
+- `Simulation`: Defines the simulation type and the physical problem, including optional settings for restart, parallel execution, and multiprecision computing.
 
-- `Parameters(iD)`: Sets the main discretization-dependent parameters, such as the chosen formulation, the analytical solution, the polynomial degree of approximation, the physical coefficients (e.g. density, Young's modulus, etc.), as well as formulation-related parameters (e.g. stabilization paramter, Nitsche's penalty parameter, etc.). If N discretizations are coupled, the parameters need to be set for each of them (i.e. `iD` = 1, ..., N).
+- `Parameters(iD)`: Specifies the main discretization-dependent parameters, such as the formulation, the analytical solution, the polynomial degree, the physical coefficients (e.g., density, Young's modulus, etc.), and formulation-related parameters (e.g., stabilization parameter, Nitsche's penalty parameter, etc.). If $N$ discretizations are coupled, the parameters must be set for each ($\text{iD} = 1,\dots,N$).
 
-- `Geometry(iD)`: Stores the geometry of all discretizations as `DiscreteGeometry` objects, leveraging the powerful MATLAB [Partial Differential Equation Toolbox](https://www.mathworks.com/help/pde/index.html).
+- `Geometry(iD)`: Stores the geometry of all discretizations as `DiscreteGeometry` objects, leveraging MATLAB's [Partial Differential Equation Toolbox](https://www.mathworks.com/help/pde/index.html).
 
-- `Mesh(iD)`: Stores the mesh data of all discretizations, including (but not limited to) the nodes coordinates and the elements connectivity.
+- `Mesh(iD)`: Contains the mesh data of all discretizations, including nodes' coordinates and the elements' connectivity.
 
-- `System`: Contains the global LHS matrix and RHS vector, as well as the systems settings chosen by the user (tolerance, maximum number of iterations, etc.)
+- `System`: Holds the global LHS matrix and RHS vector, along with user-defined settings such as tolerance and maximum iterations
 
-- `Time`: Contains the main temporal data, including the initial, current and final time, the time step size and the chosen BDF order.
+- `Time`: Stores time-related data, including initial, current, and final times, time step size, and the selected BDF order.
 
-- `Solver`: Contains the chosen solver and preconditioner, as well as solver-specific parameters.
+- `Solver`: Contains the chosen solver and preconditioner along with solver-specific parameters.
 
-- `Boundaries(iD)`: Defines the boundary splitting (edges in 2D and faces in 3D) for each discretization for the imposition of the boundary conditions. To visualize the boundary ids, set `Options.PlotMesh='yes'` in the input file.
+- `Boundaries(iD)`: Specifies the boundary splitting (edges in 2D, faces in 3D) for each discretization for imposing boundary conditions. To visualize boundary IDs, set `Options.PlotMesh='yes'` in the input file.
 
-- `Options`: Allows to trigger several actions, for plotting the geometry (set `Options.PlotGeometry='yes'`), the mesh and the boundary conditions (set `Options.PlotMesh='yes'`) and the solution (set `Options.PlotSolution={'VariableName'}`), for computing the numerical error (set `Options.ComputeError={'VariableName'}`), for saving and exporting the results, etc.
+- `Options`: Enables various features, such as plotting the geometry (`Options.PlotGeometry='yes'`), mesh and boundary conditions (`Options.PlotMesh='yes'`), or solution (`Options.PlotSolution={'VariableName'}`). Additional options include error computation (`Options.ComputeError={'VariableName'}`) and result saving/exporting.
 
 The structs created in the **main file** are:
 
-- `BCs(iD)`: Contains the nodes of each discretization (w.r.t. the underlying linear mesh) to visualize the boundary conditions.
+- `BCs(iD)`:  Stores nodes of each discretization (relative to the underlying linear mesh) for boundary condition visualization.
 
-- `Block`: Stores the block-dependent data, including the LHS and RHS, as well as the indices for matrix assembly.
+- `Block`: Contains block-dependent data, including LHS, RHS, and matrix assembly indices.
 
-- `Elements`: Re-organizes the data in an element-wise fashion for a more effective use of `parfor`.
+- `Elements`: Organizes data in an element-wise manner for optimized `parfor` execution.
 
-- `Faces(iD1,iD2)`: Stores the faces information for each discretization and for the interface coupling with all other discretizations.
+- `Faces(iD1,iD2)`: Stores face information for each discretization and interface coupling between different discretizations.
 
-- `Memory`: Stores tge memory occupied by the variables in the workspace during the simulation phases.
+- `Memory`: Tracks memory usage of variables during different simulation phases.
 
-- `RefElement(iD1,iD2)`: Contains all data of the reference element for each discretization (nodes coordinate, Gauss points coordinates and weigths, shape functions, etc.), as well as for the coupling with all other discretizations.
+- `RefElement(iD1,iD2)`: Stores reference element data for each discretization and their coupling, including node coordinates, Gauss points, weights, and shape functions.
 
-- `Results(iD)`: Stores the results of each discretization (time, temperature, displacement, etc.) at the chosen time steps.
+- `Results(iD)`: Stores results of each discretization (e.g., time, temperature, displacement) at chosen time steps.
 
-- `Sizes(iD)`: Stores all discretization-dependent sizes, such as the number of global/local components, the number of elements/faces/nodes, etc.
+- `Sizes(iD)`: Stores discretization-dependent sizes, such as global/local component counts, number of elements, faces, and nodes.
 
-- `Timer`: Stores the time spent for the pre-processing, processing (evaluation, solution, local problems), and post-processing tasks.
+- `Timer`: Records time spent on pre-processing, processing (evaluation, solution, local problems), and post-processing.
 
 ## Formulation Class 🧩
 
-The ease the implementation of new finite element methods, you can declare a new class (this is likely the only part of the code would need to touch!) that inherits from the base `Formulation` class.
+The facilitate the implementation of new finite element methods, ***galerkin*** allows you to declare a new class (likely the only part of the code you need to touch!) that inherits from the base `Formulation` class.
 
 Its main **properties** are:
 
@@ -220,17 +220,17 @@ Its main **properties** are:
 
 - `DiscretizationType`: Discretization type ('CG' or 'HDG').
 
-- `TimeDerOrder`: Order of the time derivative (e.g. 1 for the heat equation and 2 for the elastodynamics equations).
+- `TimeDerOrder`: Order of the time derivative (e.g., 1 for the heat equation and 2 for the elastodynamics equations).
 
-- `Domain`: Domain of the problem ('Time' of 'Frequency').
+- `Domain`: Problem domain ('Time' of 'Frequency').
 
 Its main **methods** are:
 
--  `initializeUnknowns()`: Initializes the unknowns of the problem.
+-  `initializeUnknowns()`: Initializes the problem unknowns.
 
 -  `computeInitialConditions()`: Computes the initial conditions.
 
-- `buildBlock()`: Builds the LHS (diagonal block) and RHS of the specific (sub-)problem as
+- `buildBlock()`: Constructs the LHS (diagonal block) and RHS of the (sub-)problem as
 ```math
 \begin{bmatrix}
       & \vdots          &       \\
@@ -245,7 +245,7 @@ Its main **methods** are:
 \end{bmatrix}^{k}
 ```
 
-- `doCoupling()`: Builds the coupling block (off-diagonal block) of the LHS as
+- `doCoupling()`: Constructs the LHS coupling block (off-diagonal block) as
 ```math
 \begin{bmatrix}
       & \vdots          &       \\
@@ -254,35 +254,35 @@ Its main **methods** are:
 \end{bmatrix}^{k}
 ```
 
-- `doPostProcess()`: Builds the LHS and RHS of the post-processing problem (for the HDG method).
+- `doPostProcess()`: Constructs the LHS and RHS of the post-processing problem (for the HDG method).
 
-- `storeResults()`: Stores the results for analysis and visualization purposes.
+- `storeResults()`: Stores results for analysis and visualization.
 
 ## Numerical Methods 🔢
 
-Here, a glimpse of the main numerical methods behind ***galerkin*** in given.
+Here, a glimpse of the main numerical methods behind ***galerkin*** is given.
 
 ### Spatial Discretization 📐
 
-- Element types: Triangles in 2D and Tetrahedra in 3D.
+- **Element types**: Triangles (2D) and Tetrahedra (3D).
 
-- Polynomial `Degree`: From order 1 to 8.
+- **Polynomial degree**: From order 1 to 8.
 
-- `NodesDistribution`: 'Uniform' (equally spaced) and 'Fekete' (for better numerical conditioning).
+- **Nodes distribution**: Uniform (equally spaced) and Fekete (for better numerical conditioning).
 
 ### Time Integration ⏳
 
-- [Backward Differentiation Formulas](https://en.wikipedia.org/wiki/Backward_differentiation_formula) (BDF): From order 1 to 6. The BFD2 scheme is initialized with the backward Euler method (BDF1) at the first time step. Schemes with $\text{BDFOrder}$ > 2 can be merery used for convergence studies (when the analytical solution is available) and they are initialized with the solution at the times $t = −n\Delta t$ with $n = [1,2,\dots,\text{BDFOrder}−1]$.
+- [**Backward Differentiation Formulas**](https://en.wikipedia.org/wiki/Backward_differentiation_formula) (BDF): From order 1 to 6. The BFD2 scheme is initialized with the backward Euler method (BDF1) at the first time step. Schemes with $\text{BDFOrder}$ > 2 are initialized (the analytical solution needs to be available!) with the solution at the times $t = −n\Delta t$ with $n = [1,2,\dots,\text{BDFOrder}−1]$.
 
-- Predictor: Supports arbitrary order (e.g. 0 for a constant predition, 1 for linear extrapolation, etc.).
+- **Predictor**: Arbitrary order (e.g., 0 for constant prediction, 1 for linear extrapolation, etc.).
 
 ### Solvers & Preconditioners 🧮
 
-***galerkin*** allows the selection of various **solvers** and **preconditioners** to efficiently solve the resulting linear system.
+***galerkin*** allows the selection of various MATLAB built-in **solvers** and **preconditioners** to efficiently solve the resulting linear system:
 
 - **Solvers**:
 
-	- [`backslash`](https://www.mathworks.com/help/matlab/ref/double.mldivide.html): MATLAB’s popular **\** operator to solve general linear systems of equations.
+	- [`backslash`](https://www.mathworks.com/help/matlab/ref/double.mldivide.html): MATLAB’s popular **\ operator** to solve general linear systems of equations.
 
 	- [`pcg`](https://www.mathworks.com/help/matlab/ref/pcg.html?s_tid=doc_ta): **Preconditioned conjugate gradient** method for symmetric positive definite matrices.
 
@@ -298,7 +298,7 @@ Here, a glimpse of the main numerical methods behind ***galerkin*** in given.
 
 ### Error Norms 📈
 
-When developing novel finite element formulations, it is crucial to perform comprehensive error assessment to validate **model accuracy**. The framework supports multiple error norms:
+When developing novel finite element formulations, it is crucial to perform a comprehensive error assessment to validate **model accuracy**. The framework supports multiple **error norms**:
 
 - `Number` (i.e. scalar) norm computed in relative terms as
 ```math
@@ -322,11 +322,11 @@ When developing novel finite element formulations, it is crucial to perform comp
 
 ## Parallel Computing ⚡
 
-***galerkin*** supports (limited) **parallel** capabilities. For instance, it leverages MATLAB's `parfor` to parallelize some element computations. You can achieve up to **~10x speedup** on relatively large-scale problems. For running a simulation on a cluster, you can adapt the `test.sh` file located in the main folder.
+***galerkin*** supports (limited) parallel computing using MATLAB's `parfor` for element computations. It achieves up to ***~10x speedup*** on relatively large-scale problems. For cluster execution, modify the `test.sh` script in the main folder.
 
 ## External Tools 🛠️
 
-Although ***galerkin*** is able to manage the main pre-processing, processing, and post-processing tasks, it can also leverage the functionalities of some external tools:
+Although ***galerkin*** can manage the main pre-processing, processing, and post-processing tasks, it can also leverage the functionalities of some external tools:
 
 - **Free** tools:
 
@@ -336,27 +336,32 @@ Although ***galerkin*** is able to manage the main pre-processing, processing, a
  
 	- [**distmesh**](https://doi.org/10.1016/j.parco.2016.04.001): A simple yet powerful unstructured **mesh generator** for MATLAB.
 
-	- [**fsparse**](https://doi.org/10.1137/S0036144503429121): A fast **sparse assembly function** surpassing the built-in MATLAB `sparse()` counterpart.
+	- [**fsparse**](https://doi.org/10.1137/S0036144503429121): A fast **sparse assembly function** outperforming the built-in MATLAB `sparse()` counterpart.
 
 - **Licensed** software:
 
 	- [**Advanpix**](https://www.advanpix.com): A **multiprecision computing toolbox** for MATLAB (supported for thermal problems only, but easily extendable).
 
-	- [**Comsol Multiphysics**](https://www.comsol.com): A powerful and versatile **simulation software** (used for the solution of the unit cell problems for multi-scale computations).
+	- [**Comsol Multiphysics**](https://www.comsol.com): A powerful **simulation software** (used for the solution of the unit cell problems for multi-scale computations).
 
 ## Getting Started 🚀
 
-From the main folder, run:
+Clone the **repository** by running:
+```bash
+git clone https://github.com/andrealaspina/galerkin.git
+```
+
+From the main folder, execute the following command in MATLAB's Command Window:
 ```matlab
 run test.m
 ```
-This command will execute all the scripts located in the `tests` folder, taking approximately 3 minutes to complete.
+This command executes all scripts in the `tests/` folder and takes ~3 minutes to complete.
 
-If all tests pass successfully, you could do worse than taking a look at the `main.m` file. This is organized in three sections: **Pre-processing**, **Processing** and **Post-processing**. Although quite lengthy (~1500 lines), it helps tracking the sequence of tasks from start to finish of the simulation.
+If all tests pass successfully, start by exploring `main.m`, which is structured into three sections: **Pre-processing**, **Processing**, and **Post-processing**. Although lengthy (~1500 lines), this file helps track the sequence of tasks from start to finish of the simulation.
 
-You are then encouraged to have a look at some test files. Self-explanatory names are assigned to them to allow the user to easily find the features of interest. For example, `test_thermal_CG_2D.m` showcases a simple 2D thermal problem; `test_convergence_space_structured.m` can help in conducting a spatial convergence study; `test_plot_3D.m` shows how to generate plots to display the geometry, the mesh and the solution of a 3D problem; `test_error_norms.m` reveals how to consider different error norms; `test_paraview_timestep.m` shows how to export the solution computed at various time steps to ParaView, etc.
+Next, check out some **test files**, which are named descriptively for easy navigation.
 
-For a more complex example, I included input and output of a popular fluid-structure interaction benchmark using two different formulations in `input/fsi_benchmark` and `output/fsi_benchmark`, respectively. When refining the mesh and reducing the time step size, you can reproduce the results in my PhD thesis[^3] and obtain this beautiful picture:
+For a more advanced example, refer to the **fluid-structure interaction benchmark** in `input/fsi_benchmark*`. By refining the mesh and decreasing the time step, you can reproduce results from my PhD thesis[^3] and obtain this beautiful picture:
 
 <p align="center">
   <img src="https://github.com/user-attachments/files/18719601/fsi.pdf" width="500">
@@ -368,7 +373,7 @@ For a more complex example, I included input and output of a popular fluid-struc
 
 For any questions, feedback, or inquiries, contact me at andrealaspina@me.com.
 
-## My mantra 💬
+## My Mantra 💬
 
 _If it doesn’t converge to machine precision, it’s simply wrong_.
 
