@@ -8,7 +8,7 @@
 
 ***galerkin*** is a powerful and extensible [**MATLAB**](https://www.mathworks.com/products/matlab.html) framework designed for developing and testing advanced **finite element** formulations. It provides an integrated environment for simulating a variety of **2D/3D** **linear/nonlinear** **single/multi-physics** **single/multi-scale** problems in the **time/frequency** domain.
 
-During the early stages of my PhD, I struggled with the complexity of large-scale research codes and faced major significant challenges in implementing complex finite element formulations for fluid-structure interaction. This motivated me to create an **accessible** and **flexible** framework that facilitates rapid **development**, **testing**, and **deployment** of novel numerical methods. This code is particularly beneficial for both early-career and experienced **researchers** striving to advance the field of **computational science and engineering**.
+During the early stages of my PhD, I struggled with the complexity of large-scale research codes and faced major significant challenges in implementing complex finite element formulations for fluid-structure interaction. This motivated me to create an **accessible** and **flexible** framework that facilitates rapid **development**, **testing**, and **deployment** of novel numerical methods. This code is particularly beneficial for both early-career and experienced researchers striving to advance the field of **computational science and engineering**.
 
 ## Features ✨
 
@@ -18,9 +18,9 @@ During the early stages of my PhD, I struggled with the complexity of large-scal
 
 - Support for multiple finite element **discretizations**, including:
 
-	- **Continuous Galerkin** (**CG**)
+	- Continuous Galerkin (**CG**)
 
-	- **Hybridizable Discontinuous Galerkin** (**HDG**)
+	- Hybridizable Discontinuous Galerkin (**HDG**)
 
 	- Coupled **CG-HDG** discretizations
 
@@ -32,7 +32,7 @@ During the early stages of my PhD, I struggled with the complexity of large-scal
 
 - **Parallel computing** capabilities (limited) via MATLAB's `parfor`.
 
-- Easy integration with **external tools** such [**GMSH**](https://gmsh.info), [**ParaView**](https://www.paraview.org), [**distmesh**](https://doi.org/10.1016/j.parco.2016.04.001), [**fsparse**](https://doi.org/10.1137/S0036144503429121), [**Advanpix**](https://www.advanpix.com), and [**Comsol**](https://www.comsol.com).
+- Easy integration with **external tools** such as [**GMSH**](https://gmsh.info), [**ParaView**](https://www.paraview.org), [**DistMesh**](https://doi.org/10.1137/S0036144503429121), [**fsparse**](https://doi.org/10.1016/j.parco.2016.04.001), [**Advanpix**](https://www.advanpix.com), and [**Comsol**](https://www.comsol.com).
 
 ## Implemented Formulations 📚
 
@@ -334,9 +334,9 @@ Although ***galerkin*** can manage the main pre-processing, processing, and post
 
 	- [**ParaView**](https://www.paraview.org): The world’s leading open-source **post-processing visualization engine**.
  
-	- [**distmesh**](https://doi.org/10.1016/j.parco.2016.04.001): A simple yet powerful unstructured **mesh generator** for MATLAB.
+	- [**DistMesh**](https://doi.org/10.1137/S0036144503429121): A simple yet powerful unstructured **mesh generator** for MATLAB.
 
-	- [**fsparse**](https://doi.org/10.1137/S0036144503429121): A fast **sparse assembly function** outperforming the built-in MATLAB `sparse()` counterpart.
+	- [**fsparse**](https://doi.org/10.1016/j.parco.2016.04.001): A fast **sparse assembly function** outperforming the built-in MATLAB `sparse()` counterpart.
 
 - **Licensed** software:
 
