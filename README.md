@@ -300,7 +300,7 @@ Here, a glimpse of the main numerical methods behind ***galerkin*** is given.
 
 When developing novel finite element formulations, it is crucial to perform a comprehensive error assessment to validate **model accuracy**. The framework supports multiple **error norms**:
 
-- `Number` (i.e. scalar) norm computed in relative terms as
+- `Number` (i.e., scalar) norm computed in relative terms as
 ```math
 \|E\| = \left|\dfrac{u^h-u^\text{ref}}{u^\text{ref}}\right|
 ```
