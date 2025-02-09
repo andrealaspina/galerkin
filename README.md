@@ -172,43 +172,43 @@ The structs defined in the **input file** are:
 
 - `Parameters(iD)`: Specifies the main discretization-dependent parameters, such as the formulation, the analytical solution, the polynomial degree, the physical coefficients, and formulation-related parameters. If $N$ discretizations are coupled, the parameters must be set for each ($\text{iD} = 1,\dots,N$).
 
-- `Geometry(iD)`: Stores the geometry of all discretizations as `DiscreteGeometry` objects, leveraging MATLAB's [Partial Differential Equation Toolbox](https://www.mathworks.com/help/pde/index.html).
+- `Geometry(iD)`: Stores the geometries as `DiscreteGeometry` objects, leveraging MATLAB's [Partial Differential Equation Toolbox](https://www.mathworks.com/help/pde/index.html).
 
-- `Mesh(iD)`: Contains the mesh data of all discretizations, including nodes' coordinates and the elements' connectivity.
+- `Mesh(iD)`: Contains the mesh data, including nodes' coordinates and the elements' connectivity.
 
-- `System`: Holds the global LHS matrix and RHS vector, along with user-defined settings such as tolerance and maximum iterations
+- `System`: Holds the global LHS matrix and RHS vector, along with user-defined settings such as tolerance and maximum iterations.
 
 - `Time`: Stores time-related data, including initial, current, and final times, time step size, and the selected BDF order.
 
 - `Solver`: Contains the chosen solver and preconditioner along with solver-specific parameters.
 
-- `Boundaries(iD)`: Specifies the boundary splitting (edges in 2D, faces in 3D) for each discretization for imposing boundary conditions. To visualize boundary IDs, set `Options.PlotMesh='yes'` in the input file.
+- `Boundaries(iD)`: Specifies the boundary splitting (edges in 2D, faces in 3D) for imposing boundary conditions.
 
 - `Options`: Enables various features, such as plotting the geometry (`Options.PlotGeometry='yes'`), mesh and boundary conditions (`Options.PlotMesh='yes'`), or solution (`Options.PlotSolution={'VariableName'}`). Additional options include error computation (`Options.ComputeError={'VariableName'}`) and result saving/exporting.
 
 The structs created in the **main file** are:
 
-- `BCs(iD)`:  Stores nodes of each discretization (relative to the underlying linear mesh) for boundary condition visualization.
+- `BCs(iD)`: Stores the nodes (relative to the underlying linear mesh) for boundary condition visualization.
 
 - `Block`: Contains block-dependent data, including LHS, RHS, and matrix assembly indices.
 
 - `Elements`: Organizes data in an element-wise manner for optimized `parfor` execution.
 
-- `Faces(iD1,iD2)`: Stores face information for each discretization and interface coupling between different discretizations.
+- `Faces(iD1,iD2)`: Stores face information for each sub-problem and interface coupling between different discretizations.
 
-- `Memory`: Tracks memory usage of variables during different simulation phases.
+- `Memory`: Tracks memory usage during different simulation phases.
 
 - `RefElement(iD1,iD2)`: Stores reference element data for each discretization and their coupling, including node coordinates, Gauss points, weights, and shape functions.
 
-- `Results(iD)`: Stores results of each discretization (e.g., time, temperature, displacement) at chosen time steps.
+- `Results(iD)`: Stores results at chosen time steps.
 
 - `Sizes(iD)`: Stores discretization-dependent sizes, such as global/local component counts, number of elements, faces, and nodes.
 
-- `Timer`: Records time spent on pre-processing, processing (evaluation, solution, local problems), and post-processing.
+- `Timer`: Records time spent on pre-processing, processing (evaluation, solution, local problems), and post-processing tasks.
 
 ## Formulation Class 🧩
 
-The facilitate the implementation of new finite element methods, ***galerkin*** allows you to declare a new class (likely the only part of the code you need to touch!) that inherits from the base `Formulation` class.
+The facilitate the implementation of new finite element methods, ***galerkin*** allows you to declare a new class (likely the only part of the code you need to touch) that inherits from the base `Formulation` class.
 
 Its main **properties** are:
 
@@ -218,11 +218,11 @@ Its main **properties** are:
 
 - `NumPostComp`: Number of components of the post-processed variable(s) (for the HDG method).
 
-- `DiscretizationType`: Discretization type ('CG' or 'HDG').
+- `DiscretizationType`: Discretization type (CG or HDG).
 
-- `TimeDerOrder`: Order of the time derivative (e.g., 1 for the heat equation and 2 for the elastodynamics equations).
+- `TimeDerOrder`: Time derivative order (e.g., 1 for the heat equation and 2 for elastic problems).
 
-- `Domain`: Problem domain ('Time' of 'Frequency').
+- `Domain`: Problem domain (time of frequency).
 
 Its main **methods** are:
 
