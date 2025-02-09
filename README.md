@@ -363,10 +363,16 @@ If all tests pass successfully, start by exploring `main.m`, which is structured
 
 Next, check out some **test files**, which are named descriptively for easy navigation.
 
-For a more advanced example, refer to the **fluid-structure interaction benchmark** in `input/fsi_benchmark*`. By refining the mesh and decreasing the time step, you can reproduce the results from my PhD thesis[^3]:
+For a more advanced example, refer to the **fluid-structure interaction** benchmark in `input/fsi_benchmark*`. By refining the mesh and decreasing the time step, you can reproduce the results from my PhD thesis[^3]:
 
 <p align="center">
   <img src="https://github.com/user-attachments/files/18719601/fsi.pdf" width="500">
+</p>
+
+For another multi-physics example, check out the **diocotron instability** problem in `input/diocotron_instability`. Similarly, you should be able to reproduce the results from this paper[^7]:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6b5da1c5-2d57-48a8-9f96-79411d220962" width="500">
 </p>
 
 ## Contact 📧
