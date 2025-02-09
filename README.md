@@ -264,7 +264,7 @@ Here, a glimpse of the main numerical methods behind ***galerkin*** is given.
 
 ### Spatial Discretization 📐
 
-- **Element types**: Triangles (2D) and Tetrahedra (3D).
+- **Element type**: Triangles (2D) and Tetrahedra (3D).
 
 - **Polynomial degree**: From order 1 to 8.
 
@@ -272,7 +272,7 @@ Here, a glimpse of the main numerical methods behind ***galerkin*** is given.
 
 ### Time Integration ⏳
 
-- [**Backward Differentiation Formulas**](https://en.wikipedia.org/wiki/Backward_differentiation_formula) (BDF): From order 1 to 6. The BFD2 scheme is initialized with the backward Euler method (BDF1) at the first time step. Schemes with $\text{BDFOrder}$ > 2 are initialized (the analytical solution needs to be available!) with the solution at the times $t = −n\Delta t$ with $n = [1,2,\dots,\text{BDFOrder}−1]$.
+- **Backward Differentiation Formulas** (BDF): From order 1 to 6. BFD2 is initialized with the backward Euler method (BDF1) at the first time step. Schemes with $\text{BDFOrder}$ > 2 are initialized (the analytical solution needs to be available!) with the solution at the times $t = −n\Delta t$ with $n = [1,2,\dots,\text{BDFOrder}−1]$.
 
 - **Predictor**: Arbitrary order (e.g., 0 for constant prediction, 1 for linear extrapolation, etc.).
 
@@ -282,7 +282,7 @@ Here, a glimpse of the main numerical methods behind ***galerkin*** is given.
 
 - **Solvers**:
 
-	- [`backslash`](https://www.mathworks.com/help/matlab/ref/double.mldivide.html): MATLAB’s popular **\ operator** to solve general linear systems of equations.
+	- [`backslash`](https://www.mathworks.com/help/matlab/ref/double.mldivide.html): MATLAB’s popular **\ operator** for general linear systems of equations.
 
 	- [`pcg`](https://www.mathworks.com/help/matlab/ref/pcg.html?s_tid=doc_ta): **Preconditioned conjugate gradient** method for symmetric positive definite matrices.
 
@@ -322,7 +322,9 @@ When developing novel finite element formulations, it is crucial to perform a co
 
 ## Parallel Computing ⚡
 
-***galerkin*** supports (limited) parallel computing using MATLAB's `parfor` for element computations. It achieves up to ***~10x speedup*** on relatively large-scale problems. For cluster execution, modify the `test.sh` script in the main folder.
+***galerkin*** supports (limited) parallel computing capabilities using MATLAB's `parfor` for element computations. It achieves up to ***~10x speedup*** on relatively large-scale problems.
+
+For cluster execution, modify the `test.sh` script in the main folder.
 
 ## External Tools 🛠️
 
@@ -340,9 +342,9 @@ Although ***galerkin*** can manage the main pre-processing, processing, and post
 
 - **Licensed** software:
 
-	- [**Advanpix**](https://www.advanpix.com): A **multiprecision computing toolbox** for MATLAB (supported for thermal problems only, but easily extendable).
+	- [**Advanpix**](https://www.advanpix.com): A **multiprecision computing toolbox** for MATLAB.
 
-	- [**Comsol Multiphysics**](https://www.comsol.com): A powerful **simulation software** (used for the solution of the unit cell problems for multi-scale computations).
+	- [**Comsol Multiphysics**](https://www.comsol.com): A powerful and versitle **simulation software**.
 
 ## Getting Started 🚀
 
