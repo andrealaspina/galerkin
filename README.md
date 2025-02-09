@@ -348,22 +348,22 @@ Although ***galerkin*** can manage the main pre-processing, processing, and post
 
 ## Getting Started 🚀
 
-Clone the **repository** by running:
+- Clone the **repository** by running:
 ```bash
 git clone https://github.com/andrealaspina/galerkin.git
 ```
 
-From the main folder, execute the following command in MATLAB's Command Window:
+- From the main folder, execute the following command in MATLAB's Command Window:
 ```matlab
 run test.m
 ```
-This command executes all scripts in the `tests/` folder and takes ~3 minutes to complete.
+This command executes all scripts in the `tests/` folder in ~3 minutes.
 
-If all tests pass successfully, start by exploring `main.m`, which is structured into three sections: **Pre-processing**, **Processing**, and **Post-processing**. Although lengthy (~1500 lines), this file helps track the sequence of tasks from start to finish of the simulation.
+- If all tests pass successfully, start by exploring `main.m`, which is structured into three sections: **Pre-processing**, **Processing**, and **Post-processing**. Although lengthy (~1500 lines), this file helps track the sequence of tasks from start to finish of the simulation.
 
-Next, check out some **test files**, which are named descriptively for easy navigation.
+- Next, check out some **test files**, which are named descriptively for easy navigation.
 
-For a more advanced example, refer to the **fluid-structure interaction benchmark** in `input/fsi_benchmark*`. By refining the mesh and decreasing the time step, you can reproduce results from my PhD thesis[^3] and obtain this beautiful picture:
+- For a more advanced example, refer to the **fluid-structure interaction benchmark** in `input/fsi_benchmark*`. By refining the mesh and decreasing the time step, you can reproduce results from my PhD thesis[^3] and obtain this beautiful picture:
 
 <p align="center">
   <img src="https://github.com/user-attachments/files/18719601/fsi.pdf" width="500">
