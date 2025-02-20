@@ -379,7 +379,7 @@ For another Machiavellian multi-physics example, check out the **diocotron insta
 
 ***galerkin*** is solo-developed and maintained by **Dr.-Ing. Andrea La Spina**.
 
-For any questions, feedback, or inquiries, contact me at andrealaspina@me.com.
+For any questions, feedback, or inquiries, contact me at andrealaspina.galerkin@gmail.com.
 
 ## My Mantra 💬
 
