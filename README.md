@@ -379,7 +379,7 @@ For another Machiavellian multi-physics example, check out the **diocotron insta
 
 ***galerkin*** is solo-developed and maintained by **Dr.-Ing. Andrea La Spina**.
 
-For any questions, feedback, or inquiries, contact me at andrealaspina@me.com.
+For any questions, feedback, or inquiries, contact me at andrealaspina.galerkin@gmail.com.
 
 ## My Mantra 💬
 
@@ -393,4 +393,4 @@ _If it doesn’t converge to machine precision, it’s simply wrong_.
 [^4]: **A. La Spina**, J. Fish, [_A superconvergent hybridizable discontinuous Galerkin method for weakly compressible magnetohydrodynamics_](https://doi.org/10.1016/j.cma.2021.114278), CMAME (2022).
 [^5]: **A. La Spina**, J. Fish, [_Time- and frequency-domain hybridizable discontinuous Galerkin solvers for the calculation of the Cherenkov radiation_](https://doi.org/10.1016/j.cma.2022.115170), CMAME (2022).
 [^6]: J. Cui, **A. La Spina**, J. Fish, [_Data-physics driven multiscale approach for high-pressure resin transfer molding (HP-RTM)_](https://doi.org/10.1016/j.cma.2023.116405), CMAME (2023).
-[^7]: **A. La Spina**, J. Fish, [_A hybridizable discontinuous Galerkin formulation for the Euler--Maxwell plasma model_](https://doi.org/10.1016/j.jcp.2023.112535), JCP (2024).
+[^7]: **A. La Spina**, J. Fish, [_A hybridizable discontinuous Galerkin formulation for the Euler-Maxwell plasma model_](https://doi.org/10.1016/j.jcp.2023.112535), JCP (2024).
