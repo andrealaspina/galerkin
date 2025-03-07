@@ -13,14 +13,12 @@ addpath('./tests');
 set(0,'DefaultFigureVisible','off');
 
 % Run tests
-TestName=dbstack;
-TestName=TestName.name;
-Files=dir(sprintf('tests/%s*.m',TestName));
-Passed=zeros(size(Files,1),1);
-CPUTime=zeros(size(Files,1),1);
+Files={dir(sprintf('tests/%s*.m',dbstack().name)).name}';
+Passed=zeros(size(Files));
+CPUTime=zeros(size(Files));
 for Test=1:length(Files)
   CPUTime(Test)=cputime;
-  run(['tests/',Files(Test).name]);
+  run(['tests/',Files{Test}]);
   Passed(Test)=Simulation.TestPassed;
   CPUTime(Test)=cputime-CPUTime(Test);
 end
@@ -29,7 +27,7 @@ end
 clc;
 Exitus='passed';
 for Test=1:length(Files)
-  fprintf('\n%s%s',Files(Test).name,repmat('.',1,66-length(Files(Test).name)));
+  fprintf('\n%s%s',Files{Test},repmat('.',1,66-length(Files{Test})));
   if Passed(Test)
     fprintf('PASSED in %.1f sec',CPUTime(Test));
   else

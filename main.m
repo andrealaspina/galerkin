@@ -1,7 +1,10 @@
 %% Pre-processing
 
+% Store input
+Input=cell2struct(cellfun(@eval,who('-regexp','.*'),'UniformOutput',false),who('-regexp','.*'));
+
 % Get file name
-FileName=dbstack(1); FileName=FileName(1).name;
+FileName=dbstack(1).name;
 
 % Start diary
 if matchField(Options,'SaveResults','yes')
