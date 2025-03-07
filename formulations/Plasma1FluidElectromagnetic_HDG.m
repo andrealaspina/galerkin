@@ -370,7 +370,7 @@ fG=zeros(NumElementFaces*NumFaceNodes,1);
 fE=zeros((nsd-1)*NumElementFaces*NumFaceNodes,1);
 
 % Compute weights at Gauss points
-[Ne,Nex,Ney,Nez,weg]=mapShapeFunctionsLinear(1,RefElement,Xe(1:nsd+1,:),nsd);
+[Ne,Nex,Ney,Nez,weg]=mapShapeFunctions('Element',RefElement,RefElement,Xe(1:nsd+1,:),nsd);
 
 % Indices
 ne1=1:NumElementNodes;
@@ -915,7 +915,7 @@ for iFace=1:NumElementFaces
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
-    [Nf,nx,ny,nz,wfg]=mapShapeFunctionsLinear(0,RefElement,Xf(1:nsd,:),nsd);
+    [Nf,nx,ny,nz,wfg]=mapShapeFunctions('Face',RefElement,RefElement,Xf(1:nsd,:),nsd);
     
     % Check boundary
     isInterior=Faces.Interior(1,iFace);
@@ -2176,7 +2176,7 @@ end
 % Compute weights at Gauss points
 FaceNodes=RefElement.FaceNodesElem;
 Xf=Xe(FaceNodes(iFace,:),:);
-[Nf,nx,ny,nz,wfg]=mapShapeFunctionsLinear(0,RefElement,Xf(1:nsd,:),nsd);
+[Nf,nx,ny,nz,wfg]=mapShapeFunctions('Face',RefElement,RefElement,Xf(1:nsd,:),nsd);
 
 % Indices
 nf1=FaceNodes(iFace,:);

@@ -7,15 +7,28 @@ N=[]; Nx=[]; Ny=[]; Nz=[]; w=[]; Ng=[]; pinvN=[];
 
 if strcmp(Where,'Element')
   
-  % Element calulcations
+  % Element calculations
   Ng=RefElementGeometry.ShapeFunctionsElem;
   N=RefElementApproxim.ShapeFunctionsElem;
-  Ngxi=RefElementGeometry.ShapeFunctionDerivativesElemXi;
+  if size(X,1)==nsd+1
+    if nsd==2
+      Ngxi= [-1,1,0];
+      Ngeta=[-1,0,1];
+    elseif nsd==3
+      Ngxi=  [0,0,-1,1];
+      Ngeta= [1,0,-1,0];
+      Ngzeta=[0,1,-1,0];
+    end
+  else
+    Ngxi=RefElementGeometry.ShapeFunctionDerivativesElemXi;
+    Ngeta=RefElementGeometry.ShapeFunctionDerivativesElemEta;
+    if nsd==3
+      Ngzeta=RefElementGeometry.ShapeFunctionDerivativesElemZeta;
+    end
+  end
   Naxi=RefElementApproxim.ShapeFunctionDerivativesElemXi;
-  Ngeta=RefElementGeometry.ShapeFunctionDerivativesElemEta;
   Naeta=RefElementApproxim.ShapeFunctionDerivativesElemEta;
   if nsd==3
-    Ngzeta=RefElementGeometry.ShapeFunctionDerivativesElemZeta;
     Nazeta=RefElementApproxim.ShapeFunctionDerivativesElemZeta;
   end
   g=RefElementApproxim.GaussWeigthsElem;
@@ -28,7 +41,6 @@ if strcmp(Where,'Element')
     invJ12=-J12./detJ;
     invJ21=-J21./detJ;
     invJ22=+J11./detJ;
-    
     Nx=invJ11.*Naxi+invJ12.*Naeta;
     Ny=invJ21.*Naxi+invJ22.*Naeta;
   elseif nsd==3
@@ -46,7 +58,6 @@ if strcmp(Where,'Element')
     invJ31=(J21.*J32-J22.*J31)./detJ;
     invJ32=(J12.*J31-J11.*J32)./detJ;
     invJ33=(J11.*J22-J12.*J21)./detJ;
-    
     Nx=invJ11.*Naxi+invJ12.*Naeta+invJ13.*Nazeta;
     Ny=invJ21.*Naxi+invJ22.*Naeta+invJ23.*Nazeta;
     Nz=invJ31.*Naxi+invJ32.*Naeta+invJ33.*Nazeta;
@@ -55,12 +66,21 @@ if strcmp(Where,'Element')
   
 elseif strcmp(Where,'Face')
   
-  % Face calulcations
+  % Face calculations
   Ng=RefElementGeometry.ShapeFunctionsFace;
   N=RefElementApproxim.ShapeFunctionsFace;
-  Ngxi=RefElementGeometry.ShapeFunctionDerivativesFaceXi;
-  if nsd==3
-    Ngeta=RefElementGeometry.ShapeFunctionDerivativesFaceEta;
+  if size(X,1)==nsd
+    if nsd==2
+      Ngxi= [-1,1];
+    elseif nsd==3
+      Ngxi= [-1,1,0];
+      Ngeta=[-1,0,1];
+    end
+  else
+    Ngxi=RefElementGeometry.ShapeFunctionDerivativesFaceXi;
+    if nsd==3
+      Ngeta=RefElementGeometry.ShapeFunctionDerivativesFaceEta;
+    end
   end
   g=RefElementApproxim.GaussWeigthsFace;
   pinvN=RefElementApproxim.PseudoinverseShapeFunctionsFace;
