@@ -13,7 +13,8 @@ addpath('./tests');
 set(0,'DefaultFigureVisible','off');
 
 % Run tests
-Files={dir(sprintf('tests/%s*.m',dbstack().name)).name}';
+TestName=dbstack().name;
+Files={dir(sprintf('tests/%s*.m',TestName)).name}';
 Passed=zeros(size(Files));
 CPUTime=zeros(size(Files));
 for Test=1:length(Files)
