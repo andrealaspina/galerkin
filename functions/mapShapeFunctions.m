@@ -5,7 +5,7 @@ function [N,Nx,Ny,Nz,w,Ng,pinvN]=mapShapeFunctions(...
 % Inizialize
 N=[]; Nx=[]; Ny=[]; Nz=[]; w=[]; Ng=[]; pinvN=[];
 
-if strcmp(Where,'Element')
+if Where==1
   
   % Element calculations
   Ng=RefElementGeometry.ShapeFunctionsElem;
@@ -64,7 +64,7 @@ if strcmp(Where,'Element')
   end
   w=g.*detJ;
   
-elseif strcmp(Where,'Face')
+elseif Where==0
   
   % Face calculations
   Ng=RefElementGeometry.ShapeFunctionsFace;

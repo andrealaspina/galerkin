@@ -176,7 +176,7 @@ Kuu=MP*zeros(NumElementNodes,NumElementNodes);
 fu=MP*zeros(NumElementNodes,1);
 
 % Compute weights at Gauss points
-[Ne,Nex,Ney,Nez,weg,~,pinvNe]=mapShapeFunctions('Element',RefElement(iD1,iD1),RefElement(iD1,iD1),Xe,nsd);
+[Ne,Nex,Ney,Nez,weg,~,pinvNe]=mapShapeFunctions(1,RefElement(iD1,iD1),RefElement(iD1,iD1),Xe,nsd);
 
 % Indices
 ne1=1:NumElementNodes;
@@ -255,7 +255,7 @@ for iFace=1:NumElementFaces
     % Compute weights at Gauss points
     FaceNodes=RefElement(iD1,iD1).FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
-    [Nf,nx,ny,nz,wfg]=mapShapeFunctions('Face',RefElement(iD1,iD1),RefElement(iD1,iD1),Xf,nsd);
+    [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement(iD1,iD1),RefElement(iD1,iD1),Xf,nsd);
     
     % Compute characteristic element size
     h=sum(wfg);
@@ -338,8 +338,8 @@ for iFace=1:NumElementFaces
       U2e=SolutionGlobalCoupled{iFace};
       
       % Compute weights at Gauss points
-      [N12f,n12x,n12y,n12z,w12fg]=mapShapeFunctions('Face',RefElement(iD1,iD2),...
-                                                           RefElement(iD1,iD2),Xf,nsd);
+      [N12f,n12x,n12y,n12z,w12fg]=mapShapeFunctions(0,RefElement(iD1,iD2),...
+                                                      RefElement(iD1,iD2),Xf,nsd);
       N21f=RefElement(iD2,iD1).ShapeFunctionsFace;
       
       % Indices
@@ -466,8 +466,7 @@ MP=Parameters(iD1).MP;
 Ku1U2=MP*zeros(NumElementNodes1,NumElementFaces2*NumFaceNodes2);
 
 % Compute weights at Gauss points
-[~,N1ex,N1ey,N1ez,~,~,pinvN1e]=mapShapeFunctions('Element',RefElement(iD1,iD1),...
-                                                           RefElement(iD1,iD1),X1e,nsd);
+[~,N1ex,N1ey,N1ez,~,~,pinvN1e]=mapShapeFunctions(1,RefElement(iD1,iD1),RefElement(iD1,iD1),X1e,nsd);
   
 % Indices
 n1e1=1:NumElementNodes1;
@@ -475,10 +474,8 @@ n1e1=1:NumElementNodes1;
 % Compute weights at Gauss points
 FaceNodes1=RefElement(iD1,iD1).FaceNodesElem;
 X1f=X1e(FaceNodes1(iFace1,:),:);
-[~,~,~,~,w1fg]=mapShapeFunctions('Face',RefElement(iD1,iD1),...
-                                        RefElement(iD1,iD1),X1f,nsd);
-[N12f,n12x,n12y,n12z,w12fg]=mapShapeFunctions('Face',RefElement(iD1,iD2),...
-                                                     RefElement(iD1,iD2),X1f,nsd);
+[~,~,~,~,w1fg]=mapShapeFunctions(0,RefElement(iD1,iD1),RefElement(iD1,iD1),X1f,nsd);
+[N12f,n12x,n12y,n12z,w12fg]=mapShapeFunctions(0,RefElement(iD1,iD2),RefElement(iD1,iD2),X1f,nsd);
 N21f=RefElement(iD2,iD1).ShapeFunctionsFace;
 
 % Compute characteristic element size

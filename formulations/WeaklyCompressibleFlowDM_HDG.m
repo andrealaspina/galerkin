@@ -320,7 +320,7 @@ if isArbitraryLagrangianEulerian
 end
 
 % Compute weights at Gauss points
-[Ne,Nex,Ney,Nez,weg]=mapShapeFunctions('Element',RefElement(iD1,iD1),RefElement(iD1,iD1),Xe,nsd);
+[Ne,Nex,Ney,Nez,weg]=mapShapeFunctions(1,RefElement(iD1,iD1),RefElement(iD1,iD1),Xe,nsd);
 
 % Indices
 ne1=1:NumElementNodes;
@@ -787,7 +787,7 @@ for iFace=1:NumElementFaces
     % Compute weights at Gauss points
     FaceNodes=RefElement(iD1,iD1).FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
-    [Nf,nx,ny,nz,wfg]=mapShapeFunctions('Face',RefElement(iD1,iD1),RefElement(iD1,iD1),Xf,nsd);
+    [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement(iD1,iD1),RefElement(iD1,iD1),Xf,nsd);
     
     % Check boundary
     isExterior=Faces.Exterior(iFace);
@@ -945,8 +945,8 @@ for iFace=1:NumElementFaces
       end
       
       % Compute weights at Gauss points
-      [~,N2ex,N2ey,N2ez,~,~,pinvN2e]=mapShapeFunctions('Element',RefElement(iD2,iD2),...
-                                                                 RefElement(iD2,iD2),X2e,nsd);
+      [~,N2ex,N2ey,N2ez,~,~,pinvN2e]=mapShapeFunctions(1,RefElement(iD2,iD2),...
+                                                         RefElement(iD2,iD2),X2e,nsd);
       
       % Indices
       n2e1=1:NumElementNodes2;
@@ -978,11 +978,10 @@ for iFace=1:NumElementFaces
       % Compute weights at Gauss points
       FaceNodes2=RefElement(iD2,iD2).FaceNodesElem;
       X2f=X2e(FaceNodes2(iFace2,:),:);
-      [N12f,n12x,n12y,n12z,w12fg]=mapShapeFunctions('Face',RefElement(iD1,iD2),...
-                                                           RefElement(iD1,iD2),Xf,nsd);
+      [N12f,n12x,n12y,n12z,w12fg]=mapShapeFunctions(0,RefElement(iD1,iD2),...
+                                                      RefElement(iD1,iD2),Xf,nsd);
       N21f=RefElement(iD2,iD1).ShapeFunctionsFace;
-      [~,~,~,~,w2fg]=mapShapeFunctions('Face',RefElement(iD2,iD2),...
-                                              RefElement(iD2,iD2),X2f,nsd);
+      [~,~,~,~,w2fg]=mapShapeFunctions(0,RefElement(iD2,iD2),RefElement(iD2,iD2),X2f,nsd);
       
       % Compute characteristic element size
       h=sum(w2fg);
@@ -1611,8 +1610,8 @@ if isArbitraryLagrangianEulerian
 end
 
 % Compute weights at Gauss points
-[~,N2ex,N2ey,N2ez,~,~,pinvN2e]=mapShapeFunctions('Element',RefElement(iD2,iD2),...
-                                                           RefElement(iD2,iD2),X2e,nsd);
+[~,N2ex,N2ey,N2ez,~,~,pinvN2e]=mapShapeFunctions(1,RefElement(iD2,iD2),...
+                                                   RefElement(iD2,iD2),X2e,nsd);
 
 % Indices
 n2e1=1:NumElementNodes2;
@@ -1639,11 +1638,9 @@ FaceNodes1=RefElement(iD1,iD1).FaceNodesElem;
 FaceNodes2=RefElement(iD2,iD2).FaceNodesElem;
 X1f=X1e(FaceNodes1(iFace1,:),:);
 X2f=X2e(FaceNodes2(iFace2,:),:);
-[N12f,n12x,n12y,n12z,w12fg]=mapShapeFunctions('Face',RefElement(iD1,iD2),...
-                                                     RefElement(iD1,iD2),X1f,nsd);
+[N12f,n12x,n12y,n12z,w12fg]=mapShapeFunctions(0,RefElement(iD1,iD2),RefElement(iD1,iD2),X1f,nsd);
 N21f=RefElement(iD2,iD1).ShapeFunctionsFace;
-[~,~,~,~,w2fg]=mapShapeFunctions('Face',RefElement(iD2,iD2),...
-                                        RefElement(iD2,iD2),X2f,nsd);
+[~,~,~,~,w2fg]=mapShapeFunctions(0,RefElement(iD2,iD2),RefElement(iD2,iD2),X2f,nsd);
 
 % Compute characteristic element size
 h=sum(w2fg);
@@ -1836,7 +1833,7 @@ fr=zeros(qsd,1);
 FaceNodes=RefElement.FaceNodesElem;
 
 % Compute weights at Gauss points
-[Ne,Nex,Ney,Nez,weg,Nle]=mapShapeFunctions('Element',RefElement.PostLow,RefElement.Post,Xe,nsd);
+[Ne,Nex,Ney,Nez,weg,Nle]=mapShapeFunctions(1,RefElement.PostLow,RefElement.Post,Xe,nsd);
 N1e=ones(length(weg),1);
 
 % Indices
@@ -1972,7 +1969,7 @@ end
 for iFace=1:NumElementFaces
   % Compute weights at Gauss points
   Xf=Xe(FaceNodes(iFace,:),:);
-  [~,nx,ny,nz,wfg,Nlf]=mapShapeFunctions('Face',RefElement.PostLow,RefElement.Post,Xf,nsd);
+  [~,nx,ny,nz,wfg,Nlf]=mapShapeFunctions(0,RefElement.PostLow,RefElement.Post,Xf,nsd);
   N1f=ones(length(wfg),1);
   Xfg=Nlf*Xf;
   

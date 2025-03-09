@@ -280,7 +280,7 @@ nge=(1:length(gwe))';
 ngf=(1:length(gwf))';
 
 % Compute weights at Gauss points
-[Ne,Nex,Ney,Nez,weg,~,pinvNe]=mapShapeFunctions('Element',RefElement,RefElement,Xe,nsd);
+[Ne,Nex,Ney,Nez,weg,~,pinvNe]=mapShapeFunctions(1,RefElement,RefElement,Xe,nsd);
 WEG=sparse(nge,nge,weg);
 
 % Indices
@@ -1245,7 +1245,7 @@ for iFace=1:NumElementFaces
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
-    [Nf,nx,ny,nz,wfg]=mapShapeFunctions('Face',RefElement,RefElement,Xf,nsd);
+    [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf,nsd);
     NORMX=sparse(ngf,ngf,nx);
     NORMY=sparse(ngf,ngf,ny);
     if nsd==3
@@ -2421,7 +2421,7 @@ N1e=ones(length(nge),1);
 N1f=ones(length(ngf),1);
 
 % Compute weights at Gauss points
-[Ne,Nex,Ney,Nez,weg,Nle]=mapShapeFunctions('Element',RefElement.PostLow,RefElement.Post,Xe,nsd);
+[Ne,Nex,Ney,Nez,weg,Nle]=mapShapeFunctions(1,RefElement.PostLow,RefElement.Post,Xe,nsd);
 WEG=sparse(nge,nge,weg);
 
 % Indices
@@ -2583,7 +2583,7 @@ fTt(1,1)=N1e'*(Teg.*weg);
 for iFace=1:NumElementFaces
   % Compute weights at Gauss points
   Xf=Xe(FaceNodes(iFace,:),:);
-  [~,nx,ny,nz,wfg,Nlf]=mapShapeFunctions('Face',RefElement.PostLow,RefElement.Post,Xf,nsd);
+  [~,nx,ny,nz,wfg,Nlf]=mapShapeFunctions(0,RefElement.PostLow,RefElement.Post,Xf,nsd);
   
   % Indices
   nlefU1=(iFace-1)*(1+nsd+1)*NumFaceNodes+(1:NumFaceNodes);

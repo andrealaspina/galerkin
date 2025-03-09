@@ -169,7 +169,7 @@ fe=zeros(nsd*NumElementNodes,1);
 fE=zeros((nsd-1)*NumElementFaces*NumFaceNodes,1);
 
 % Compute weights at Gauss points
-[Ne,Nex,Ney,Nez,weg]=mapShapeFunctions('Element',RefElement,RefElement,Xe(1:nsd+1,:),nsd);
+[Ne,Nex,Ney,Nez,weg]=mapShapeFunctions(1,RefElement,RefElement,Xe(1:nsd+1,:),nsd);
 
 % Indices
 ne1=1:NumElementNodes;
@@ -249,7 +249,7 @@ for iFace=1:NumElementFaces
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
-    [Nf,nx,ny,nz,wfg]=mapShapeFunctions('Face',RefElement,RefElement,Xf(1:nsd,:),nsd);
+    [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf(1:nsd,:),nsd);
     
     % Check boundary
     isDirichlet=Faces.Dirichlet(iFace);
@@ -612,9 +612,9 @@ fh=zeros(NumElementNodesPostHigh,1);
 Nhe=RefElement.PostHigh.ShapeFunctionsElem;
 
 % Compute weights at Gauss points
-[~,Nex,Ney,Nez,weg,Nle]=mapShapeFunctions('Element',RefElement.PostLow,RefElement.Post,Xe,nsd);
-[~,Nhhex,Nhhey,Nhhez,wheg,Nlhe]=mapShapeFunctions('Element',RefElement.PostLowHigh,...
-                                                            RefElement.PostHighHigh,Xe,nsd);
+[~,Nex,Ney,Nez,weg,Nle]=mapShapeFunctions(1,RefElement.PostLow,RefElement.Post,Xe,nsd);
+[~,Nhhex,Nhhey,Nhhez,wheg,Nlhe]=mapShapeFunctions(1,RefElement.PostLowHigh,...
+                                                    RefElement.PostHighHigh,Xe,nsd);
 
 % Indices
 ne1=1:NumElementNodesPost;
@@ -771,7 +771,7 @@ end
 % Compute weights at Gauss points
 FaceNodes=RefElement.FaceNodesElem;
 Xf=Xe(FaceNodes(iFace,:),:);
-[Nf,nx,ny,nz,wfg]=mapShapeFunctions('Face',RefElement,RefElement,Xf(1:nsd,:),nsd);
+[Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf(1:nsd,:),nsd);
 
 % Indices
 nf1=FaceNodes(iFace,:);

@@ -58,7 +58,7 @@ end
 uhe=Solution(Ce,:);
 
 % Compute weights at Gauss points
-[Ne,Nex,Ney,Nez,weg]=mapShapeFunctions('Element',RefElement,RefElement,Xe,nsd);
+[Ne,Nex,Ney,Nez,weg]=mapShapeFunctions(1,RefElement,RefElement,Xe,nsd);
 
 % Compute variables at Gauss points
 Xeg=Ne*Xe;

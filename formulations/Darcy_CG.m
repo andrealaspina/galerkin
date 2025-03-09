@@ -93,7 +93,7 @@ Kpp=zeros(NumElementNodes,NumElementNodes);
 fp=zeros(NumElementNodes,1);
 
 % Compute weights at Gauss points
-[Ne,Nex,Ney,~,weg]=mapShapeFunctions('Element',RefElement,RefElement,Xe,nsd);
+[Ne,Nex,Ney,~,weg]=mapShapeFunctions(1,RefElement,RefElement,Xe,nsd);
 
 % Reduce to only 1 Gauss point
 Ne=mean(Ne);
@@ -190,7 +190,7 @@ for iFace=1:NumElementFaces
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
-    [Nf,nx,ny,~,wfg]=mapShapeFunctions('Face',RefElement,RefElement,Xf,nsd);
+    [Nf,nx,ny,~,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf,nsd);
     
     % Reduce to only 1 Gauss point
     Nf=mean(Nf);
