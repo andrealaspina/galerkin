@@ -49,53 +49,27 @@ switch Simulation.Type
   case 'SingleSimulation'
     Simulation.NumSimulations=1;
   case 'ConvergenceSpace'
-    DegreeAux=vertcat(Parameters.Degree);
-    if matchField(Parameters,'MeshRefinement')
-      MeshRefinementAux=vertcat(Parameters.MeshRefinement);
-    end
-    BoundariesAux=Boundaries;
-    if strcmp(Time.TimeDependent,'yes')
-      TimeStepSizeAux=Time.TimeStepSize;
-    end
     if exist('MeshFile','var')
       NumMeshesAux=size(MeshFile,2);
       EmptyMeshAux=strcmp(MeshFile,'None');
     elseif exist('Distmesh','var')
       NumMeshesAux=size(Distmesh.ElementSize,2);
       EmptyMeshAux=isnan(Distmesh.ElementSize);
-      ElementSizeAux=Distmesh.ElementSize;
     else
       NumMeshesAux=size(Mesh.MinElementSize,2);
       EmptyMeshAux=isnan(Mesh.MinElementSize);
-      MinElementSizeAux=Mesh.MinElementSize;
-      MaxElementSizeAux=Mesh.MaxElementSize;
-      MeshGradationAux=Mesh.MeshGradation;
     end
-    NumEmptyMeshAux=sum(sum(EmptyMeshAux));
-    Simulation.NumSimulations=numel(Parameters(1).Degree)*NumMeshesAux-NumEmptyMeshAux;
+    Simulation.NumSimulations=numel(Parameters(1).Degree)*NumMeshesAux-sum(EmptyMeshAux(:));
   case 'ConvergenceTime'
-    BDFOrderAux=Time.BDFOrder;
-    TimeStepSizeAux=Time.TimeStepSize;
-    if not(exist('MeshFile','var'))
-      MinElementSizeAux=Mesh.MinElementSize;
-      MaxElementSizeAux=Mesh.MaxElementSize;
-      MeshGradationAux=Mesh.MeshGradation;
-    end
-    NumTimeStepSizeAux=size(Time.TimeStepSize,2);
-    EmptyTimeStepSizeAux=isnan(Time.TimeStepSize);
-    NumEmptyTimeStepSizeAux=sum(sum(EmptyTimeStepSizeAux));
-    Simulation.NumSimulations=numel(Time.BDFOrder)*NumTimeStepSizeAux-NumEmptyTimeStepSizeAux;
+    Simulation.NumSimulations=numel(Time.BDFOrder)*size(Time.TimeStepSize,2)-...
+                                                             sum(isnan(Input.Time.TimeStepSize(:)));
   case 'ParametricStudy'
-    ParameterStudyAux=vertcat(Parameters.(Simulation.ParameterStudy));
     Simulation.NumSimulations=numel(Parameters(1).(Simulation.ParameterStudy));
   case 'ScalingStrong'
-    NumProcessorsAux=Simulation.NumProcessors;
-    Simulation.NumSimulations=numel(NumProcessorsAux);
+    Simulation.NumSimulations=numel(Simulation.NumProcessors);
   case 'ScalingWeak'
-    NumProcessorsAux=Simulation.NumProcessors;
-    NumMeshesAux=size(MeshFile,2);
-    BoundariesAux=Boundaries;
-    Simulation.NumSimulations=(numel(NumProcessorsAux)==NumMeshesAux)*numel(NumProcessorsAux);
+    Simulation.NumSimulations=(numel(Simulation.NumProcessors)==size(MeshFile,2))*...
+                               numel(Simulation.NumProcessors);
 end
 
 % Initialize results
@@ -118,63 +92,65 @@ for iS=1:Simulation.NumSimulations
         iS2=1;
       end
       for iD=1:Simulation.NumDiscretizations
-        Parameters(iD).Degree=DegreeAux(iD,iS1);
+        Parameters(iD).Degree=Input.Parameters(iD).Degree(iS1);
         if matchField(Parameters,'MeshRefinement')
-          Parameters(iD).MeshRefinement=MeshRefinementAux(iD,iS2);
+          Parameters(iD).MeshRefinement=Input.Parameters(iD).MeshRefinement(iS2);
         end
       end
       for iD=1:Simulation.NumDiscretizations
-        BoundariesNamesAux=fieldnames(BoundariesAux(iD));
-        if size(BoundariesAux(iD).(BoundariesNamesAux{1}),1)>1
+        BoundariesNamesAux=fieldnames(Input.Boundaries(iD));
+        if size(Input.Boundaries(iD).(BoundariesNamesAux{1}),1)>1
           for iBN=1:numel(BoundariesNamesAux)
-            if not(isempty(BoundariesAux(iD).(BoundariesNamesAux{iBN})))
+            if not(isempty(Input.Boundaries(iD).(BoundariesNamesAux{iBN})))
               Boundaries(iD).(BoundariesNamesAux{iBN})=...
-                                            BoundariesAux(iD).(BoundariesNamesAux{iBN})(iS2,:); %#ok
+                                         Input.Boundaries(iD).(BoundariesNamesAux{iBN})(iS2,:); %#ok
             end
           end
         end
       end
       if exist('Distmesh','var')
-        Distmesh.ElementSize=ElementSizeAux(min(end,iS1),min(end,iS2));
+        Distmesh.ElementSize=Input.Distmesh.ElementSize(min(end,iS1),min(end,iS2));
       elseif not(exist('MeshFile','var'))
-        Mesh.MinElementSize=MinElementSizeAux(min(end,iS1),min(end,iS2));
-        Mesh.MaxElementSize=MaxElementSizeAux(min(end,iS1),min(end,iS2));
-        Mesh.MeshGradation=MeshGradationAux;
+        Mesh.MinElementSize=Input.Mesh.MinElementSize(min(end,iS1),min(end,iS2));
+        Mesh.MaxElementSize=Input.Mesh.MaxElementSize(min(end,iS1),min(end,iS2));
+        Mesh.MeshGradation=Input.Mesh.MeshGradation;
       end
       if strcmp(Time.TimeDependent,'yes')
-        Time.TimeStepSize=TimeStepSizeAux(min(end,iS1),min(end,iS2));
+        Time.TimeStepSize=Input.Time.TimeStepSize(min(end,iS1),min(end,iS2));
       end
     case 'ConvergenceTime'
       iS2=iS2+1;
-      if iS2>NumTimeStepSizeAux || (size(EmptyTimeStepSizeAux,1)>1 && EmptyTimeStepSizeAux(iS1,iS2))
+      if iS2>size(Input.Time.TimeStepSize,2) || (size(isnan(Input.Time.TimeStepSize),1)>1 && ...
+                                                      isnan(Input.Time.TimeStepSize(iS1,iS2)))
         iS1=iS1+1;
         iS2=1;
       end
-      Time.BDFOrder=BDFOrderAux(iS1);
-      Time.TimeStepSize=TimeStepSizeAux(min(end,iS1),min(end,iS2));
+      Time.BDFOrder=Input.Time.BDFOrder(iS1);
+      Time.TimeStepSize=Input.Time.TimeStepSize(min(end,iS1),min(end,iS2));
       if not(exist('MeshFile','var'))
-        Mesh.MinElementSize=MinElementSizeAux(min(end,iS1),min(end,iS2));
-        Mesh.MaxElementSize=MaxElementSizeAux(min(end,iS1),min(end,iS2));
-        Mesh.MeshGradation=MeshGradationAux;
+        Mesh.MinElementSize=Input.Mesh.MinElementSize(min(end,iS1),min(end,iS2));
+        Mesh.MaxElementSize=Input.Mesh.MaxElementSize(min(end,iS1),min(end,iS2));
+        Mesh.MeshGradation=Input.Mesh.MeshGradation;
       end
     case 'ParametricStudy'
       iS2=iS2+1;
       for iD=1:Simulation.NumDiscretizations
-        Parameters(iD).(Simulation.ParameterStudy)=ParameterStudyAux(iD,iS2);
+        Parameters(iD).(Simulation.ParameterStudy)=...
+                                              Input.Parameters(iD).(Simulation.ParameterStudy)(iS2);
       end
     case 'ScalingStrong'
       iS2=iS2+1;
-      Simulation.NumProcessors=NumProcessorsAux(iS2);
+      Simulation.NumProcessors=Input.Simulation.NumProcessors(iS2);
     case 'ScalingWeak'
       iS2=iS2+1;
-      Simulation.NumProcessors=NumProcessorsAux(iS2);
+      Simulation.NumProcessors=Input.Simulation.NumProcessors(iS2);
       for iD=1:Simulation.NumDiscretizations
-        BoundariesNamesAux=fieldnames(BoundariesAux(iD));
-        if size(BoundariesAux(iD).(BoundariesNamesAux{1}),1)>1
+        BoundariesNamesAux=fieldnames(Input.Boundaries(iD));
+        if size(Input.Boundaries(iD).(BoundariesNamesAux{1}),1)>1
           for iBN=1:numel(BoundariesNamesAux)
-            if not(isempty(BoundariesAux(iD).(BoundariesNamesAux{iBN})))
+            if not(isempty(Input.Boundaries(iD).(BoundariesNamesAux{iBN})))
               Boundaries(iD).(BoundariesNamesAux{iBN})=...
-                                            BoundariesAux(iD).(BoundariesNamesAux{iBN})(iS2,:); %#ok
+                                              Input.Boundaries(iD).(BoundariesNamesAux{iBN})(iS2,:);
             end
           end
         end
