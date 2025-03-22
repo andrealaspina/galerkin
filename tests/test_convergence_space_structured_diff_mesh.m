@@ -21,7 +21,7 @@ Parameters.HeatSource=@(x,y,z,t)-12*x.^2-12*y.^2;% Heat source
 % --------------------------------------------------------------------------------------------------
 
 % Geometry and mesh --------------------------------------------------------------------------------
-MeshFile=...                                     % Mesh file
+Mesh.File=...                                   % Mesh file
   {'Mesh_square_1','Mesh_square_2','Mesh_square_3','Mesh_square_4';...
    'Mesh_square_1','Mesh_square_2','None','None';...
    'Mesh_square_1','Mesh_square_2','Mesh_square_3','None'};

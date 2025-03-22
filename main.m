@@ -50,9 +50,9 @@ switch Simulation.Type
   case 'SingleSimulation'
     Simulation.NumSimulations=1;
   case 'ConvergenceSpace'
-    if exist('MeshFile','var')
-      NumMeshesAux=size(MeshFile,2);
-      EmptyMeshAux=strcmp(MeshFile,'None');
+    if exist('Mesh','var') && matchField(Mesh,'File')
+      NumMeshesAux=size(Mesh.File,2);
+      EmptyMeshAux=strcmp(Mesh.File,'None');
     elseif exist('Distmesh','var')
       NumMeshesAux=size(Distmesh.ElementSize,2);
       EmptyMeshAux=isnan(Distmesh.ElementSize);
@@ -69,7 +69,7 @@ switch Simulation.Type
   case 'ScalingStrong'
     Simulation.NumSimulations=numel(Simulation.NumProcessors);
   case 'ScalingWeak'
-    Simulation.NumSimulations=(numel(Simulation.NumProcessors)==size(MeshFile,2))*...
+    Simulation.NumSimulations=(numel(Simulation.NumProcessors)==size(Mesh.File,2))*...
                                numel(Simulation.NumProcessors);
 end
 
@@ -111,7 +111,7 @@ for iS=1:Simulation.NumSimulations
       end
       if exist('Distmesh','var')
         Distmesh.ElementSize=Input.Distmesh.ElementSize(min(end,iS1),min(end,iS2));
-      elseif not(exist('MeshFile','var'))
+      elseif not(matchField(Input,'Mesh') && matchField(Input.Mesh,'File'))
         Mesh.MinElementSize=Input.Mesh.MinElementSize(min(end,iS1),min(end,iS2));
         Mesh.MaxElementSize=Input.Mesh.MaxElementSize(min(end,iS1),min(end,iS2));
         Mesh.MeshGradation=Input.Mesh.MeshGradation;
@@ -128,7 +128,7 @@ for iS=1:Simulation.NumSimulations
       end
       Time.BDFOrder=Input.Time.BDFOrder(iS1);
       Time.TimeStepSize=Input.Time.TimeStepSize(min(end,iS1),min(end,iS2));
-      if not(exist('MeshFile','var'))
+      if not(matchField(Input,'Mesh') && matchField(Input.Mesh,'File'))
         Mesh.MinElementSize=Input.Mesh.MinElementSize(min(end,iS1),min(end,iS2));
         Mesh.MaxElementSize=Input.Mesh.MaxElementSize(min(end,iS1),min(end,iS2));
         Mesh.MeshGradation=Input.Mesh.MeshGradation;
@@ -192,8 +192,8 @@ for iS=1:Simulation.NumSimulations
     end
 
     % Get geometry and linear mesh
-    if exist('MeshFile','var')
-      load(['geometry/',MeshFile{min(end,iS1),min(end,iS2)},'.mat']);
+    if matchField(Input,'Mesh') && matchField(Input.Mesh,'File')
+      load(['geometry/',Input.Mesh.File{min(end,iS1),min(end,iS2)},'.mat']);
       Mesh(1:Simulation.NumDiscretizations)=Mesh(1:Simulation.NumDiscretizations);
       for iD=1:Simulation.NumDiscretizations
         Mesh(iD).DegreeK=Mesh(iD);

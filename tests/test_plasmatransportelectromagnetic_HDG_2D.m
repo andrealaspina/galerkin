@@ -50,7 +50,7 @@ Parameters.IncidentField=@(x,y,z,t) [0*x,0*x];   % Incident field for absorbing 
 % --------------------------------------------------------------------------------------------------
 
 % Geometry and mesh --------------------------------------------------------------------------------
-load('Mesh_square01_3.mat');                     % Mesh file
+load('Mesh_square01_3.mat');                    % Mesh file
 Mesh.Nodes(1,:)=(Mesh.Nodes(1,:)-1/2)*(1+2*dx);
 Mesh.Nodes(2,:)=(Mesh.Nodes(2,:)-1/2)*(1+2*dy);
 clear xi xf yi yf dx dy m sigmax sigmay

@@ -36,9 +36,9 @@ Parameters(2).HeatSource=@(x,y,z,t) -4*(x==x);   % Heat source
 % --------------------------------------------------------------------------------------------------
 
 % Geometry and mesh --------------------------------------------------------------------------------
-MeshFile={'Mesh_square_coupled_2parts_1',...     % Mesh file
-          'Mesh_square_coupled_2parts_2',...
-          'Mesh_square_coupled_2parts_3'};
+Mesh.File={'Mesh_square_coupled_2parts_1',...   % Mesh file
+           'Mesh_square_coupled_2parts_2',...
+           'Mesh_square_coupled_2parts_3'};
 % --------------------------------------------------------------------------------------------------
 
 % System -------------------------------------------------------------------------------------------
