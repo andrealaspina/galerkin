@@ -27,8 +27,9 @@ if matchField(Simulation,'Digits') && Simulation.Digits~=16
   mp.Digits(Simulation.Digits);
 else
   Simulation.Digits=16;
-  pathAux=path; iAdv=strfind(pathAux,'advanpix'); iDots=[0,strfind(pathAux(1:iAdv),':')];
-  rmpath(pathAux(iDots(end)+1:iAdv+7));
+  if contains(path,'advanpix')
+    rmpath(extractBefore(path,strfind(path,'advanpix')+8));
+  end
 end
 [Parameters(:).MP]=deal(MP);
 
@@ -62,7 +63,7 @@ switch Simulation.Type
     Simulation.NumSimulations=numel(Parameters(1).Degree)*NumMeshesAux-sum(EmptyMeshAux(:));
   case 'ConvergenceTime'
     Simulation.NumSimulations=numel(Time.BDFOrder)*size(Time.TimeStepSize,2)-...
-                                                             sum(isnan(Input.Time.TimeStepSize(:)));
+                                                                   sum(isnan(Time.TimeStepSize(:)));
   case 'ParametricStudy'
     Simulation.NumSimulations=numel(Parameters(1).(Simulation.ParameterStudy));
   case 'ScalingStrong'

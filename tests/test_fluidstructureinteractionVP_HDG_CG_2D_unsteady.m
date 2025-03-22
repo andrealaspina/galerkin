@@ -46,7 +46,8 @@ Parameters(2).YoungsModulus=...                  % Young's modulus
   @(x,y,z) 1+(5-1)*max((1-abs(y-0.2)/0.2).^2,0)+(20-1)*((x-0.6).^2+(y-0.2).^2<0.03^2);
 Parameters(2).PoissonsRatio=@(x,y,z) 0;          % Poisson's ratio
 Parameters(2).Displacement=@(x,y,z,t) [0*x,0*x]; % Displacement
-Parameters(2).Traction=@(x,y,z,t) [0*x,0*x];     % Traction
+Parameters(2).Traction=...                       % Traction
+  @(x,y,z,t,nx,ny,nz) [0*x,0*x];
 Parameters(2).Force=@(x,y,z,t) [0*x,0*x];        % Force
 Parameters(3).Formulation='Elasticity_CG';       % Formulation
 Parameters(3).Problem='Structural';              % Problem
@@ -58,7 +59,8 @@ Parameters(3).Density=10e3;                      % Density
 Parameters(3).YoungsModulus=@(x,y,z) 1.4e6;      % Young's modulus
 Parameters(3).PoissonsRatio=@(x,y,z) 0.4;        % Poisson's ratio
 Parameters(3).Displacement=@(x,y,z,t) [0*x,0*x]; % Displacement
-Parameters(3).Traction=@(x,y,z,t) [0*x,0*x];     % Traction
+Parameters(3).Traction=...                       % Traction
+  @(x,y,z,t,nx,ny,nz) [0*x,0*x];
 Parameters(3).Force=@(x,y,z,t) [0*x,0*x];        % Force
 % --------------------------------------------------------------------------------------------------
 

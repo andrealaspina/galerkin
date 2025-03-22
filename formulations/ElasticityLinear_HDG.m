@@ -521,7 +521,7 @@ for iFace=1:NumElementFaces
         uDzfg=uDfg(:,3);
       end
     elseif isNeumann
-      tNfg=tN(Xfg(:,1),Xfg(:,2),Xfg(:,3),t);
+      tNfg=tN(Xfg(:,1),Xfg(:,2),Xfg(:,3),t,nx,ny,nz);
       tNxfg=tNfg(:,1);
       tNyfg=tNfg(:,2);
       if nsd==3

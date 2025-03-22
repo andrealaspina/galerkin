@@ -21,7 +21,7 @@ Parameters.PoissonsRatio=@(x,y,z) 1/4;           % Poisson's ratio
 Parameters.Displacement=...                      % Displacement
   @(x,y,z,t) [(x.^2+y.^2)*t^0,...
               (x.^2+y.^2)*t^0];
-Parameters.Traction=@(x,y,z,t) [0*x,0*x];        % Traction
+Parameters.Traction=@(x,y,z,t,nx,ny,nz)[0*x,0*x];% Traction
 Parameters.Force=...                             % Force
   @(x,y,z,t) [-48*x.^2-32*x-48*y.^2-16*y-4,...
               -48*x.^2-16*x-48*y.^2-32*y-4];

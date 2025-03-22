@@ -20,7 +20,7 @@ Parameters(1).PoissonsRatio=@(x,y,z) 0.49999;    % Poisson's ratio
 Parameters(1).Displacement=...                   % Displacement
   @(x,y,z,t) [0*x,0*x,0*x];
 Parameters(1).Traction=...                       % Traction
-  @(x,y,z,t) [0*x,-13/6000*(y>=(+1-1e-6)),0*x];
+  @(x,y,z,t,nx,ny,nz) [0*x,-13/6000*(y>=(+1-1e-6)),0*x];
 Parameters(1).Force=@(x,y,z,t) [0*x,0*x,0*x];    % Force
 Parameters(2).Formulation='Elasticity_CG';       % Formulation
 Parameters(2).Problem='Structural';              % Problem
@@ -33,7 +33,7 @@ Parameters(2).PoissonsRatio=@(x,y,z) 0.3;        % Poisson's ratio
 Parameters(2).Displacement=...                   % Displacement
   @(x,y,z,t) [0*x,0*x,0*x];
 Parameters(2).Traction=...                       % Traction
-  @(x,y,z,t) [0*x,-13/6000*(y>=(+1-1e-6)),0*x];
+  @(x,y,z,t,nx,ny,nz) [0*x,-13/6000*(y>=(+1-1e-6)),0*x];
 Parameters(2).Force=@(x,y,z,t) [0*x,0*x,0*x];    % Force
 % --------------------------------------------------------------------------------------------------
 
