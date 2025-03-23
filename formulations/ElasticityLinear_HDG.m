@@ -436,6 +436,7 @@ for iFace=1:NumElementFaces
     [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement(iD1,iD1),RefElement(iD1,iD1),Xf,nsd);
     
     % Check boundary
+    Boundary=Faces.Boundary(iFace);
     isDirichlet=Faces.Dirichlet(iFace);
     isNeumann=Faces.Neumann(iFace);
     if matchField(Faces,'Interface')
@@ -521,7 +522,7 @@ for iFace=1:NumElementFaces
         uDzfg=uDfg(:,3);
       end
     elseif isNeumann
-      tNfg=tN(Xfg(:,1),Xfg(:,2),Xfg(:,3),t,nx,ny,nz);
+      tNfg=tN(Xfg(:,1),Xfg(:,2),Xfg(:,3),t,Boundary,nx,ny,nz);
       tNxfg=tNfg(:,1);
       tNyfg=tNfg(:,2);
       if nsd==3

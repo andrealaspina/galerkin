@@ -19,7 +19,8 @@ Parameters.Density=0;                            % Density
 Parameters.YoungsModulus=@(x,y,z) 5/4;           % Young's modulus
 Parameters.PoissonsRatio=@(x,y,z) 1/4;           % Poisson's ratio
 Parameters.Displacement=@(x,y,z,t) [x+y,x+y];    % Displacement
-Parameters.Traction=@(x,y,z,t,nx,ny,nz)[0*x,0*x];% Traction
+Parameters.Traction=...                          % Traction
+  @(x,y,z,t,b,nx,ny,nz) [0*x,0*x];
 Parameters.Force=@(x,y,z,t) [0*x,0*x];           % Force
 % --------------------------------------------------------------------------------------------------
 

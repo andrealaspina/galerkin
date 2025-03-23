@@ -48,7 +48,7 @@ Parameters(2).YoungsModulus=...                  % Young's modulus
 Parameters(2).PoissonsRatio=@(x,y,z) 0;          % Poisson's ratio
 Parameters(2).Displacement=@(x,y,z,t) [0*x,0*x]; % Displacement
 Parameters(2).Traction=...                       % Traction
-  @(x,y,z,t,nx,ny,nz) [0*x,0*x];
+  @(x,y,z,t,b,nx,ny,nz) [0*x,0*x];
 Parameters(2).Force=@(x,y,z,t) [0*x,0*x];        % Force
 Parameters(2).RelaxationParameter=0.8;           % Relaxation parameter
 
@@ -63,7 +63,7 @@ Parameters(3).YoungsModulus=@(x,y,z) 1.4e6;      % Young's modulus
 Parameters(3).PoissonsRatio=@(x,y,z) 0.4;        % Poisson's ratio
 Parameters(3).Displacement=@(x,y,z,t) [0*x,0*x]; % Displacement
 Parameters(3).Traction=...                       % Traction
-  @(x,y,z,t,nx,ny,nz) [0*x,0*x];
+  @(x,y,z,t,b,nx,ny,nz) [0*x,0*x];
 Parameters(3).Force=@(x,y,z,t) [0*x,0*x];        % Force
 % --------------------------------------------------------------------------------------------------
 
