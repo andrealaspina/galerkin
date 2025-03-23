@@ -60,6 +60,8 @@ for iD=1:Simulation.NumDiscretizations
   Faces(iD,iD).Exterior=double.empty(0,2);
   Elements(iD).Faces.Exterior=...
         mat2cell(repmat(zeros(1,NumElemFaces),1,NumElements),1,repmat(NumElemFaces,1,NumElements))';
+  Elements(iD).Faces.Boundary=...
+        mat2cell(repmat(zeros(1,NumElemFaces),1,NumElements),1,repmat(NumElemFaces,1,NumElements))';
   BoundaryNames=fieldnames(Boundaries(iD));
   for iBoundaryName=1:length(BoundaryNames)
     Faces(iD,iD).(BoundaryNames{iBoundaryName})=[];
@@ -81,6 +83,7 @@ for iD=1:Simulation.NumDiscretizations
     Faces(iD,iD).Exterior=[Faces(iD,iD).Exterior;Element,ElementFaces];
     for iElem=1:length(Element)
       Elements(iD).Faces.Exterior{Element(iElem),1}(ElementFaces(iElem))=1;
+      Elements(iD).Faces.Boundary{Element(iElem),1}(ElementFaces(iElem))=iBoundaryFace;
     end
     for iBoundaryName=1:length(BoundaryNames)
       if ismember(iBoundaryFace,Boundaries(iD).(BoundaryNames{iBoundaryName}))
