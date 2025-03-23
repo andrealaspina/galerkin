@@ -46,6 +46,26 @@ elseif strcmp(Parameters.DiscretizationType,'HDG')
   D=zeros(msd,msd);
 end
 
+% Include thermal effects
+if matchField(Parameters,'Temperature')
+  if strcmp(Parameters.DiscretizationType,'CG')
+    if strcmp(Parameters.Model,'LinearElasticity')
+      alpha=Parameters.CoefficientThermalExpansion;
+      T0=Parameters.ReferenceTemperature;
+      T=Parameters.Temperature(X(:,1),X(:,2),X(:,3));
+      Fxx=Fxx-alpha*(T-T0);
+      Fyy=Fyy-alpha*(T-T0);
+      if nsd==3
+        Fzz=Fzz-alpha*(T-T0);
+      end
+    else
+      error('Thermal effects implemented only for LinearElasticity!')
+    end
+  else
+    error('Thermal effects not implemented for HDG!')
+  end
+end
+
 % Compute common terms
 if strcmp(Parameters.DiscretizationType,'CG')
   if nsd==2
