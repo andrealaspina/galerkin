@@ -3,11 +3,11 @@
 Input file: jet_engine_blade
 
 Pre-processing  started...
-Pre-processing  completed in 2.0 sec (137.5 MB)
+Pre-processing  completed in 2.1 sec (137.5 MB)
 Processing      started...
-Processing      completed in 4.5 sec (250.9 MB)
+Processing      completed in 6.3 sec (250.9 MB)
 Post-processing started...
-Post-processing completed in 3.7 sec (258.2 MB)
+Post-processing completed in 4.4 sec (258.2 MB)
 --------------------------------------------------------------------------------
 
 Saved output file in: output/jet_engine_blade/jet_engine_blade.mat
