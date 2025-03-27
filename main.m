@@ -666,9 +666,6 @@ for iS=1:Simulation.NumSimulations
     Time.InitialTimeStep=1;
     Time.FinalTimeStep=Time.NumTimeSteps;
   end
-
-  % Send constant variables to the workers to avoid repeated data transfer (only for the time loop)
-  RefElement=parallel.pool.Constant(RefElement);
   
   if strcmp(Time.TimeDependent,'yes')
     fprintf('\nTime integration ...............................................................');
@@ -685,7 +682,6 @@ for iS=1:Simulation.NumSimulations
                                                                         Simulation.RestartFileName);
       load(sprintf('%s/output/%s%s.mat',fileparts(which(mfilename)),Options.SaveResultsFolder,...
                  Simulation.RestartFileName),'-regexp','^(?!(FileName|Simulation|Time|Options)$).');
-      RefElement=parallel.pool.Constant(RefElement);
     end
     
     % Update time
@@ -1081,9 +1077,6 @@ for iS=1:Simulation.NumSimulations
   if strcmp(Time.TimeDependent,'yes')
     fprintf('\n................................................................................');
   end
-
-  % Retrieve the original variables from the workers
-  RefElement=RefElement.Value;
   
   % Store element data for effective use of parfor
   for iD=1:Simulation.NumDiscretizations

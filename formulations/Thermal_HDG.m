@@ -98,7 +98,7 @@ classdef Thermal_HDG < Formulation
           SolutionGlobalElem{iElem},SolutionLocalElem{iElem},SolutionOldElem{iElem},...
           SolutionLocalSameElemCoupled{iElem},...
           NodesElemCoupled(iElem,:),SolutionGlobalElemCoupled(iElem,:),...
-          Simulation,Parameters,Time,RefElement.Value,Sizes); %#ok
+          Simulation,Parameters,Time,RefElement,Sizes);
         LhsCoef(:,iElem)=reshape(LhsGlobalElem',[],1);
         RhsCoef(:,iElem)=reshape(RhsGlobalElem',[],1);
         MatLocal{iElem}=MatLocalElem;
@@ -143,7 +143,7 @@ classdef Thermal_HDG < Formulation
                              Sizes(iD1).NumFacesInterface(iD2));
         for iFaceInterface=1:Sizes(iD1).NumFacesInterface(iD2)
           [LhsCoupElem]=...
-            doCouplingElement(iFaceInterface,iD1,iD2,Parameters,Mesh,Faces,RefElement.Value,Sizes);
+            doCouplingElement(iFaceInterface,iD1,iD2,Parameters,Mesh,Faces,RefElement,Sizes);
           LhsCoupCoef(:,iFaceInterface)=reshape(LhsCoupElem',[],1);
         end
         if Simulation.Digits==16

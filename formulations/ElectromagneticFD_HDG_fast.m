@@ -49,7 +49,7 @@ classdef ElectromagneticFD_HDG_fast < Formulation
       parfor iElem=1:Sizes(iD).NumElements
         [LhsGlobalElem,RhsGlobalElem,MatLocalElem,VecLocalElem]=...
           buildBlockElement(NodesElem{iElem},FacesElem(iElem),...
-          Parameters,Time,RefElement.Value,Sizes); %#ok
+          Parameters,Time,RefElement,Sizes);
         LhsCoef(:,iElem)=reshape(LhsGlobalElem.',[],1);
         RhsCoef(:,iElem)=reshape(RhsGlobalElem.',[],1);
         MatLocal{iElem}=MatLocalElem;

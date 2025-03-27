@@ -82,7 +82,7 @@ classdef ElectromagneticPML_HDG_fast < Formulation
         for iElem=1:Sizes(iD).NumElements
           [LhsGlobalElem,MatLocalElem,LhsLLinvElem,LhsGLElem]=...
             buildBlockElementLhs(NodesElem{iElem},FacesElem(iElem),...
-            Parameters,Time,RefElement.Value,Sizes);
+            Parameters,Time,RefElement,Sizes);
           LhsCoef(:,iElem)=reshape(LhsGlobalElem',[],1);
           Elements(iD).MatLocal{iElem}=MatLocalElem;
           Elements(iD).LhsLLinv{iElem}=LhsLLinvElem;
@@ -102,7 +102,7 @@ classdef ElectromagneticPML_HDG_fast < Formulation
         [RhsLElem,RhsGElem]=...
           buildBlockElementRhs(NodesElem{iElem},FacesElem(iElem),...
           SolutionOldElem{iElem},...
-          Parameters,Time,RefElement.Value,Sizes); %#ok
+          Parameters,Time,RefElement,Sizes);
         RhsL{iElem}=RhsLElem;
         RhsG{iElem}=RhsGElem;
       end
