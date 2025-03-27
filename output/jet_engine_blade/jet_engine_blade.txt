@@ -1,0 +1,14 @@
+
+--------------------------------------------------------------------------------
+Input file: jet_engine_blade
+
+Pre-processing  started...
+Pre-processing  completed in 2.2 sec (137.5 MB)
+Processing      started...
+Processing      completed in 5.1 sec (250.9 MB)
+Post-processing started...
+Post-processing completed in 2.0 sec (250.9 MB)
+--------------------------------------------------------------------------------
+
+Saved output file in: output/jet_engine_blade/jet_engine_blade.mat
+Saved  diary file in: output/jet_engine_blade/jet_engine_blade.txt
