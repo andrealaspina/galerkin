@@ -132,6 +132,28 @@ classdef Elasticity_CG < Formulation
       Results(iD).Time(iST)=Time.Time;
       Results(iD).Displacement(:,:,iST)=Block(iD,iD).SolutionGlobal;
     end
+
+    %% Evaluate stress
+    function [Results]=evaluateStress(~,iD,Results,Elements,Parameters,Mesh,RefElement,Sizes)
+      NodesElem=Elements(iD).Nodes;
+      ResultsElem=mat2cell(...
+        Results(iD).Displacement(Mesh(iD).Elements(:),:),...
+        ones(Sizes(iD).NumElements,1)*Sizes(iD).NumElementNodes,...
+        Sizes(iD).NumSpaceDim);
+      Stress=zeros(Sizes(iD).NumElementNodes*Sizes(iD).NumSpaceDim^2,Sizes(iD).NumElements);
+      parfor iElem=1:Sizes(iD).NumElements
+        [StressElem]=...
+          evaluateStressElement(iD,NodesElem{iElem},...
+          ResultsElem{iElem},...
+          Parameters,RefElement,Sizes);
+        Stress(:,iElem)=reshape(StressElem',[],1);
+      end
+      Results(iD).StressDisc=reshape(Stress,Sizes(iD).NumSpaceDim^2,[])';
+      for iC=1:Sizes(iD).NumSpaceDim^2
+        Results(iD).Stress(:,iC)=accumarray(Mesh(iD).Elements(:),Results(iD).StressDisc(:,iC),[],...
+          @mean);
+      end
+    end
     
   end
   
@@ -1716,6 +1738,88 @@ elseif isFSI && isStructure && isFluidVP
 elseif isFSI && isStructure && isFluidDM
   LhsCoup(iu1,iR2)=Ku1R2;
   LhsCoup(iu1,iW2)=Ku1W2;
+end
+
+end
+
+%% Evaluate stress element
+function [Stress]=evaluateStressElement(...
+  iD,Nodes,Results,Parameters,RefElement,Sizes)
+
+% Get general parameters
+nsd=Sizes(iD).NumSpaceDim;
+NumElementNodes=Sizes(iD).NumElementNodes;
+NumElementFaces=Sizes(iD).NumElementFaces;
+Xe=Nodes';
+Xem=sum(Xe(1:NumElementFaces,:),1)/NumElementFaces;
+
+% Get solution
+ue=reshape(Results,[],1);
+
+% Compute weights at Gauss points
+[Ne,Nex,Ney,Nez,~,~,pinvNe]=mapShapeFunctions(1,RefElement(iD,iD),RefElement(iD,iD),Xe,nsd);
+
+% Indices
+ne1=1:NumElementNodes;
+ne2=ne1+NumElementNodes;
+ne3=ne2+NumElementNodes;
+
+% Compute variables at nodes
+uxe=ue(ne1);
+uye=ue(ne2);
+if nsd==3
+  uze=ue(ne3);
+end
+if nsd==2
+  Fxxe=pinvNe*(Nex*uxe+1); Fxye=pinvNe*(Ney*uxe);
+  Fyxe=pinvNe*(Nex*uye);   Fyye=pinvNe*(Ney*uye+1);
+elseif nsd==3
+  Fxxe=pinvNe*(Nex*uxe+1); Fxye=pinvNe*(Ney*uxe);   Fxze=pinvNe*(Nez*uxe);
+  Fyxe=pinvNe*(Nex*uye);   Fyye=pinvNe*(Ney*uye+1); Fyze=pinvNe*(Nez*uye);
+  Fzxe=pinvNe*(Nex*uze);   Fzye=pinvNe*(Ney*uze);   Fzze=pinvNe*(Nez*uze+1);  
+end
+
+% Compute variables at Gauss points
+if nsd==2
+  Fxxeg=Ne*Fxxe; Fxyeg=Ne*Fxye;
+  Fyxeg=Ne*Fyxe; Fyyeg=Ne*Fyye;
+elseif nsd==3
+  Fxxeg=Ne*Fxxe; Fxyeg=Ne*Fxye; Fxzeg=Ne*Fxze;
+  Fyxeg=Ne*Fyxe; Fyyeg=Ne*Fyye; Fyzeg=Ne*Fyze;
+  Fzxeg=Ne*Fzxe; Fzyeg=Ne*Fzye; Fzzeg=Ne*Fzze;
+end
+
+% Compute stress
+if nsd==2
+  [seg]=...
+    computeStress('yes','no','no',Parameters(iD),Xem,...
+    [Fxxeg,Fxyeg,Fyxeg,Fyyeg],Sizes(iD));
+  sxxeg=seg(:,1); sxyeg=seg(:,2);
+  syxeg=seg(:,3); syyeg=seg(:,4);
+elseif nsd==3
+  [seg]=...
+    computeStress('yes','no','no',Parameters(iD),Xem,...
+    [Fxxeg,Fxyeg,Fxzeg,Fyxeg,Fyyeg,Fyzeg,Fzxeg,Fzyeg,Fzzeg],Sizes(iD));
+  sxxeg=seg(:,1); sxyeg=seg(:,2); sxzeg=seg(:,3);
+  syxeg=seg(:,4); syyeg=seg(:,5); syzeg=seg(:,6);
+  szxeg=seg(:,7); szyeg=seg(:,8); szzeg=seg(:,9);
+end
+
+% Map stress to element nodes
+if nsd==2
+  sxxe=pinvNe*(sxxeg); sxye=pinvNe*(sxyeg);
+  syxe=pinvNe*(syxeg); syye=pinvNe*(syyeg);
+elseif nsd==3
+  sxxe=pinvNe*(sxxeg); sxye=pinvNe*(sxyeg);  sxze=pinvNe*(sxzeg);
+  syxe=pinvNe*(syxeg); syye=pinvNe*(syyeg);  syze=pinvNe*(syzeg);
+  szxe=pinvNe*(szxeg); szye=pinvNe*(szyeg);  szze=pinvNe*(szzeg);
+end
+
+% Store stress
+if nsd==2
+  Stress=[sxxe,sxye,syxe,syye];
+elseif nsd==3
+  Stress=[sxxe,sxye,sxze,syxe,syye,syze,szxe,szye,szze];
 end
 
 end

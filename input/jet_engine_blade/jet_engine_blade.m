@@ -38,8 +38,8 @@ Parameters.HeatSource=@(x,y,z,t) 0*x;            % Heat source
 
 % Geometry and mesh --------------------------------------------------------------------------------
 Geometry=importGeometry(createpde,'Blade.stl');  % Geometry definition
-Mesh.MinElementSize=0.005;                       % Minimum element size
-Mesh.MaxElementSize=0.005;                       % Maximum element size
+Mesh.MinElementSize=0.01/2;                      % Minimum element size
+Mesh.MaxElementSize=0.01/2;                      % Maximum element size
 Mesh.MeshGradation=1.5;                          % Element size growth rate
 % --------------------------------------------------------------------------------------------------
 
@@ -110,8 +110,8 @@ Parameters.Temperature=...                       % Temperature
 % --------------------------------------------------------------------------------------------------
 
 % Geometry and mesh --------------------------------------------------------------------------------
-Mesh.MinElementSize=0.01;                        % Minimum element size
-Mesh.MaxElementSize=0.01;                        % Maximum element size
+Mesh.MinElementSize=0.01/1; %0.01/2 for figure   % Minimum element size
+Mesh.MaxElementSize=0.01/1; %0.01/2 for figure   % Maximum element size
 Mesh.MeshGradation=1.5;                          % Element size growth rate
 % --------------------------------------------------------------------------------------------------
 
@@ -137,10 +137,22 @@ Boundaries.Neumann=[10,11];                      % Neumann portion
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='yes';                          % Plot mesh
 Options.PlotMeshDistortion='yes';                % Plot mesh distortion
-Options.PlotSolution={'Displacement'};           % Plot solution
+Options.PlotSolution=...                         % Plot solution
+  {'Displacement';
+   'VonMisesStress'};
 Options.Export2Paraview=...                      % Export to Paraview
   {'Temperature';
-   'Displacement'};
+   'Displacement';
+   'Stress';
+   'VonMisesStress'};
+Options.ComputeQuantityError=...                 % Compute quantity of interest (error computation)
+  ['[Results]=Formulation{1}.evaluateStress(1,Results,Elements,Parameters,Mesh,RefElement,',...
+   '                                        Sizes); ',...
+   'Results.VonMisesStress=sqrt(',...
+   '  1/2*((Results.Stress(:,1)-Results.Stress(:,5)).^2+',...
+   '       (Results.Stress(:,5)-Results.Stress(:,9)).^2+',...
+   '       (Results.Stress(:,9)-Results.Stress(:,1)).^2+',...
+   '     6*(Results.Stress(:,2).^2+Results.Stress(:,3).^2+Results.Stress(:,6).^2)));'];
 Options.SaveResults='yes';                       % Save results
 Options.SaveResultsFolder='jet_engine_blade/';   % Save results folder
 % --------------------------------------------------------------------------------------------------
