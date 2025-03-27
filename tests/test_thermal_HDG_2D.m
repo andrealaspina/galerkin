@@ -16,6 +16,8 @@ Parameters.StabTemperature=10;                   % Stabilization for temperature
 Parameters.Density=0;                            % Density
 Parameters.SpecificHeatCapacity=0;               % Specific heat capacity
 Parameters.ThermalConductivity=1;                % Thermal conductivity
+Parameters.ConvectionCoefficient=@(x,y,z,b) 0;   % Convection coefficient
+Parameters.AmbientTemperature=@(x,y,z,b) 0;      % Ambient temperature
 Parameters.ScaledTemperatureGradient=...         % Scaled temperature gradient
   @(x,y,z,t) [pi/2*x./sqrt(x.^2+y.^2).*sin(pi/2*sqrt(y.^2+x.^2)),...
               pi/2*y./sqrt(x.^2+y.^2).*sin(pi/2*sqrt(y.^2+x.^2))];
@@ -47,6 +49,7 @@ Solver.Type='backslash';                         % Type
 % Boundary splitting -------------------------------------------------------------------------------
 Boundaries.Dirichlet=[1,2,3,4];                  % Dirichlet portion
 Boundaries.Neumann=[];                           % Neumann portion
+Boundaries.Robin=[];                             % Robin portion
 % --------------------------------------------------------------------------------------------------
 
 % Output options -----------------------------------------------------------------------------------

@@ -16,6 +16,8 @@ Parameters.StabTemperature=1;                    % Stabilization for temperature
 Parameters.Density=0;                            % Density
 Parameters.SpecificHeatCapacity=0;               % Specific heat capacity
 Parameters.ThermalConductivity=1;                % Thermal conductivity
+Parameters.ConvectionCoefficient=@(x,y,z,b) 0;   % Convection coefficient
+Parameters.AmbientTemperature=@(x,y,z,b) 0;      % Ambient temperature
 Parameters.ScaledTemperatureGradient=...         % Scaled temperature gradient
   @(x,y,z,t) [-1*(x==x),-1*(x==x)];
 Parameters.Temperature=@(x,y,z,t) x+y;           % Temperature
@@ -49,6 +51,7 @@ Solver.Equilibrate='no';                         % Equilibrate matrix
 % Boundary splitting -------------------------------------------------------------------------------
 Boundaries.Dirichlet=[1,2,3,4];                  % Dirichlet portion
 Boundaries.Neumann=[];                           % Neumann portion
+Boundaries.Robin=[];                             % Robin portion
 % --------------------------------------------------------------------------------------------------
 
 % Output options -----------------------------------------------------------------------------------

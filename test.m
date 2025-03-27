@@ -42,7 +42,7 @@ fprintf('\n\nTest completed (%s) in %.0f sec (CPU time)\n',Exitus,sum(CPUTime));
 set(0,'DefaultFigureVisible','on');
 set(findobj('type','figure'),'Visible','on');
 for iFig=1:length(findobj('type','figure'))
-  close; pause(0.2);
+  pause(0.2); close;
 end
 
 % Delete useless variables

@@ -15,6 +15,8 @@ Parameters(1).NitschePenalty=100;                % Nitsche's penalty parameter
 Parameters(1).Density=1;                         % Density
 Parameters(1).SpecificHeatCapacity=1;            % Specific heat capacity
 Parameters(1).ThermalConductivity=1;             % Thermal conductivity
+Parameters(1).ConvectionCoefficient=@(x,y,z,b) 0;% Convection coefficient
+Parameters(1).AmbientTemperature=@(x,y,z,b) 0;   % Ambient temperature
 Parameters(1).Temperature=@(x,y,z,t) x+y+z;      % Temperature
 Parameters(1).ThermalFlux=@(x,y,z,t) 0*x;        % Thermal flux
 Parameters(1).HeatSource=@(x,y,z,t) 0*x;         % Heat source
@@ -26,6 +28,8 @@ Parameters(2).StabTemperature=10;                % Stabilization for temperature
 Parameters(2).Density=1;                         % Density
 Parameters(2).SpecificHeatCapacity=1;            % Specific heat capacity
 Parameters(2).ThermalConductivity=1;             % Thermal conductivity
+Parameters(2).ConvectionCoefficient=@(x,y,z,b) 0;% Convection coefficient
+Parameters(2).AmbientTemperature=@(x,y,z,b) 0;   % Ambient temperature
 Parameters(2).ScaledTemperatureGradient=...      % Scaled temperature gradient
   @(x,y,z,t) [-1*(x==x),-1*(x==x),-1*(x==x)];
 Parameters(2).Temperature=@(x,y,z,t) x+y+z;      % Temperature
@@ -54,9 +58,11 @@ Solver.Type='backslash';                         % Type
 Boundaries(1).Dirichlet=[2,3,4,5,6];             % Dirichlet portion
 Boundaries(1).Interface=1;                       % Interface portion
 Boundaries(1).Neumann=[];                        % Neumann portion
+Boundaries(1).Robin=[];                          % Robin portion
 Boundaries(2).Dirichlet=[1,2,3,5,6];             % Dirichlet portion
 Boundaries(2).Interface=4;                       % Interface portion
 Boundaries(2).Neumann=[];                        % Neumann portion
+Boundaries(2).Robin=[];                          % Robin portion
 % --------------------------------------------------------------------------------------------------
 
 % Output options -----------------------------------------------------------------------------------

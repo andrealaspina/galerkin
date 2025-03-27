@@ -150,6 +150,8 @@ NumElementFaces=Sizes(iD1).NumElementFaces;
 rho=Parameters(iD1).Density;
 cp=Parameters(iD1).SpecificHeatCapacity;
 kappa=Parameters(iD1).ThermalConductivity;
+H=Parameters(iD1).ConvectionCoefficient;
+uinf=Parameters(iD1).AmbientTemperature;
 uD=Parameters(iD1).Temperature;
 fN=Parameters(iD1).ThermalFlux;
 s=Parameters(iD1).HeatSource;
@@ -261,8 +263,10 @@ for iFace=1:NumElementFaces
     h=sum(wfg);
     
     % Check boundary
+    Boundary=Faces.Boundary(iFace);
     isDirichlet=Faces.Dirichlet(iFace);
     isNeumann=Faces.Neumann(iFace);
+    isRobin=Faces.Robin(iFace);
     if matchField(Faces,'Interface')
       isInterface=Faces.Interface(1,iFace);
     else
@@ -308,6 +312,9 @@ for iFace=1:NumElementFaces
       uDfg=uD(Xfg(:,1),Xfg(:,2),Xfg(:,3),t);
     elseif isNeumann
       fNfg=fN(Xfg(:,1),Xfg(:,2),Xfg(:,3),t);
+    elseif isRobin
+      Hfg=H(Xfg(:,1),Xfg(:,2),Xfg(:,3),Boundary);
+      uinffg=uinf(Xfg(:,1),Xfg(:,2),Xfg(:,3),Boundary);
     end
     
     % Compute basic matrices
@@ -389,6 +396,10 @@ for iFace=1:NumElementFaces
         Kuu(ne1,nf1)=Kuu(ne1,nf1)-kappa*Cznzf;
       end
     end
+
+    if isRobin
+      Kuu(nf1,nf1)=Kuu(nf1,nf1)+NwfT*(Hfg.*Nf);
+    end
     
     % Compute rhs
     if isDirichlet
@@ -429,6 +440,10 @@ for iFace=1:NumElementFaces
     
     if isNeumann
       fu(nf1,1)=fu(nf1,1)+NwfT*(fNfg);
+    end
+
+    if isRobin
+      fu(nf1,1)=fu(nf1,1)+NwfT*(Hfg.*(uinffg-ufg));
     end
   end
 end

@@ -15,6 +15,8 @@ Parameters.NitschePenalty=100;                   % Nitsche's penalty parameter
 Parameters.Density=0;                            % Density
 Parameters.SpecificHeatCapacity=0;               % Specific heat capacity
 Parameters.ThermalConductivity=1;                % Thermal conductivity
+Parameters.ConvectionCoefficient=@(x,y,z,b) 0;   % Convection coefficient
+Parameters.AmbientTemperature=@(x,y,z,b) 0;      % Ambient temperature
 Parameters.Temperature=...                       % Temperature
   @(x,y,z,t) y.*(y-1/2).*(y-1).*x.*z;
 Parameters.ThermalFlux=@(x,y,t) 0*x;             % Thermal flux
@@ -42,6 +44,7 @@ Solver.Type='backslash';                         % Type
 % Boundary splitting -------------------------------------------------------------------------------
 Boundaries.Dirichlet=[1,2,4,6];                  % Dirichlet portion
 Boundaries.Neumann=[];                           % Neumann portion
+Boundaries.Robin=[];                             % Robin portion
 Boundaries.PeriodicMaster=3;                     % Periodic portion (master)
 Boundaries.PeriodicSlave=5;                      % Periodic portion (slave)
 % --------------------------------------------------------------------------------------------------

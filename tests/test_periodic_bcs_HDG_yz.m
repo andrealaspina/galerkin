@@ -16,6 +16,8 @@ Parameters.StabTemperature=1;                    % Stabilization for temperature
 Parameters.Density=0;                            % Density
 Parameters.SpecificHeatCapacity=0;               % Specific heat capacity
 Parameters.ThermalConductivity=1;                % Thermal conductivity
+Parameters.ConvectionCoefficient=@(x,y,z,b) 0;   % Convection coefficient
+Parameters.AmbientTemperature=@(x,y,z,b) 0;      % Ambient temperature
 Parameters.ScaledTemperatureGradient=...         % Scaled temperature gradient
   @(x,y,z,t) [-y.*z.*(y-1).*(y-1/2).*(z-1).*(z-1/2),...
               -(x.*z.*(6.*y.^2-6.*y+1).*(2.*z.^2-3.*z+1))/4,...
@@ -47,6 +49,7 @@ Solver.Type='backslash';                         % Type
 % Boundary splitting -------------------------------------------------------------------------------
 Boundaries.Dirichlet=[1,5];                      % Dirichlet portion
 Boundaries.Neumann=[];                           % Neumann portion
+Boundaries.Robin=[];                             % Robin portion
 Boundaries.PeriodicMaster=[2,3];                 % Periodic portion (master)
 Boundaries.PeriodicSlave=[4,6];                  % Periodic portion (slave)
 % --------------------------------------------------------------------------------------------------
