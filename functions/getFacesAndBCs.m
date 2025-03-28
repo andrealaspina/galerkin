@@ -80,14 +80,12 @@ for iD=1:Simulation.NumDiscretizations
     [~,ElementFaces]=ismember(A,B,'rows');
     ElementMore=repelem(find(sum(ElementNodes,2)>NumFaceNodes),NumElemFaces,1);
     ElementFacesMore=repmat((1:NumElemFaces)',numel(ElementMore)/NumElemFaces,1);
-    if not(isempty(ElementMore))
-      Element=[Element;ElementMore];                %#ok
-      ElementFaces=[ElementFaces;ElementFacesMore]; %#ok
-      Interior=ismember([Element,ElementFaces],Faces(iD,iD).Interior(:,1:2),'rows') | ...
-               ismember([Element,ElementFaces],Faces(iD,iD).Interior(:,3:4),'rows');
-      Element=Element(not(Interior));
-      ElementFaces=ElementFaces(not(Interior));
-    end
+    Element=[Element;ElementMore];                %#ok
+    ElementFaces=[ElementFaces;ElementFacesMore]; %#ok
+    Interior=ismember([Element,ElementFaces],Faces(iD,iD).Interior(:,1:2),'rows') | ...
+             ismember([Element,ElementFaces],Faces(iD,iD).Interior(:,3:4),'rows');
+    Element=Element(not(Interior));
+    ElementFaces=ElementFaces(not(Interior));
     Faces(iD,iD).Exterior=[Faces(iD,iD).Exterior;Element,ElementFaces];
     for iElem=1:length(Element)
       Elements(iD).Faces.Exterior{Element(iElem),1}(ElementFaces(iElem))=1;
