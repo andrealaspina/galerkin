@@ -1,6 +1,6 @@
 %% galerkin test
 
-% Setup 
+% Setup
 clear; clc; path(pathdef); close('all');
 addpath('./');
 addpath('./formulations');
