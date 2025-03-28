@@ -22,39 +22,37 @@ for iD=1:Simulation.NumDiscretizations
   NumFaceNodesHigh=size(RefElement(iD,iD).FaceNodesElem,2);
   
   % Get interior faces
-  if strcmp(Parameters(iD).DiscretizationType,'HDG')
-    Faces(iD,iD).Interior=zeros(NumElements*NumElemFaces,5);
-    Elements(iD).Faces.Interior=mat2cell(repmat(zeros(2,NumElemFaces),1,NumElements),2,...
+  Faces(iD,iD).Interior=zeros(NumElements*NumElemFaces,5);
+  Elements(iD).Faces.Interior=mat2cell(repmat(zeros(2,NumElemFaces),1,NumElements),2,...
                                                                repmat(NumElemFaces,1,NumElements))';
-    iFaceInt=0;
-    MeshElementsFast=Mesh(iD).Degree1.Elements';
-    for iElem1=1:NumElements
-      MeshElementsFast(1,:)=[];
-      for iElemFace1=1:NumElemFaces
-        FaceNodes1=Mesh(iD).Degree1.Elements(FaceNodesElem(iElemFace1,:),iElem1)';
-        [Filter1,~]=find(MeshElementsFast==FaceNodes1(1));
-        [Filter2,~]=find(MeshElementsFast(Filter1,:)==FaceNodes1(2));
-        if Sizes(iD).NumSpaceDim==3
-          [Filter3,~]=find(MeshElementsFast(Filter1(Filter2),:)==FaceNodes1(3));
-        else
-          Filter3=1:length(Filter2);
-        end
-        iElem2=iElem1+Filter1(Filter2(Filter3));
-        if not(isempty(iElem2))
-          iFaceInt=iFaceInt+1;
-          [iFaceNodes2,~]=find(Mesh(iD).Degree1.Elements(:,iElem2)==FaceNodes1);
-          iElemFace2=find(all(sort(FaceNodesElem,2)==sort(iFaceNodes2)',2));
-          FaceNodes2=Mesh(iD).Degree1.Elements(FaceNodesElem(iElemFace2,:),iElem2)';
-          Node2Match1stNode1=find(FaceNodes2==FaceNodes1(1));
-          Faces(iD,iD).Interior(iFaceInt,:)=[iElem1,iElemFace1,...
-                                             iElem2,iElemFace2,Node2Match1stNode1];
-          Elements(iD).Faces.Interior{iElem1,1}(:,iElemFace1)=[1;0];
-          Elements(iD).Faces.Interior{iElem2,1}(:,iElemFace2)=[1;Node2Match1stNode1];
-        end
+  iFaceInt=0;
+  MeshElementsFast=Mesh(iD).Degree1.Elements';
+  for iElem1=1:NumElements
+    MeshElementsFast(1,:)=[];
+    for iElemFace1=1:NumElemFaces
+      FaceNodes1=Mesh(iD).Degree1.Elements(FaceNodesElem(iElemFace1,:),iElem1)';
+      [Filter1,~]=find(MeshElementsFast==FaceNodes1(1));
+      [Filter2,~]=find(MeshElementsFast(Filter1,:)==FaceNodes1(2));
+      if Sizes(iD).NumSpaceDim==3
+        [Filter3,~]=find(MeshElementsFast(Filter1(Filter2),:)==FaceNodes1(3));
+      else
+        Filter3=1:length(Filter2);
+      end
+      iElem2=iElem1+Filter1(Filter2(Filter3));
+      if not(isempty(iElem2))
+        iFaceInt=iFaceInt+1;
+        [iFaceNodes2,~]=find(Mesh(iD).Degree1.Elements(:,iElem2)==FaceNodes1);
+        iElemFace2=find(all(sort(FaceNodesElem,2)==sort(iFaceNodes2)',2));
+        FaceNodes2=Mesh(iD).Degree1.Elements(FaceNodesElem(iElemFace2,:),iElem2)';
+        Node2Match1stNode1=find(FaceNodes2==FaceNodes1(1));
+        Faces(iD,iD).Interior(iFaceInt,:)=[iElem1,iElemFace1,...
+                                           iElem2,iElemFace2,Node2Match1stNode1];
+        Elements(iD).Faces.Interior{iElem1,1}(:,iElemFace1)=[1;0];
+        Elements(iD).Faces.Interior{iElem2,1}(:,iElemFace2)=[1;Node2Match1stNode1];
       end
     end
-    Faces(iD,iD).Interior=Faces(iD,iD).Interior(1:iFaceInt,:);
   end
+  Faces(iD,iD).Interior=Faces(iD,iD).Interior(1:iFaceInt,:);
   
   % Get exterior faces and BCs
   Faces(iD,iD).Exterior=double.empty(0,2);
@@ -80,6 +78,16 @@ for iD=1:Simulation.NumDiscretizations
     A=(ElementNodes(Element,:)*diag(1:NumElemNodes))'; A(A==0)=[];
     A=reshape(A,size(FaceNodesElem,2),length(Element))'; B=sort(FaceNodesElem,2);
     [~,ElementFaces]=ismember(A,B,'rows');
+    ElementMore=repelem(find(sum(ElementNodes,2)>NumFaceNodes),NumElemFaces,1);
+    ElementFacesMore=repmat((1:NumElemFaces)',numel(ElementMore)/NumElemFaces,1);
+    if not(isempty(ElementMore))
+      Element=[Element;ElementMore];                %#ok
+      ElementFaces=[ElementFaces;ElementFacesMore]; %#ok
+      Interior=ismember([Element,ElementFaces],Faces(iD,iD).Interior(:,1:2),'rows') | ...
+               ismember([Element,ElementFaces],Faces(iD,iD).Interior(:,3:4),'rows');
+      Element=Element(not(Interior));
+      ElementFaces=ElementFaces(not(Interior));
+    end
     Faces(iD,iD).Exterior=[Faces(iD,iD).Exterior;Element,ElementFaces];
     for iElem=1:length(Element)
       Elements(iD).Faces.Exterior{Element(iElem),1}(ElementFaces(iElem))=1;
