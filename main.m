@@ -760,8 +760,8 @@ for iS=1:Simulation.NumSimulations
       for iD=1:Simulation.NumDiscretizations
         if strcmp(Parameters(iD).DiscretizationType,'CG')
           Elements(iD).SolutionGlobal=mat2cell(Block(iD,iD).SolutionGlobal(...
-            Mesh(iD).Elements(:),:),ones(Sizes(iD).NumElements,1)*...
-            Sizes(iD).NumElementNodes,Sizes(iD).NumGlobalComp);
+            Mesh(iD).Elements(:),:,:),ones(Sizes(iD).NumElements,1)*...
+            Sizes(iD).NumElementNodes,Sizes(iD).NumGlobalComp,size(Block(iD,iD).SolutionGlobal,3));
           if strcmp(Time.TimeDependent,'yes')
             Elements(iD).SolutionOld=mat2cell(Block(iD,iD).SolutionOld(...
               Mesh(iD).Elements(:),:,:),ones(Sizes(iD).NumElements,1)*...
@@ -771,11 +771,12 @@ for iS=1:Simulation.NumSimulations
           end
         elseif strcmp(Parameters(iD).DiscretizationType,'HDG')          
           Elements(iD).SolutionGlobal=mat2cell(Block(iD,iD).SolutionGlobal(...
-            cell2mat(Faces(iD,iD).GlobalLocal),:),ones(Sizes(iD).NumElements,1)*...
-            Sizes(iD).NumElementFaces*Sizes(iD).NumFaceNodes*Sizes(iD).NumGlobalComp,1);
+            cell2mat(Faces(iD,iD).GlobalLocal),:,:),ones(Sizes(iD).NumElements,1)*...
+            Sizes(iD).NumElementFaces*Sizes(iD).NumFaceNodes*Sizes(iD).NumGlobalComp,...
+            size(Block(iD,iD).SolutionGlobal,3));
           Elements(iD).SolutionLocal=mat2cell(Block(iD,iD).SolutionLocal(...
-            Mesh(iD).Elements(:),:),ones(Sizes(iD).NumElements,1)*...
-            Sizes(iD).NumElementNodes,Sizes(iD).NumLocalComp);
+            Mesh(iD).Elements(:),:,:),ones(Sizes(iD).NumElements,1)*...
+            Sizes(iD).NumElementNodes,Sizes(iD).NumLocalComp,size(Block(iD,iD).SolutionLocal,3));
           if strcmp(Time.TimeDependent,'yes')
             Elements(iD).SolutionOld=mat2cell(Block(iD,iD).SolutionOld(...
               Mesh(iD).Elements(:),:,:),ones(Sizes(iD).NumElements,1)*...
@@ -816,14 +817,17 @@ for iS=1:Simulation.NumSimulations
       System.Rhs=vertcat(Block.RhsGlobal);
 
       % Strongly impose fixed BCs
-      System.Rhs(System.DOFsFixed,1)=0;
       System.Lhs(System.DOFsFixed,:)=0;
       System.Lhs(System.DOFsFixed,System.DOFsFixed)=eye(numel(System.DOFsFixed));
+      System.Rhs(System.DOFsFixed,:)=0;
+      if size(System.Rhs,2)==size(System.Lhs,2)
+        System.Rhs(System.DOFsFixed,System.DOFsFixed)=eye(numel(System.DOFsFixed));
+      end
 
       % Strongly impose periodic BCs
       System.Rhs(System.DOFsMaster,:)=System.Rhs(System.DOFsMaster,:)+System.Rhs(System.DOFsSlave,:);
       System.Lhs(System.DOFsMaster,:)=System.Lhs(System.DOFsMaster,:)+System.Lhs(System.DOFsSlave,:);
-      System.Rhs(System.DOFsSlave,1)=0;
+      System.Rhs(System.DOFsSlave,:)=0;
       System.Lhs(System.DOFsSlave,:)=0;
       System.Lhs(System.DOFsSlave,System.DOFsSlave) =+eye(numel(System.DOFsSlave));
       System.Lhs(System.DOFsSlave,System.DOFsMaster)=-eye(numel(System.DOFsSlave));
@@ -834,6 +838,9 @@ for iS=1:Simulation.NumSimulations
         (matchField(System,'SymmetrizeMatrixOnlyOnce','yes') && ...
          Time.TimeStep<=Time.BDFOrderEff && System.Iteration==1))
           System.Lhs=(System.Lhs+System.Lhs.')/2;
+          if size(System.Rhs,2)==size(System.Lhs,2)
+            System.Rhs=(System.Rhs+System.Rhs.')/2;
+          end
       end
       
       % GLOBAL PROBLEM -----------------------------------------------------------------------------
@@ -894,16 +901,23 @@ for iS=1:Simulation.NumSimulations
           System.Solution=System.Lhs\System.Rhs;
         case 'pcg'
           System.Solution=pcg(System.Lhs,System.Rhs,...
-              Solver.Tolerance,Solver.MaxIterations,System.PrecondL,System.PrecondL');
+                    Solver.Tolerance,Solver.MaxIterations,System.PrecondL,System.PrecondL');
         case 'minres'
           System.Solution=minres(System.Lhs,System.Rhs,...
-              Solver.Tolerance,Solver.MaxIterations,System.PrecondL,System.PrecondL');
+                    Solver.Tolerance,Solver.MaxIterations,System.PrecondL,System.PrecondL');
         case 'gmres'
-           System.Solution=gmres(System.Lhs,System.Rhs,...
-             Solver.Restart,Solver.Tolerance,min(Solver.MaxIterations,size(System.Rhs,1)),...
-             System.PrecondL,System.PrecondU);
+          System.Solution=gmres(System.Lhs,System.Rhs,...
+                    Solver.Restart,Solver.Tolerance,min(Solver.MaxIterations,size(System.Rhs,1)),...
+                    System.PrecondL,System.PrecondU);
+        case 'eigs'
+          [EigenvectorsAux,EigenvaluesAux]=eigs(System.Lhs,System.Rhs,...
+                    max(Time.Mode),'smallestabs');
+          EigenvectorsAux=EigenvectorsAux(:,Time.Mode); [~,iMax]=max(abs(EigenvectorsAux));
+          System.Solution(:,1,:)=EigenvectorsAux./...
+                                       arrayfun(@(n) EigenvectorsAux(iMax(n),n),1:numel(Time.Mode));
+          Results.NaturalFrequency(1,1,:)=sqrt(diag(EigenvaluesAux(Time.Mode,Time.Mode)))';
       end
-      %System=rmfield(System,'Lhs');
+      System.Solution=full(System.Solution);
       
       % Timer
       Timer.Solution=[Timer.Solution,toc(TimerSolutionAux)];
@@ -925,20 +939,18 @@ for iS=1:Simulation.NumSimulations
       end
       
       % Extract
-      Block(1,1).SysSolutionGlobal=System.Solution((1:size(Block(1,1).RhsGlobal,1)),1);
+      Block(1,1).SysSolutionGlobal=System.Solution((1:size(Block(1,1).RhsGlobal,1)),1,:);
       for iD=2:Simulation.NumDiscretizations
         Block(iD,iD).SysSolutionGlobal=System.Solution(....
           sum(arrayfun(@(S) S.NumGlobalNodes*S.NumGlobalComp,Sizes(1:iD-1)))...
-          +(1:size(Block(iD,iD).RhsGlobal,1)),1);
+          +(1:size(Block(iD,iD).RhsGlobal,1)),1,:);
       end
-      %System=rmfield(System,'Solution');
-      %Block=rmfield(Block,'RhsGlobal');
       
       % Reshape
       for iD=1:Simulation.NumDiscretizations
         if strcmp(Parameters(iD).DiscretizationType,'CG')
           Block(iD,iD).SysSolutionGlobal=reshape(Block(iD,iD).SysSolutionGlobal,...
-                                                [Sizes(iD).NumGlobalNodes,Sizes(iD).NumGlobalComp]);
+                                               Sizes(iD).NumGlobalNodes,Sizes(iD).NumGlobalComp,[]);
         end
       end
       
@@ -961,8 +973,9 @@ for iS=1:Simulation.NumSimulations
           
           % Store element data for effective use of parfor
           Elements(iD).SysSolutionGlobal=mat2cell(Block(iD,iD).SysSolutionGlobal(...
-            cell2mat(Faces(iD,iD).GlobalLocal),:),ones(Sizes(iD).NumElements,1)*...
-            Sizes(iD).NumElementFaces*Sizes(iD).NumFaceNodes*Sizes(iD).NumGlobalComp,1);
+            cell2mat(Faces(iD,iD).GlobalLocal),:,:),ones(Sizes(iD).NumElements,1)*...
+            Sizes(iD).NumElementFaces*Sizes(iD).NumFaceNodes*Sizes(iD).NumGlobalComp,...
+            size(Block(iD,iD).SysSolutionGlobal,3));
           
           % Solve
           for iElem=1:Sizes(iD).NumElements
@@ -987,7 +1000,7 @@ for iS=1:Simulation.NumSimulations
       % --------------------------------------------------------------------------------------------
       
       % Compute norm of the residual
-      System.ResidualNorm=norm(System.Rhs);
+      System.ResidualNorm=norm(System.Rhs,'fro');
       
       % Print Newton iteration info
       if strcmp(System.Nonlinear,'yes')
@@ -1082,8 +1095,8 @@ for iS=1:Simulation.NumSimulations
   for iD=1:Simulation.NumDiscretizations
     if strcmp(Parameters(iD).DiscretizationType,'CG')
       Elements(iD).SolutionGlobal=mat2cell(Block(iD,iD).SolutionGlobal(...
-        Mesh(iD).Elements(:),:),ones(Sizes(iD).NumElements,1)*...
-        Sizes(iD).NumElementNodes,Sizes(iD).NumGlobalComp);
+        Mesh(iD).Elements(:),:,:),ones(Sizes(iD).NumElements,1)*...
+        Sizes(iD).NumElementNodes,Sizes(iD).NumGlobalComp,size(Block(iD,iD).SolutionGlobal,3));
       if strcmp(Time.TimeDependent,'yes')
         Elements(iD).SolutionOld=mat2cell(Block(iD,iD).SolutionOld(...
           Mesh(iD).Elements(:),:,:),ones(Sizes(iD).NumElements,1)*...
@@ -1093,11 +1106,12 @@ for iS=1:Simulation.NumSimulations
       end
     elseif strcmp(Parameters(iD).DiscretizationType,'HDG')
       Elements(iD).SolutionGlobal=mat2cell(Block(iD,iD).SolutionGlobal(...
-        cell2mat(Faces(iD,iD).GlobalLocal),:),ones(Sizes(iD).NumElements,1)*...
-        Sizes(iD).NumElementFaces*Sizes(iD).NumFaceNodes*Sizes(iD).NumGlobalComp,1);
+        cell2mat(Faces(iD,iD).GlobalLocal),:,:),ones(Sizes(iD).NumElements,1)*...
+        Sizes(iD).NumElementFaces*Sizes(iD).NumFaceNodes*Sizes(iD).NumGlobalComp,...
+        size(Block(iD,iD).SolutionGlobal,3));
       Elements(iD).SolutionLocal=mat2cell(Block(iD,iD).SolutionLocal(...
-        Mesh(iD).Elements(:),:),ones(Sizes(iD).NumElements,1)*...
-        Sizes(iD).NumElementNodes,Sizes(iD).NumLocalComp);
+        Mesh(iD).Elements(:),:,:),ones(Sizes(iD).NumElements,1)*...
+        Sizes(iD).NumElementNodes,Sizes(iD).NumLocalComp,size(Block(iD,iD).SolutionLocal,3));
       if strcmp(Time.TimeDependent,'yes')
         Elements(iD).SolutionOld=mat2cell(Block(iD,iD).SolutionOld(...
           Mesh(iD).Elements(:),:,:),ones(Sizes(iD).NumElements,1)*...
@@ -1180,7 +1194,7 @@ for iS=1:Simulation.NumSimulations
     if matchField(Results,'Time')
       iPlotT=numel(Results(1).Time);
     else
-      iPlotT=1;
+      iPlotT=size(System.Solution,3);
     end
     plotSolution(Simulation,Mesh,Faces,Results,Parameters,RefElement,Sizes,Options,iPlotT);
   end

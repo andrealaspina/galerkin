@@ -20,7 +20,7 @@ classdef ElectromagneticPML_FD_HDG_fast < Formulation
     % Time derivative order
     TimeDerOrder=NaN;
     
-    % Time/frequency domain
+    % Domain
     Domain='Frequency';
     
   end
@@ -31,11 +31,6 @@ classdef ElectromagneticPML_FD_HDG_fast < Formulation
     function [Block]=initializeUnknowns(~,iD,Block,~,~,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes*Sizes(iD).NumGlobalComp,1);
       Block(iD,iD).SolutionLocal=zeros(Sizes(iD).NumLocalNodes,Sizes(iD).NumLocalComp,1);
-    end
-    
-    %% Compute initial conditions
-    function [Block]=computeInitialConditions(~,~,Block,~,~,~,~,~,~)
-
     end
     
     %% Build block

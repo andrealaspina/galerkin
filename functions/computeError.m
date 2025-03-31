@@ -22,14 +22,16 @@ function [Error]=computeNumberError(...
 
 % Get general parameters
 if strcmp(Domain,'Time')
-  t_or_w=Time.Time;
+  t_or_w_or_n=Time.Time;
 elseif strcmp(Domain,'Frequency')
-  t_or_w=2*pi*Time.Frequency;
+  t_or_w_or_n=2*pi*Time.Frequency;
+elseif strcmp(Domain,'Mode')
+  t_or_w_or_n=Time.Mode(end);
 end
 
 % Get solution
 uh=Solution;
-uA=AnalyticSolution(t_or_w);
+uA=AnalyticSolution(t_or_w_or_n);
 
 % Compute (relative) error if all components of the analytical solution are not zero
 if not(any(uA<1e-12)) % Relative error if all components of the analytical solution are not zero
@@ -49,9 +51,11 @@ Ce=Mesh.Elements(:,iElem)';
 Xe=Mesh.Nodes(:,Ce)';
 uA=AnalyticSolution;
 if strcmp(Domain,'Time')
-  t_or_w=Time.Time;
+  t_or_w_or_n=Time.Time;
 elseif strcmp(Domain,'Frequency')
-  t_or_w=2*pi*Time.Frequency;
+  t_or_w_or_n=2*pi*Time.Frequency;
+elseif strcmp(Domain,'Mode')
+  t_or_w_or_n=Time.Mode(end);
 end
 
 % Get solution
@@ -63,7 +67,7 @@ uhe=Solution(Ce,:);
 % Compute variables at Gauss points
 Xeg=Ne*Xe;
 uheg=Ne*uhe;
-uAeg=uA(Xeg(:,1),Xeg(:,2),Xeg(:,3),t_or_w);
+uAeg=uA(Xeg(:,1),Xeg(:,2),Xeg(:,3),t_or_w_or_n);
 
 % Compute L2 contribution
 ErrorElemL2=sum(((uheg-uAeg).^2).*weg);

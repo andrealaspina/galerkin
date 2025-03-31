@@ -20,7 +20,7 @@ classdef ElasticityLinear_HDG < Formulation
     % Time derivative order
     TimeDerOrder=2;
     
-    % Time/frequency domain
+    % Domain
     Domain='Time';
     
   end

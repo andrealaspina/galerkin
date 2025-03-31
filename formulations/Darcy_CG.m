@@ -11,7 +11,7 @@ classdef Darcy_CG < Formulation
     % Time derivative order
     TimeDerOrder=1;
     
-    % Time/frequency domain
+    % Domain
     Domain='Time';
     
   end
@@ -21,11 +21,6 @@ classdef Darcy_CG < Formulation
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,~,~,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes,Sizes(iD).NumGlobalComp,1);
-    end
-    
-    %% Compute initial conditions
-    function [Block]=computeInitialConditions(~,~,Block,~,~,~,~,~,~)
-      
     end
     
     %% Build block

@@ -20,7 +20,7 @@ classdef Formulation
     % Time derivative order
     TimeDerOrder=1;
     
-    % Time/frequency domain
+    % Domain
     Domain='Time';
     
   end

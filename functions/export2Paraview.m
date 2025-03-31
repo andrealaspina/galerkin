@@ -8,9 +8,11 @@ k=Parameters.Degree;
 C=Mesh.Elements';
 X=Mesh.Nodes';
 if matchField(Time,'Frequency')
-  t_or_f=Time.Frequency;
-else
-  t_or_f=Time.Time;
+  t_or_f_or_n=Time.Frequency;
+elseif matchField(Time,'Time')
+  t_or_f_or_n=Time.Time;
+elseif matchField(Time,'Mode')
+  t_or_f_or_n=Time.Mode(end);
 end
 
 % Extrapolate mesh info
@@ -116,8 +118,8 @@ for iP=1:length(Options.Export2Paraview)
   elseif matchField(Parameters,VariableName) && isa(Parameters.(VariableName),'function_handle')
     if nargin(Parameters.(VariableName))==3
       Variable=Parameters.(VariableName)(X(:,1),X(:,2),X(:,3));
-    elseif nargin(Parameters.(VariableName))==4
-      Variable=Parameters.(VariableName)(X(:,1),X(:,2),X(:,3),t_or_f);
+    elseif nargin(Parameters.(VariableName))>3
+      Variable=Parameters.(VariableName)(X(:,1),X(:,2),X(:,3),t_or_f_or_n);
     end
   elseif matchField(Parameters,VariableName) && isnumeric(Parameters.(VariableName))
     Variable=repmat(Parameters.(VariableName)(:)',NumNodes,1);

@@ -113,7 +113,7 @@ for iD=1:Simulation.NumDiscretizations
       Faces(iD,iD).(BoundaryNames{iBoundaryName})=double.empty(0,2);
     end
   end
-    
+  
   % Get faces of specific regions
   if not(isempty(Regions))
     RegionsNames=fieldnames(Regions(iD));

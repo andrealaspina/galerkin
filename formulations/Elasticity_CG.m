@@ -11,7 +11,7 @@ classdef Elasticity_CG < Formulation
     % Time derivative order
     TimeDerOrder=2;
     
-    % Time/frequency domain
+    % Domain
     Domain='Time';
     
   end

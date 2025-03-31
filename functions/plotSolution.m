@@ -28,6 +28,8 @@ for iP=1:length(Options.PlotSolution)
     else
       Domain='Time';
     end
+  elseif matchField(Results,'Mode')
+    Domain='Mode';
   end
   for iC=1:size(vertcat(Results.([Options.PlotSolution{iP}])),2)
     figure('Color','w');
