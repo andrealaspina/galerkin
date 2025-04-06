@@ -52,6 +52,8 @@ Here is a non-exhaustive list of the currently implemented **formulations**:
 
 - `ElasticityLinear_HDG`: Solves the **equations of linear elastodynamics** with the HDG method [^1].
 
+- `ElasticityModal_CG`: Solves the eigenvalue problem of **linear elasticity** for modal analysis using the CG method.
+
 ### Fluid Dynamics 🌊
 
 - `CompressibleFlow_HDG`: Solves the **compressible Euler equations** with the HDG method.
