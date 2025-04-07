@@ -1,0 +1,1 @@
+Include "fsi_3d_channel.geo";
