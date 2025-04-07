@@ -1,0 +1,519 @@
+
+--------------------------------------------------------------------------------
+Input file: fsi_3d_channel
+
+Pre-processing  started...
+Pre-processing  completed in 3.8 sec (160.8 MB)
+Processing      started...
+Time integration ...............................................................
+Time = 1.00e-01 Step = 01/100
+  Iter = 1      |Res| = 4.8e-06      [te,ts,tl] = [1.4,1.2,0.0]
+  Iter = 2      |Res| = 8.1e-09      [te,ts,tl] = [1.1,1.1,0.0]
+Time = 2.00e-01 Step = 02/100
+  Iter = 1      |Res| = 1.3e+02      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 7.6e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 3.00e-01 Step = 03/100
+  Iter = 1      |Res| = 4.9e+02      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 4.8e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 4.00e-01 Step = 04/100
+  Iter = 1      |Res| = 1.2e+03      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 2.0e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 3.0e-11      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 5.00e-01 Step = 05/100
+  Iter = 1      |Res| = 2.3e+03      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 5.9e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.4e-10      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 6.00e-01 Step = 06/100
+  Iter = 1      |Res| = 3.8e+03      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 1.4e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 4.7e-10      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 7.00e-01 Step = 07/100
+  Iter = 1      |Res| = 5.5e+03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 2.7e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.3e-09      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 8.00e-01 Step = 08/100
+  Iter = 1      |Res| = 7.5e+03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 4.7e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 3.0e-09      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 9.00e-01 Step = 09/100
+  Iter = 1      |Res| = 9.6e+03      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 7.5e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 6.6e-09      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 1.00e+00 Step = 10/100
+  Iter = 1      |Res| = 1.2e+04      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 1.1e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.4e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 1.10e+00 Step = 11/100
+  Iter = 1      |Res| = 1.4e+04      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 1.6e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 2.7e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 1.20e+00 Step = 12/100
+  Iter = 1      |Res| = 1.7e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 2.3e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 5.4e-08      [te,ts,tl] = [1.1,1.1,0.0]
+Time = 1.30e+00 Step = 13/100
+  Iter = 1      |Res| = 2.0e+04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 3.0e-04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 3      |Res| = 1.1e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 1.40e+00 Step = 14/100
+  Iter = 1      |Res| = 2.3e+04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 4.0e-04      [te,ts,tl] = [1.0,1.2,0.0]
+  Iter = 3      |Res| = 2.0e-07      [te,ts,tl] = [1.1,1.1,0.0]
+Time = 1.50e+00 Step = 15/100
+  Iter = 1      |Res| = 2.5e+04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 5.0e-04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 3      |Res| = 3.8e-07      [te,ts,tl] = [1.0,1.1,0.0]
+Time = 1.60e+00 Step = 16/100
+  Iter = 1      |Res| = 2.8e+04      [te,ts,tl] = [1.2,1.0,0.0]
+  Iter = 2      |Res| = 6.2e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 6.9e-07      [te,ts,tl] = [1.1,1.0,0.0]
+Time = 1.70e+00 Step = 17/100
+  Iter = 1      |Res| = 3.1e+04      [te,ts,tl] = [1.3,1.1,0.0]
+  Iter = 2      |Res| = 7.6e-04      [te,ts,tl] = [1.3,1.0,0.0]
+  Iter = 3      |Res| = 1.2e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 3.8e-08      [te,ts,tl] = [1.1,1.0,0.0]
+Time = 1.80e+00 Step = 18/100
+  Iter = 1      |Res| = 3.3e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 9.1e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 2.0e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 6.0e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 1.90e+00 Step = 19/100
+  Iter = 1      |Res| = 3.6e+04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 1.1e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 3.3e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 9.2e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 2.00e+00 Step = 20/100
+  Iter = 1      |Res| = 3.9e+04      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 1.2e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 5.2e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.4e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 2.10e+00 Step = 21/100
+  Iter = 1      |Res| = 4.1e+04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 1.4e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 8.0e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 2.0e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 2.20e+00 Step = 22/100
+  Iter = 1      |Res| = 4.3e+04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 1.6e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.2e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 2.8e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 2.30e+00 Step = 23/100
+  Iter = 1      |Res| = 4.5e+04      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 1.8e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.7e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 3.8e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 2.40e+00 Step = 24/100
+  Iter = 1      |Res| = 4.7e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 2.0e-03      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 3      |Res| = 2.4e-05      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 4      |Res| = 5.1e-07      [te,ts,tl] = [1.0,1.1,0.0]
+Time = 2.50e+00 Step = 25/100
+  Iter = 1      |Res| = 4.9e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 2.3e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 3.4e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 6.7e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 2.60e+00 Step = 26/100
+  Iter = 1      |Res| = 5.0e+04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 2.5e-03      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 3      |Res| = 4.6e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 8.7e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 2.70e+00 Step = 27/100
+  Iter = 1      |Res| = 5.2e+04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 2.7e-03      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 3      |Res| = 6.0e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.1e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 2.8e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 2.80e+00 Step = 28/100
+  Iter = 1      |Res| = 5.3e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 2.9e-03      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 3      |Res| = 7.9e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.4e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 4.2e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 2.90e+00 Step = 29/100
+  Iter = 1      |Res| = 5.4e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 3.1e-03      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 3      |Res| = 1.0e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.8e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 6.0e-08      [te,ts,tl] = [1.0,1.1,0.0]
+Time = 3.00e+00 Step = 30/100
+  Iter = 1      |Res| = 5.4e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 3.3e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.3e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 2.2e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 8.5e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 3.10e+00 Step = 31/100
+  Iter = 1      |Res| = 5.5e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 3.5e-03      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 3      |Res| = 1.6e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 2.7e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.2e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 3.20e+00 Step = 32/100
+  Iter = 1      |Res| = 5.5e+04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 3.7e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.9e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 3.4e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.6e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 3.30e+00 Step = 33/100
+  Iter = 1      |Res| = 5.5e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 3.8e-03      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 3      |Res| = 2.3e-04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 4      |Res| = 4.1e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 2.1e-07      [te,ts,tl] = [1.1,1.1,0.0]
+Time = 3.40e+00 Step = 34/100
+  Iter = 1      |Res| = 5.4e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 4.0e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 2.7e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 5.1e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 2.7e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 3.50e+00 Step = 35/100
+  Iter = 1      |Res| = 5.4e+04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 4.1e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 3.1e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 6.2e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 3.4e-07      [te,ts,tl] = [1.1,1.1,0.0]
+Time = 3.60e+00 Step = 36/100
+  Iter = 1      |Res| = 5.3e+04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 4.2e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 3.6e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 7.5e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 4.2e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 3.70e+00 Step = 37/100
+  Iter = 1      |Res| = 5.2e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 4.2e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 4.1e-04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 8.9e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 5.1e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 3.80e+00 Step = 38/100
+  Iter = 1      |Res| = 5.1e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 4.3e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 4.5e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.0e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 6.2e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 3.90e+00 Step = 39/100
+  Iter = 1      |Res| = 4.9e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 4.3e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 5.0e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.2e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 7.2e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 4.00e+00 Step = 40/100
+  Iter = 1      |Res| = 4.7e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 4.2e-03      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 3      |Res| = 5.4e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.4e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 8.4e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 4.10e+00 Step = 41/100
+  Iter = 1      |Res| = 4.5e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 4.2e-03      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 3      |Res| = 5.8e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.6e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 9.5e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 4.20e+00 Step = 42/100
+  Iter = 1      |Res| = 4.3e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 4.1e-03      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 3      |Res| = 6.1e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.7e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.1e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 6      |Res| = 5.0e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 4.30e+00 Step = 43/100
+  Iter = 1      |Res| = 4.1e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 4.0e-03      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 3      |Res| = 6.3e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.9e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.1e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 6      |Res| = 5.7e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 4.40e+00 Step = 44/100
+  Iter = 1      |Res| = 3.9e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 3.8e-03      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 3      |Res| = 6.4e-04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 2.0e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.2e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 6      |Res| = 6.4e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 4.50e+00 Step = 45/100
+  Iter = 1      |Res| = 3.6e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 3.6e-03      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 3      |Res| = 6.4e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 2.1e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.3e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 6      |Res| = 7.0e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 4.60e+00 Step = 46/100
+  Iter = 1      |Res| = 3.3e+04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 3.4e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 6.4e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 2.2e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.3e-06      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 6      |Res| = 7.5e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 4.70e+00 Step = 47/100
+  Iter = 1      |Res| = 3.1e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 3.2e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 6.2e-04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 2.2e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.3e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 6      |Res| = 7.7e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 4.80e+00 Step = 48/100
+  Iter = 1      |Res| = 2.8e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 2.9e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 5.8e-04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 2.1e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.3e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 6      |Res| = 7.7e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 4.90e+00 Step = 49/100
+  Iter = 1      |Res| = 2.5e+04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 2.6e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 5.4e-04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 2.0e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.2e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 6      |Res| = 7.5e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 5.00e+00 Step = 50/100
+  Iter = 1      |Res| = 2.2e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 2.3e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 4.9e-04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 1.9e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.1e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 6      |Res| = 7.0e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 5.10e+00 Step = 51/100
+  Iter = 1      |Res| = 1.9e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 1.9e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 4.3e-04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 1.7e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 9.8e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 5.20e+00 Step = 52/100
+  Iter = 1      |Res| = 1.6e+04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 1.6e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 3.7e-04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 1.5e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 8.5e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 5.30e+00 Step = 53/100
+  Iter = 1      |Res| = 1.3e+04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 1.4e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 3.1e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.2e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 7.2e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 5.40e+00 Step = 54/100
+  Iter = 1      |Res| = 1.1e+04      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 1.1e-03      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 2.5e-04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 1.0e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 5.9e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 5.50e+00 Step = 55/100
+  Iter = 1      |Res| = 8.5e+03      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 8.9e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 2.1e-04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 8.5e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 4.8e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 5.60e+00 Step = 56/100
+  Iter = 1      |Res| = 6.7e+03      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 7.0e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.6e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 6.8e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 3.8e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 5.70e+00 Step = 57/100
+  Iter = 1      |Res| = 5.2e+03      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 5.3e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.3e-04      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 5.3e-06      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 5      |Res| = 2.9e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 5.80e+00 Step = 58/100
+  Iter = 1      |Res| = 4.0e+03      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 4.0e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 9.3e-05      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 3.9e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 2.2e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 5.90e+00 Step = 59/100
+  Iter = 1      |Res| = 2.9e+03      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 2.9e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 6.7e-05      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 2.8e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.5e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 6.00e+00 Step = 60/100
+  Iter = 1      |Res| = 2.0e+03      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 1.9e-04      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 3      |Res| = 4.5e-05      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 1.9e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 1.0e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 6.10e+00 Step = 61/100
+  Iter = 1      |Res| = 1.3e+03      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 1.2e-04      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 2.7e-05      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 1.2e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 5      |Res| = 6.4e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 6.20e+00 Step = 62/100
+  Iter = 1      |Res| = 7.7e+02      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 6.5e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.4e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 5.8e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 6.30e+00 Step = 63/100
+  Iter = 1      |Res| = 3.5e+02      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 2.8e-05      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 3      |Res| = 3.3e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.3e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 6.40e+00 Step = 64/100
+  Iter = 1      |Res| = 4.7e+01      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 2.9e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 4.7e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 2.1e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 6.50e+00 Step = 65/100
+  Iter = 1      |Res| = 2.4e+02      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 4.7e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.0e-05      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 4.5e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 6.60e+00 Step = 66/100
+  Iter = 1      |Res| = 4.1e+02      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 6.1e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.4e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 6.1e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 6.70e+00 Step = 67/100
+  Iter = 1      |Res| = 5.2e+02      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 7.0e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.7e-05      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 4      |Res| = 7.1e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 6.80e+00 Step = 68/100
+  Iter = 1      |Res| = 5.9e+02      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 7.6e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.8e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 7.6e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 6.90e+00 Step = 69/100
+  Iter = 1      |Res| = 6.2e+02      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 7.7e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.8e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 7.8e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 7.00e+00 Step = 70/100
+  Iter = 1      |Res| = 6.2e+02      [te,ts,tl] = [1.1,1.2,0.0]
+  Iter = 2      |Res| = 7.6e-05      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 3      |Res| = 1.8e-05      [te,ts,tl] = [1.2,1.0,0.0]
+  Iter = 4      |Res| = 7.7e-07      [te,ts,tl] = [1.2,1.2,0.0]
+Time = 7.10e+00 Step = 71/100
+  Iter = 1      |Res| = 6.1e+02      [te,ts,tl] = [1.2,1.1,0.0]
+  Iter = 2      |Res| = 7.3e-05      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 3      |Res| = 1.7e-05      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 7.4e-07      [te,ts,tl] = [1.1,1.0,0.0]
+Time = 7.20e+00 Step = 72/100
+  Iter = 1      |Res| = 5.8e+02      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 6.9e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.6e-05      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 6.9e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 7.30e+00 Step = 73/100
+  Iter = 1      |Res| = 5.5e+02      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 6.3e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.5e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 6.4e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 7.40e+00 Step = 74/100
+  Iter = 1      |Res| = 5.0e+02      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 5.8e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.4e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 5.8e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 7.50e+00 Step = 75/100
+  Iter = 1      |Res| = 4.5e+02      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 5.2e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.2e-05      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 5.2e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 7.60e+00 Step = 76/100
+  Iter = 1      |Res| = 4.1e+02      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 4.6e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.1e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 4.6e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 7.70e+00 Step = 77/100
+  Iter = 1      |Res| = 3.6e+02      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 4.0e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 9.5e-06      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 4.0e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 7.80e+00 Step = 78/100
+  Iter = 1      |Res| = 3.1e+02      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 3.5e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 8.3e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 3.5e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 7.90e+00 Step = 79/100
+  Iter = 1      |Res| = 2.7e+02      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 3.0e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 7.1e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 3.0e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 8.00e+00 Step = 80/100
+  Iter = 1      |Res| = 2.3e+02      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 2.5e-05      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 3      |Res| = 6.0e-06      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 2.5e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 8.10e+00 Step = 81/100
+  Iter = 1      |Res| = 1.9e+02      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 2.1e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 5.0e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 2.1e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 8.20e+00 Step = 82/100
+  Iter = 1      |Res| = 1.6e+02      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 1.8e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 4.2e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 1.8e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 8.30e+00 Step = 83/100
+  Iter = 1      |Res| = 1.3e+02      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 1.4e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 3.4e-06      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 1.4e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 8.40e+00 Step = 84/100
+  Iter = 1      |Res| = 1.1e+02      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 1.2e-05      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 2.8e-06      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 4      |Res| = 1.2e-07      [te,ts,tl] = [1.1,1.0,0.0]
+Time = 8.50e+00 Step = 85/100
+  Iter = 1      |Res| = 8.8e+01      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 9.3e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 2.2e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 9.2e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 8.60e+00 Step = 86/100
+  Iter = 1      |Res| = 7.0e+01      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 7.3e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.7e-06      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 4      |Res| = 7.2e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 8.70e+00 Step = 87/100
+  Iter = 1      |Res| = 5.4e+01      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 5.6e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 1.3e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 4      |Res| = 5.5e-08      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 8.80e+00 Step = 88/100
+  Iter = 1      |Res| = 4.1e+01      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 4.1e-06      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 3      |Res| = 9.7e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 8.90e+00 Step = 89/100
+  Iter = 1      |Res| = 3.0e+01      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 2      |Res| = 3.0e-06      [te,ts,tl] = [1.1,1.1,0.0]
+  Iter = 3      |Res| = 6.9e-07      [te,ts,tl] = [1.1,1.0,0.0]
+Time = 9.00e+00 Step = 90/100
+  Iter = 1      |Res| = 2.1e+01      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 2.0e-06      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 3      |Res| = 4.7e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 9.10e+00 Step = 91/100
+  Iter = 1      |Res| = 1.4e+01      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 1.3e-06      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 3      |Res| = 2.9e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 9.20e+00 Step = 92/100
+  Iter = 1      |Res| = 8.2e+00      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 7.0e-07      [te,ts,tl] = [1.0,1.1,0.0]
+Time = 9.30e+00 Step = 93/100
+  Iter = 1      |Res| = 3.8e+00      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 3.1e-07      [te,ts,tl] = [1.0,1.1,0.0]
+Time = 9.40e+00 Step = 94/100
+  Iter = 1      |Res| = 6.0e-01      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 2.6e-07      [te,ts,tl] = [1.0,1.1,0.0]
+Time = 9.50e+00 Step = 95/100
+  Iter = 1      |Res| = 2.1e+00      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 4.4e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 9.60e+00 Step = 96/100
+  Iter = 1      |Res| = 3.9e+00      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 6.0e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 9.70e+00 Step = 97/100
+  Iter = 1      |Res| = 5.1e+00      [te,ts,tl] = [1.1,1.0,0.0]
+  Iter = 2      |Res| = 7.0e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 9.80e+00 Step = 98/100
+  Iter = 1      |Res| = 5.8e+00      [te,ts,tl] = [1.0,1.0,0.0]
+  Iter = 2      |Res| = 7.5e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 9.90e+00 Step = 99/100
+  Iter = 1      |Res| = 6.2e+00      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 7.7e-07      [te,ts,tl] = [1.0,1.0,0.0]
+Time = 1.00e+01 Step = 100/100
+  Iter = 1      |Res| = 6.3e+00      [te,ts,tl] = [1.0,1.1,0.0]
+  Iter = 2      |Res| = 7.7e-07      [te,ts,tl] = [1.0,1.0,0.0]
+................................................................................
+Processing      completed in 934.3 sec (524.4 MB)
+Post-processing started...
+Post-processing completed in 0.1 sec (524.4 MB)
+--------------------------------------------------------------------------------
+
+Saved output file in: output/fsi_3d_channel/fsi_3d_channel.mat
+Saved  diary file in: output/fsi_3d_channel/fsi_3d_channel.txt
