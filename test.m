@@ -10,6 +10,7 @@ addpath('./input');
 addpath('./output');
 addpath('./symbolic');
 addpath('./tests');
+set(0,'DefaultFigureVisible','on');
 set(0,'DefaultFigureVisible','off');
 
 % Run tests
