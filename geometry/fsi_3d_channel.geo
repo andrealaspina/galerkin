@@ -33,7 +33,7 @@ Mesh 3;
 // save mesh structure
 Save "fsi_3d_channel_structure.mat";
 
-// channel
+// fluid
 Box(2) = {0, -W/2, -H/2, L, W, H};
 BooleanDifference{Volume{2}; Delete;}{Volume{1}; Delete;}
 Transfinite Curve {13, 15, 18, 23} = 2^(r-1)+1;
