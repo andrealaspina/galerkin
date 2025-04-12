@@ -8,26 +8,21 @@ if nargin<5
 end
 
 % Maximum polynomial degree implemented
-if nsd==2
-  kMax=8;
-  if kNodes>kMax || kGauss>kMax
-    warning('Using maximum polynomial degree implemented = %d',kMax);
-  end
-  kNodes=min(kNodes,kMax);
-  kGauss=min(kGauss,kMax);
-elseif nsd==3
-  kMax=8;
-  if kNodes>kMax || kGauss>kMax
-    warning('Using maximum polynomial degree implemented = %d',kMax);
-  end
-  kNodes=min(kNodes,kMax);
-  kGauss=min(kGauss,kMax);
+kMax=8;
+if kNodes>kMax || kGauss>kMax
+  warning('Using maximum polynomial degree implemented = %d',kMax);
 end
+kNodes=min(kNodes,kMax);
+kGauss=min(kGauss,kMax);
 
 % Geometric info
 if strcmp(Distribution,'Uniform')
   if nsd==3
     switch kNodes
+      case 0
+        InnerNodes=1;
+        FaceNodes=[1 3 2; 3 4 2; 4 1 2; 3 1 4];
+        EdgeNodes=[1 2; 2 3; 1 3; 1 4; 2 4; 3 4];
       case 1
         InnerNodes=[];
         FaceNodes=[1 3 2; 3 4 2; 4 1 2; 3 1 4];
@@ -64,13 +59,21 @@ if strcmp(Distribution,'Uniform')
         error('Element not yet implemented');
     end
   elseif nsd==2
-    InnerNodes=(3*kNodes+1):((3*kNodes)+(1/2*kNodes^2-3/2*kNodes+1));
+    if kNodes==0
+      InnerNodes=1;
+    else
+      InnerNodes=(3*kNodes+1):((3*kNodes)+(1/2*kNodes^2-3/2*kNodes+1));
+    end
     if isempty(InnerNodes); InnerNodes=double.empty; end
     FaceNodes=[1,2,(1:(kNodes-1))+3+0*(kNodes-1);2,3,(1:(kNodes-1))+3+1*(kNodes-1);3,1,(1:(kNodes-1))+3+2*(kNodes-1)];
   end
 elseif strcmp(Distribution,'Fekete')
   if nsd==3
     switch kNodes
+      case 0
+        InnerNodes=1;
+        FaceNodes=[1 3 2; 3 4 2; 4 1 2; 3 1 4];
+        EdgeNodes=[1 2; 2 3; 1 3; 1 4; 2 4; 3 4];
       case 1
         InnerNodes=[];
         FaceNodes=[1 3 2; 3 4 2; 4 1 2; 3 1 4];
@@ -107,7 +110,11 @@ elseif strcmp(Distribution,'Fekete')
         error('Element not yet implemented');
     end
   elseif nsd==2
-    InnerNodes=(3*kNodes+1):((3*kNodes)+(1/2*kNodes^2-3/2*kNodes+1));
+    if kNodes==0
+      InnerNodes=1;
+    else
+      InnerNodes=(3*kNodes+1):((3*kNodes)+(1/2*kNodes^2-3/2*kNodes+1));
+    end
     if isempty(InnerNodes); InnerNodes=double.empty; end
     FaceNodes=[1,2,(1:(kNodes-1))+3+0*(kNodes-1);2,3,(1:(kNodes-1))+3+1*(kNodes-1);3,1,(1:(kNodes-1))+3+2*(kNodes-1)];
   end
@@ -116,6 +123,10 @@ end
 % Nodes coordinates
 if strcmp(Distribution,'Uniform')
   switch kNodes
+    case 0
+      X3D='[1/3 1/3 1/3]';
+      X2D='[1/3 1/3]';
+      X1D='[1/2]';
     case 1
       X3D='[0 1 0; 0 0 1; 0 0 0; 1 0 0]';
       X2D='[0 0; 1 0; 0 1]';
@@ -153,6 +164,10 @@ if strcmp(Distribution,'Uniform')
   end
 elseif strcmp(Distribution,'Fekete')
   switch kNodes
+    case 0
+      X3D='[0.333333333333333 0.333333333333333 0.333333333333333]';
+      X2D='[0.333333333333333 0.333333333333333]';
+      X1D='[0.500000000000000]';
     case 1
       X3D='[0.000000000000000 1.000000000000000 0.000000000000000; 0.000000000000000 0.000000000000000 1.000000000000000; 0.000000000000000 0.000000000000000 0.000000000000000; 1.000000000000000 0.000000000000000 0.000000000000000]';
       X2D='[0.000000000000000 0.000000000000000; 1.000000000000000 0.000000000000000; 0.000000000000000 1.000000000000000]';
@@ -203,7 +218,7 @@ end
 
 if nsd==3
   % Gauss quadrature in 3D
-  [Xg3D,Gw3D]=quadratureSimplex(kGauss+1,X3D([1,2,3,4],:));
+  [Xg3D,Gw3D]=quadratureSimplex(kGauss+1,[0 1 0; 0 0 1; 0 0 0; 1 0 0]);
   x=Xg3D(:,1);
   y=Xg3D(:,2);
   z=Xg3D(:,3);
@@ -212,6 +227,11 @@ if nsd==3
   
   % Pascal triangle and derivatives in 3D
   switch kNodes
+    case 0
+      P3D=    I;
+      P3DXi=  O;
+      P3DEta= O;
+      P3DZeta=O;
     case 1
       P3D=    [I, x, y, z];
       P3DXi=  [O, I, O, O];
@@ -259,6 +279,8 @@ if nsd==3
   % Coefficients in 3D
   if strcmp(Distribution,'Uniform')
     switch kNodes
+      case 0
+        C3D='[1]';
       case 1
         C3D='[0 0 1 0; 0 0 -1 1; 1 0 -1 0; 0 1 -1 0]';
       case 2
@@ -280,6 +302,8 @@ if nsd==3
     end
   elseif strcmp(Distribution,'Fekete')
     switch kNodes
+      case 0
+        C3D='[1.000000000000000]';
       case 1
         C3D='[0.000000000000000 0.000000000000000 1.000000000000000 0.000000000000000; 0.000000000000000 0.000000000000000 -1.000000000000000 1.000000000000000; 1.000000000000000 0.000000000000000 -1.000000000000000 0.000000000000000; 0.000000000000000 1.000000000000000 -1.000000000000000 0.000000000000000]';
       case 2
@@ -317,12 +341,12 @@ if nsd>=2
   % Gauss quadrature in 2D
   if Digits==16
     % Exception: Use standard triquad if double precision
-    rule2D=[2,6,7,9,11,12,15,16];
-    XgGw2D=triquad(rule2D(kGauss),'Domain',[0 0;1 0;0 1],'Type','nonproduct');
+    rule2D=[1,2,6,7,9,11,12,15,16];
+    XgGw2D=triquad(rule2D(kGauss+1),'Domain',[0 0;1 0;0 1],'Type','nonproduct');
     Xg2D=XgGw2D.Points;
     Gw2D=XgGw2D.Weights;
   else
-    [Xg2D,Gw2D]=quadratureSimplex(kGauss+1,X2D([3,1,2],:));
+    [Xg2D,Gw2D]=quadratureSimplex(kGauss+1,[0 0; 1 0; 0 1]);
   end
   x=Xg2D(:,1);
   y=Xg2D(:,2);
@@ -331,6 +355,10 @@ if nsd>=2
   
   % Pascal triangle and derivatives in 2D
   switch kNodes
+    case 0
+      P2D=   I;
+      P2DXi= O;
+      P2DEta=O;
     case 1
       P2D=   [I, x, y];
       P2DXi= [O, I, O];
@@ -370,6 +398,8 @@ if nsd>=2
   % Coefficients in 2D
   if strcmp(Distribution,'Uniform')
     switch kNodes
+      case 0
+        C2D='[1]';
       case 1
         C2D='[1 0 0; -1 1 0; -1 0 1]';
       case 2
@@ -391,6 +421,8 @@ if nsd>=2
     end
   elseif strcmp(Distribution,'Fekete')
     switch kNodes
+      case 0
+        C2D='[1.000000000000000]';
       case 1
         C2D='[1.000000000000000 0.000000000000000 0.000000000000000; -1.000000000000000 1.000000000000000 0.000000000000000; -1.000000000000000 0.000000000000000 1.000000000000000]';
       case 2
@@ -425,13 +457,16 @@ end
 
 if nsd>=1
   % Gauss quadrature in 1D
-  [Xg1D,Gw1D]=quadratureSimplex(kGauss+1+(kGauss==3),X1D([1,2],:));
+  [Xg1D,Gw1D]=quadratureSimplex(kGauss+1+(kGauss==3),[0; 1]);
   x=Xg1D(:,1);
   O=0*x;
   I=1+O;
   
   % Pascal triangle and derivatives in 1D
   switch kNodes
+    case 0
+      P1D=  I;
+      P1DXi=O;
     case 1
       P1D=  [I, x];
       P1DXi=[O, I];
@@ -463,6 +498,8 @@ if nsd>=1
   % Coefficients in 1D
   if strcmp(Distribution,'Uniform')
     switch kNodes
+      case 0
+        C1D='[1]';
       case 1
         C1D='[1 0; -1 1]';
       case 2
@@ -484,6 +521,8 @@ if nsd>=1
     end
   elseif strcmp(Distribution,'Fekete')
     switch kNodes
+      case 0
+        C1D='[1.000000000000000]';
       case 1
         C1D='[1.000000000000000 0.000000000000000; -1.000000000000000 1.000000000000000]';
       case 2

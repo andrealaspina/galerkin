@@ -1,5 +1,5 @@
 function [Error]=computeError(...
-         Time,Mesh,RefElement,Sizes,Solution,AnalyticSolution,Norm,Condition,Domain)
+         Time,Mesh,Parameters,RefElement,Sizes,Solution,AnalyticSolution,Norm,Condition,Domain)
          % Compute error
 
 % Loop in the elements
@@ -8,7 +8,7 @@ if strcmp(Norm,'Number')
 else
   Error=0;
   parfor iElem=1:Sizes.NumElements
-    ErrorElem=computeElementError(iElem,Mesh,Time,RefElement,Sizes,...
+    ErrorElem=computeElementError(iElem,Mesh,Time,Parameters,RefElement,Sizes,...
       Solution,AnalyticSolution,Norm,Condition,Domain);
     Error=Error+ErrorElem;
   end
@@ -43,10 +43,11 @@ end
 end
 
 function [ErrorElem]=computeElementError(...
-  iElem,Mesh,Time,RefElement,Sizes,Solution,AnalyticSolution,Norm,Condition,Domain)
+  iElem,Mesh,Time,Parameters,RefElement,Sizes,Solution,AnalyticSolution,Norm,Condition,Domain)
 
 % Get general parameters
 nsd=Sizes.NumSpaceDim;
+k=Parameters.Degree;
 Ce=Mesh.Elements(:,iElem)';
 Xe=Mesh.Nodes(:,Ce)';
 uA=AnalyticSolution;
@@ -59,13 +60,21 @@ elseif strcmp(Domain,'Mode')
 end
 
 % Get solution
-uhe=Solution(Ce,:);
+if k==0
+  uhe=Solution(iElem,:);
+else
+  uhe=Solution(Ce,:);
+end
 
 % Compute weights at Gauss points
 [Ne,Nex,Ney,Nez,weg]=mapShapeFunctions(1,RefElement,RefElement,Xe,nsd);
 
 % Compute variables at Gauss points
-Xeg=Ne*Xe;
+if k==0
+  Xeg=mean(Xe);
+else
+  Xeg=Ne*Xe;
+end
 uheg=Ne*uhe;
 uAeg=uA(Xeg(:,1),Xeg(:,2),Xeg(:,3),t_or_w_or_n);
 

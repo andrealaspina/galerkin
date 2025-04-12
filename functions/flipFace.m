@@ -6,6 +6,8 @@ function [order]=flipFace(...
 if nsd==2
   %order=[2,1,(k+1):-1:3];
   switch k
+    case 0
+      order=1;
     case 1
       order=[2,1];
     case 2
@@ -27,6 +29,15 @@ if nsd==2
   end
 elseif nsd==3
   switch k
+    case 0
+      switch N21
+        case 1
+          order=1;
+        case 2
+          order=1;
+        case 3
+          order=1;
+      end
     case 1
       switch N21
         case 1

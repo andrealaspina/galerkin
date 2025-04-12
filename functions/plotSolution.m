@@ -48,7 +48,12 @@ for iP=1:length(Options.PlotSolution)
                 Ce=Mesh(iD).Post.Elements(:,iElem)';
                 Xe=double(Mesh(iD).Post.Nodes(1:2,Ce)');
               end
-              ue=double(Results(iD).([Options.PlotSolution{iP}])(Ce,iC,Index));
+              if Parameters(iD).Degree==0
+                ue=repelem(double(Results(iD).([Options.PlotSolution{iP}])(iElem,iC,Index)),...
+                  Sizes(iD).NumSpaceDim+1);
+              else
+                ue=double(Results(iD).([Options.PlotSolution{iP}])(Ce,iC,Index));
+              end
               if iRI==1
                 ue=real(ue);
               elseif iRI==2
@@ -68,7 +73,12 @@ for iP=1:length(Options.PlotSolution)
                   Ce=Mesh(iD).Post.Elements(:,iElem)';
                   Xe=double(Mesh(iD).Post.Nodes(:,Ce)');
                 end
-                ue=double(Results(iD).([Options.PlotSolution{iP}])(Ce,iC,Index));
+                if Parameters(iD).Degree==0
+                  ue=repelem(double(Results(iD).([Options.PlotSolution{iP}])(iElem,iC,Index)),...
+                    Sizes(iD).NumSpaceDim+1);
+                else
+                  ue=double(Results(iD).([Options.PlotSolution{iP}])(Ce,iC,Index));
+                end
                 if iRI==1
                   ue=real(ue);
                 elseif iRI==2

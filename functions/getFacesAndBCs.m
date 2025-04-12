@@ -19,7 +19,7 @@ for iD=1:Simulation.NumDiscretizations
     NumFaces=Geometry(iD).NumFaces;
   end
   NumGlobalComp=Sizes(iD).NumGlobalComp;
-  NumFaceNodesHigh=size(RefElement(iD,iD).FaceNodesElem,2);
+  NumFaceNodesHigh=size(RefElement(iD,iD).NodesCoordFace,1);
   
   % Get interior faces
   if strcmp(Parameters(iD).DiscretizationType,'HDG')
