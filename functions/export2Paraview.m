@@ -33,6 +33,8 @@ end
 % Nodes re-ordering
 if nsd==2
   switch k
+    case 0
+      order=[1,2,3];    
     case 1
       order=[1,2,3];
     case 2
@@ -54,6 +56,8 @@ if nsd==2
   end
 elseif nsd==3
   switch k
+    case 0
+      order=[1,2,3,4];
     case 1
       order=[1,2,3,4];
     case 2
@@ -92,7 +96,7 @@ fprintf(vtkId,'\nDATASET UNSTRUCTURED_GRID\n');
 
 % Write coordinates
 fprintf(vtkId,'\nPOINTS %d float\n',NumNodes);
-fprintf(vtkId,'% .12f % .12f % .12f\n',X');
+fprintf(vtkId,'% .12e % .12e % .12e\n',X');
 
 % Write connectivity
 fprintf(vtkId,'\nCELLS %d %d\n',NumElements,NumElements*(NumElementNodes+1));
@@ -112,6 +116,8 @@ for iP=1:length(Options.Export2Paraview)
   if matchField(Results,VariableName)
     if size(Results.(VariableName)(:,:,end),1)==NumNodes
       Variable=Results.(VariableName)(:,:,end);
+    elseif size(Results.(VariableName)(:,:,end),1)==NumElements
+      Variable=repelem(Results.(VariableName)(:,:,end),NumElementNodes,1);
     else
       continue;
     end
