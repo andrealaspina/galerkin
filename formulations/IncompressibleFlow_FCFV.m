@@ -103,7 +103,7 @@ classdef IncompressibleFlow_FCFV < Formulation
         SolutionOldElemCoupled(iEF)=Elements(iD2).SolutionOld(Faces(iD1,iD2).Interface(:,3));
       end
       
-      parfor iElem=1:Sizes(iD1).NumElements
+      for iElem=1:Sizes(iD1).NumElements
         [LhsGlobalElem,RhsGlobalElem,MatLocalElem,VecLocalElem]=...
           buildBlockElement(iD1,NodesElem{iElem},NodesInitialElem{iElem},FacesElem(iElem),...
           SolutionGlobalElem{iElem},SolutionLocalElem{iElem},SolutionOldElem{iElem},...
@@ -223,6 +223,7 @@ msd=nsd*(nsd+1)/2;
 NumElementNodes=Sizes(iD1).NumElementNodes;
 NumElementFaces=Sizes(iD1).NumElementFaces;
 NumFaceNodes=Sizes(iD1).NumFaceNodes;
+k=Parameters.Degree;
 mu=Parameters(iD1).DynamicViscosity;
 lambda=-2/3*Parameters(iD1).DynamicViscosity;
 r=Parameters(iD1).Density;
@@ -270,13 +271,10 @@ end
 
 % Initialize lhs
 KLL=zeros(msd*NumElementNodes,msd*NumElementNodes);
-KLv=zeros(msd*NumElementNodes,nsd*NumElementNodes);
 KLV=zeros(msd*NumElementNodes,nsd*NumElementFaces*NumFaceNodes);
-KvL=zeros(nsd*NumElementNodes,msd*NumElementNodes);
 Kvv=zeros(nsd*NumElementNodes,nsd*NumElementNodes);
-Kvp=zeros(nsd*NumElementNodes,NumElementNodes);
 KvV=zeros(nsd*NumElementNodes,nsd*NumElementFaces*NumFaceNodes);
-Kpv=zeros(NumElementNodes,nsd*NumElementNodes);
+KvP=zeros(nsd*NumElementNodes,NumElementFaces*NumFaceNodes);
 Kpp=zeros(NumElementNodes,NumElementNodes);
 KpV=zeros(NumElementNodes,nsd*NumElementFaces*NumFaceNodes);
 KpP=zeros(NumElementNodes,NumElementFaces*NumFaceNodes);
@@ -396,7 +394,11 @@ else
 end
 
 % Compute variables at Gauss points
-Xeg=Ne*Xe;
+if k==0
+  Xeg=mean(Xe);
+else
+  Xeg=Ne*Xe;
+end
 if nsd==2
   Lxxeg=Ne*Lxxe;
   Lyyeg=Ne*Lyye;
@@ -427,11 +429,6 @@ fyeg=feg(:,2);
 if nsd==3
   fzeg=feg(:,3);
 end
-axeg=Ne*axe;
-ayeg=Ne*aye;
-if nsd==3
-  azeg=Ne*aze;
-end
 if isArbitraryLagrangianEulerian
   if nsd==2
     divaeg=Nex*axe+Ney*aye;
@@ -442,23 +439,8 @@ end
 
 % Compute basic matrices
 NweT=(weg.*Ne)';
-NwexT=(weg.*Nex)';
-NweyT=(weg.*Ney)';
-if nsd==3
-  NwezT=(weg.*Nez)';
-end
 Me=NweT*Ne;
 Me=(Me+Me')/2;
-Cxe=NwexT*Ne;
-Cye=NweyT*Ne;
-if nsd==3
-  Cze=NwezT*Ne;
-end
-CxeT=Cxe';
-CyeT=Cye';
-if nsd==3
-  CzeT=Cze';
-end
 
 % Compute linearization of viscous stress
 if nsd==2
@@ -481,56 +463,6 @@ if nsd==3
   KLL(ne6,ne6)=-Me;
 end
 
-if nsd==2
-  KLv(ne1,ne1)=Voigt1*Cxe;
-  KLv(ne2,ne1)=Voigt2*Cxe;
-  KLv(ne3,ne1)=Voigt3*Cye;
-  KLv(ne1,ne2)=Voigt2*Cye;
-  KLv(ne2,ne2)=Voigt1*Cye;
-  KLv(ne3,ne2)=Voigt3*Cxe;
-elseif nsd==3
-  KLv(ne1,ne1)=Voigt1*Cxe;
-  KLv(ne2,ne1)=Voigt2*Cxe;
-  KLv(ne3,ne1)=Voigt2*Cxe;
-  KLv(ne4,ne1)=Voigt3*Cye;
-  KLv(ne5,ne1)=Voigt3*Cze;
-  KLv(ne1,ne2)=Voigt2*Cye;
-  KLv(ne2,ne2)=Voigt1*Cye;
-  KLv(ne3,ne2)=Voigt2*Cye;
-  KLv(ne4,ne2)=Voigt3*Cxe;
-  KLv(ne6,ne2)=Voigt3*Cze;
-  KLv(ne1,ne3)=Voigt2*Cze;
-  KLv(ne2,ne3)=Voigt2*Cze;
-  KLv(ne3,ne3)=Voigt1*Cze;
-  KLv(ne5,ne3)=Voigt3*Cxe;
-  KLv(ne6,ne3)=Voigt3*Cye;
-end
-
-if nsd==2
-  KvL(ne1,ne1)=Voigt1*CxeT;
-  KvL(ne1,ne2)=Voigt2*CxeT;
-  KvL(ne1,ne3)=Voigt3*CyeT;
-  KvL(ne2,ne1)=Voigt2*CyeT;
-  KvL(ne2,ne2)=Voigt1*CyeT;
-  KvL(ne2,ne3)=Voigt3*CxeT;
-elseif nsd==3
-  KvL(ne1,ne1)=Voigt1*CxeT;
-  KvL(ne1,ne2)=Voigt2*CxeT;
-  KvL(ne1,ne3)=Voigt2*CxeT;
-  KvL(ne1,ne4)=Voigt3*CyeT;
-  KvL(ne1,ne5)=Voigt3*CzeT;
-  KvL(ne2,ne1)=Voigt2*CyeT;
-  KvL(ne2,ne2)=Voigt1*CyeT;
-  KvL(ne2,ne3)=Voigt2*CyeT;
-  KvL(ne2,ne4)=Voigt3*CxeT;
-  KvL(ne2,ne6)=Voigt3*CzeT;
-  KvL(ne3,ne1)=Voigt2*CzeT;
-  KvL(ne3,ne2)=Voigt2*CzeT;
-  KvL(ne3,ne3)=Voigt1*CzeT;
-  KvL(ne3,ne5)=Voigt3*CxeT;
-  KvL(ne3,ne6)=Voigt3*CyeT;
-end
-
 if isTimeDependent
   Kvv(ne1,ne1)=alpha(1)/dt*r*Me;
   Kvv(ne2,ne2)=alpha(1)/dt*r*Me;
@@ -547,78 +479,18 @@ if isArbitraryLagrangianEulerian
   end
 end
 
-if isConvectiveFlow
-  if nsd==2
-    Kvv(ne1,ne1)=Kvv(ne1,ne1)-NwexT*((r*(2*vxeg-axeg)).*Ne)...
-                             -NweyT*((r*(  vyeg-ayeg)).*Ne);
-    Kvv(ne2,ne1)=Kvv(ne2,ne1)-NwexT*((r*vyeg).*Ne);
-    Kvv(ne1,ne2)=Kvv(ne1,ne2)-NweyT*((r*vxeg).*Ne);
-    Kvv(ne2,ne2)=Kvv(ne2,ne2)-NwexT*((r*(  vxeg-axeg)).*Ne)...
-                             -NweyT*((r*(2*vyeg-ayeg)).*Ne);
-  elseif nsd==3
-    Kvv(ne1,ne1)=Kvv(ne1,ne1)-NwexT*((r*(2*vxeg-axeg)).*Ne)...
-                             -NweyT*((r*(  vyeg-ayeg)).*Ne)...
-                             -NwezT*((r*(  vzeg-azeg)).*Ne);
-    Kvv(ne2,ne1)=Kvv(ne2,ne1)-NwexT*((r*vyeg).*Ne);
-    Kvv(ne3,ne1)=Kvv(ne3,ne1)-NwezT*((r*vzeg).*Ne);
-    Kvv(ne1,ne2)=Kvv(ne1,ne2)-NweyT*((r*vxeg).*Ne);
-    Kvv(ne2,ne2)=Kvv(ne2,ne2)-NwexT*((r*(  vxeg-axeg)).*Ne)...
-                             -NweyT*((r*(2*vyeg-ayeg)).*Ne)...
-                             -NwezT*((r*(  vzeg-azeg)).*Ne);
-    Kvv(ne3,ne2)=Kvv(ne3,ne2)-NwezT*((r*vzeg).*Ne);
-    Kvv(ne1,ne3)=Kvv(ne1,ne3)-NwezT*((r*vxeg).*Ne);
-    Kvv(ne2,ne3)=Kvv(ne2,ne3)-NwezT*((r*vyeg).*Ne);
-    Kvv(ne3,ne3)=Kvv(ne3,ne3)-NwexT*((r*(  vxeg-axeg)).*Ne)...
-                             -NweyT*((r*(  vyeg-ayeg)).*Ne)...
-                             -NwezT*((r*(2*vzeg-azeg)).*Ne);
-  end
-end
-
-Kvp(ne1,ne1)=Kvp(ne1,ne1)+CxeT;
-Kvp(ne2,ne1)=Kvp(ne2,ne1)+CyeT;
-if nsd==3
-  Kvp(ne3,ne1)=Kvp(ne3,ne1)+CzeT;
-end
-
-Kpv(ne1,ne1)=-r*Cxe;
-Kpv(ne1,ne2)=-r*Cye;
-if nsd==3
-  Kpv(ne1,ne3)=-r*Cze;
-end
-
 % Compute rhs
 if nsd==2
-  fL(ne1,1)=+NweT*(Lxxeg)...
-            -NwexT*(Voigt1*vxeg)...
-            -NweyT*(Voigt2*vyeg);
-  fL(ne2,1)=+NweT*(Lyyeg)...
-            -NwexT*(Voigt2*vxeg)...
-            -NweyT*(Voigt1*vyeg);
-  fL(ne3,1)=+NweT*(Lxyeg)...
-            -NweyT*(Voigt3*vxeg)...
-            -NwexT*(Voigt3*vyeg);
+  fL(ne1,1)=+NweT*(Lxxeg);
+  fL(ne2,1)=+NweT*(Lyyeg);
+  fL(ne3,1)=+NweT*(Lxyeg);
 elseif nsd==3
-  fL(ne1,1)=+NweT*(Lxxeg)...
-            -NwexT*(Voigt1*vxeg)...
-            -NweyT*(Voigt2*vyeg)...
-            -NwezT*(Voigt2*vzeg);
-  fL(ne2,1)=+NweT*(Lyyeg)...
-            -NwexT*(Voigt2*vxeg)...
-            -NweyT*(Voigt1*vyeg)...
-            -NwezT*(Voigt2*vzeg);
-  fL(ne3,1)=+NweT*(Lzzeg)...
-            -NwexT*(Voigt2*vxeg)...
-            -NweyT*(Voigt2*vyeg)...
-            -NwezT*(Voigt1*vzeg);
-  fL(ne4,1)=+NweT*(Lxyeg)...
-            -NwexT*(Voigt3*vyeg)...
-            -NweyT*(Voigt3*vxeg);
-  fL(ne5,1)=+NweT*(Lxzeg)...
-            -NwexT*(Voigt3*vzeg)...
-            -NwezT*(Voigt3*vxeg);
-  fL(ne6,1)=+NweT*(Lyzeg)...
-            -NweyT*(Voigt3*vzeg)...
-            -NwezT*(Voigt3*vyeg);
+  fL(ne1,1)=+NweT*(Lxxeg);
+  fL(ne2,1)=+NweT*(Lyyeg);
+  fL(ne3,1)=+NweT*(Lzzeg);
+  fL(ne4,1)=+NweT*(Lxyeg);
+  fL(ne5,1)=+NweT*(Lxzeg);
+  fL(ne6,1)=+NweT*(Lyzeg);
 end
 
 if isTimeDependent
@@ -640,44 +512,6 @@ if isArbitraryLagrangianEulerian
   end
 end
 
-if isConvectiveFlow
-  if nsd==2
-    fv(ne1,1)=fv(ne1,1)+NwexT*(r*vxeg.*(vxeg-axeg))...
-                       +NweyT*(r*vxeg.*(vyeg-ayeg));
-    fv(ne2,1)=fv(ne2,1)+NwexT*(r*vyeg.*(vxeg-axeg))...
-                       +NweyT*(r*vyeg.*(vyeg-ayeg));
-  elseif nsd==3
-    fv(ne1,1)=fv(ne1,1)+NwexT*(r*vxeg.*(vxeg-axeg))...
-                       +NweyT*(r*vxeg.*(vyeg-ayeg))...
-                       +NwezT*(r*vxeg.*(vzeg-azeg));
-    fv(ne2,1)=fv(ne2,1)+NwexT*(r*vyeg.*(vxeg-axeg))...
-                       +NweyT*(r*vyeg.*(vyeg-ayeg))...
-                       +NwezT*(r*vyeg.*(vzeg-azeg));
-    fv(ne3,1)=fv(ne3,1)+NwexT*(r*vzeg.*(vxeg-axeg))...
-                       +NweyT*(r*vzeg.*(vyeg-ayeg))...
-                       +NwezT*(r*vzeg.*(vzeg-azeg));
-  end
-end
-
-if nsd==2
-  fv(ne1,1)=fv(ne1,1)-NweT*(+Voigt1*(Nex*Lxxe)+Voigt2*(Nex*Lyye)...
-                            +Voigt3*(Ney*Lxye)...
-                            +(Nex*pe));
-  fv(ne2,1)=fv(ne2,1)-NweT*(+Voigt2*(Ney*Lxxe)+Voigt1*(Ney*Lyye)...
-                            +Voigt3*(Nex*Lxye)...
-                            +(Ney*pe));
-elseif nsd==3
-  fv(ne1,1)=fv(ne1,1)-NweT*(+Voigt1*(Nex*Lxxe)+Voigt2*(Nex*Lyye)+Voigt2*(Nex*Lzze)...
-                            +Voigt3*(Ney*Lxye)+Voigt3*(Nez*Lxze)...
-                            +(Nex*pe));
-  fv(ne2,1)=fv(ne2,1)-NweT*(+Voigt2*(Ney*Lxxe)+Voigt1*(Ney*Lyye)+Voigt2*(Ney*Lzze)...
-                            +Voigt3*(Nex*Lxye)+Voigt3*(Nez*Lyze)...
-                            +(Ney*pe));
-  fv(ne3,1)=fv(ne3,1)-NweT*(+Voigt2*(Nez*Lxxe)+Voigt2*(Nez*Lyye)+Voigt1*(Nez*Lzze)...
-                            +Voigt3*(Nex*Lxze)+Voigt3*(Ney*Lyze)...
-                            +(Nez*pe));
-end
-
 fv(ne1,1)=fv(ne1,1)+NweT*(fxeg);
 fv(ne2,1)=fv(ne2,1)+NweT*(fyeg);
 if nsd==3
@@ -686,12 +520,6 @@ end
 
 if isArbitraryLagrangianEulerian
   fp(ne1,1)=fp(ne1,1)-NweT*(r*divaeg);
-end
-
-fp(ne1,1)=fp(ne1,1)+NwexT*(r*(vxeg-axeg))...
-                   +NweyT*(r*(vyeg-ayeg));
-if nsd==3
-  fp(ne1,1)=fp(ne1,1)+NwezT*(r*(vzeg-azeg));
 end
 
 % Faces loop
@@ -723,7 +551,7 @@ for iFace=1:NumElementFaces
     end
     
     % Indices
-    nf1=FaceNodes(iFace,:);
+    nf1=1;
     nf2=nf1+NumElementNodes;
     nf3=nf2+NumElementNodes;
     nf4=nf3+NumElementNodes;
@@ -737,21 +565,6 @@ for iFace=1:NumElementFaces
     nefV2=nefV1+NumFaceNodes;
     nefV3=nefV2+NumFaceNodes;
     nefP1=(iFace-1)*NumFaceNodes+(1:NumFaceNodes);
-    
-    % Flip face
-    Node2Match1stNode1=Faces.Interior(2,iFace);
-    FlipFace=max(Node2Match1stNode1);
-    if FlipFace
-      order=flipFace(nsd,Parameters(iD1).Degree,Node2Match1stNode1);
-      nefU1=nefU1(order);
-      nefU2=nefU2(order);
-      nefU3=nefU3(order);
-      nefU4=nefU4(order);
-      nefV1=nefV1(order);
-      nefV2=nefV2(order);
-      nefV3=nefV3(order);
-      nefP1=nefP1(order);
-    end
     
     % Compute variables at nodes
     if nsd==2
@@ -789,7 +602,11 @@ for iFace=1:NumElementFaces
     end
     
     % Compute variables at Gauss points
-    Xfg=Nf*Xf;
+    if k==0
+      Xfg=mean(Xf);
+    else
+      Xfg=Nf*Xf;
+    end
     if nsd==2
       Lxxfg=Nf*Lxxf;
       Lyyfg=Nf*Lyyf;
@@ -1003,7 +820,7 @@ for iFace=1:NumElementFaces
     end
     
     Kpp(nf1,nf1)=Kpp(nf1,nf1)+tauP*Mf;
-    
+
     if not(isDirichlet_v_x)
       if nsd==2
         KLV(nf1,nefV1)=KLV(nf1,nefV1)-Voigt1*Mfnx;
@@ -1086,6 +903,14 @@ for iFace=1:NumElementFaces
     
     if nsd==3 && not(isDirichlet_v_z)
       KvV(nf3,nefV3)=KvV(nf3,nefV3)-tauV*Mf;
+    end
+
+    if not(isDirichlet_p)
+      KvP(nf1,nefP1)=KvP(nf1,nefP1)+Mfnx;
+      KvP(nf2,nefP1)=KvP(nf2,nefP1)+Mfny;
+      if nsd==3
+        KvP(nf3,nefP1)=KvP(nf3,nefP1)+Mfnz;
+      end
     end
     
     if not(isDirichlet_v_x)
@@ -1243,6 +1068,12 @@ for iFace=1:NumElementFaces
       fv(nf3,1)=fv(nf3,1)+NwfT*(tauV*Vzfg);
     end
     
+    fv(nf1,1)=fv(nf1,1)-NwfT*(Pfg.*nx);
+    fv(nf2,1)=fv(nf2,1)-NwfT*(Pfg.*ny);
+    if nsd==3
+      fv(nf3,1)=fv(nf3,1)-NwfT*(Pfg.*nz);
+    end
+    
     fp(nf1,1)=fp(nf1,1)-NwfT*(r*((Vxfg-axfg).*nx+(Vyfg-ayfg).*ny)-tauP*Pfg);
     if nsd==3
       fp(nf1,1)=fp(nf1,1)-NwfT*(r*(Vzfg-azfg).*nz);
@@ -1371,16 +1202,13 @@ RhsG=zeros((nsd+1)*NumElementFaces*NumFaceNodes,1);
 
 % Lhs local-local
 LhsLL(iL,iL)=KLL;
-LhsLL(iL,iv)=KLv;
-LhsLL(iv,iL)=KvL;
 LhsLL(iv,iv)=Kvv;
-LhsLL(iv,ip)=Kvp;
-LhsLL(ip,iv)=Kpv;
 LhsLL(ip,ip)=Kpp;
 
 % Lhs local-global
 LhsLG(iL,iV)=KLV;
 LhsLG(iv,iV)=KvV;
+LhsLG(iv,iP)=KvP;
 LhsLG(ip,iV)=KpV;
 LhsLG(ip,iP)=KpP;
 
