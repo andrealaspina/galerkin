@@ -272,6 +272,7 @@ end
 KLL=zeros(msd*NumElementNodes,msd*NumElementNodes);
 KLv=zeros(msd*NumElementNodes,nsd*NumElementNodes);
 KLV=zeros(msd*NumElementNodes,nsd*NumElementFaces*NumFaceNodes);
+KvL=zeros(nsd*NumElementNodes,msd*NumElementNodes);
 Kvv=zeros(nsd*NumElementNodes,nsd*NumElementNodes);
 Kvp=zeros(nsd*NumElementNodes,NumElementNodes);
 KvV=zeros(nsd*NumElementNodes,nsd*NumElementFaces*NumFaceNodes);
@@ -503,6 +504,31 @@ elseif nsd==3
   KLv(ne3,ne3)=Voigt1*Cze;
   KLv(ne5,ne3)=Voigt3*Cxe;
   KLv(ne6,ne3)=Voigt3*Cye;
+end
+
+if nsd==2
+  KvL(ne1,ne1)=Voigt1*CxeT;
+  KvL(ne1,ne2)=Voigt2*CxeT;
+  KvL(ne1,ne3)=Voigt3*CyeT;
+  KvL(ne2,ne1)=Voigt2*CyeT;
+  KvL(ne2,ne2)=Voigt1*CyeT;
+  KvL(ne2,ne3)=Voigt3*CxeT;
+elseif nsd==3
+  KvL(ne1,ne1)=Voigt1*CxeT;
+  KvL(ne1,ne2)=Voigt2*CxeT;
+  KvL(ne1,ne3)=Voigt2*CxeT;
+  KvL(ne1,ne4)=Voigt3*CyeT;
+  KvL(ne1,ne5)=Voigt3*CzeT;
+  KvL(ne2,ne1)=Voigt2*CyeT;
+  KvL(ne2,ne2)=Voigt1*CyeT;
+  KvL(ne2,ne3)=Voigt2*CyeT;
+  KvL(ne2,ne4)=Voigt3*CxeT;
+  KvL(ne2,ne6)=Voigt3*CzeT;
+  KvL(ne3,ne1)=Voigt2*CzeT;
+  KvL(ne3,ne2)=Voigt2*CzeT;
+  KvL(ne3,ne3)=Voigt1*CzeT;
+  KvL(ne3,ne5)=Voigt3*CxeT;
+  KvL(ne3,ne6)=Voigt3*CyeT;
 end
 
 if isTimeDependent
@@ -1346,7 +1372,7 @@ RhsG=zeros((nsd+1)*NumElementFaces*NumFaceNodes,1);
 % Lhs local-local
 LhsLL(iL,iL)=KLL;
 LhsLL(iL,iv)=KLv;
-LhsLL(iv,iL)=KLv';
+LhsLL(iv,iL)=KvL;
 LhsLL(iv,iv)=Kvv;
 LhsLL(iv,ip)=Kvp;
 LhsLL(ip,iv)=Kpv;
