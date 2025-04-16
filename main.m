@@ -394,6 +394,14 @@ for iS=1:Simulation.NumSimulations
         end
       end
     end
+
+    % Add elements' centroids for FCFV
+    for iD=1:Simulation.NumDiscretizations
+      if strcmp(Parameters(iD).DiscretizationType,'HDG') && Parameters(iD).Degree==0
+        Mesh(iD).Centroids=squeeze(mean(reshape(Mesh(iD).Nodes(:,...
+                  Mesh(iD).Elements(1:Sizes(iD).NumSpaceDim+1,:)),3,Sizes(iD).NumSpaceDim+1,[]),2));
+      end
+    end
     
     % Store initial mesh
     for iD=1:Simulation.NumDiscretizations
