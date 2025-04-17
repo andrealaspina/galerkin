@@ -1,16 +1,7 @@
 %% galerkin test
 
 % Setup
-clear; clc; path(pathdef); close('all');
-addpath('./');
-addpath('./formulations');
-addpath('./functions');
-addpath('./geometry');
-addpath('./input');
-addpath('./output');
-addpath('./symbolic');
-addpath('./tests');
-set(0,'DefaultFigureVisible','on');
+init;
 set(0,'DefaultFigureVisible','off');
 
 % Run tests
