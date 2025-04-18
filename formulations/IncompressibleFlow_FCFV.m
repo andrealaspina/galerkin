@@ -105,7 +105,7 @@ classdef IncompressibleFlow_FCFV < Formulation
         SolutionOldElemCoupled(iEF)=Elements(iD2).SolutionOld(Faces(iD1,iD2).Interface(:,3));
       end
       
-      for iElem=1:Sizes(iD1).NumElements
+      parfor iElem=1:Sizes(iD1).NumElements
         [LhsGlobalElem,RhsGlobalElem,MatLocalElem,VecLocalElem]=...
           buildBlockElement(iD1,NodesElem{iElem},NodesInitialElem{iElem},FacesElem(iElem),...
           SolutionGlobalElem{iElem},SolutionLocalElem{iElem},SolutionOldElem{iElem},...
@@ -164,8 +164,8 @@ classdef IncompressibleFlow_FCFV < Formulation
       if strcmp(Parameters(iD).ArbitraryLagrangianEulerian,'yes')
         for iElem=1:Sizes(iD).NumElements
           if strcmp(Simulation.Problem,'Fluid')
-            Xe=Mesh(iD).Nodes(:,Mesh(iD).Elements(:,iElem)')';
-            ue=Parameters(iD).Displacement(Xe(:,1),Xe(:,2),Xe(:,3),Time.Time);
+            Xc=Mesh(iD).Centroids(:,iElem)';
+            ue=Parameters(iD).Displacement(Xc(:,1),Xc(:,2),Xc(:,3),Time.Time);
           elseif strcmp(Simulation.Problem,'FluidALE') || ...
                  strcmp(Simulation.Problem,'FluidStructureInteraction')
             iD2=find(contains({Parameters.Problem},'Mesh'));
@@ -229,7 +229,7 @@ if isArbitraryLagrangianEulerian
   if isFluid
     ue=reshape(Parameters(iD1).Displacement(X0e(:,1),X0e(:,2),X0e(:,3),t),[],1);
     if isTimeDependent
-      uolde=zeros(nsd,BDFo);
+      uolde=zeros(nsd*(nsd+1),BDFo);
       for iBDF=1:BDFo
         uolde(:,iBDF)=reshape(Parameters(iD1).Displacement(X0e(:,1),X0e(:,2),X0e(:,3),t-iBDF*dt),...
           [],1);
@@ -274,7 +274,8 @@ if isArbitraryLagrangianEulerian
   elseif isFluidALE || isFSI
     N210e=RefElement(iD2,iD1).ShapeFunctionsElem;
     pinvN102e=RefElement(iD1,iD2).PseudoinverseShapeFunctionsElem;
-    Xe(:,1:nsd)=X0e(:,1:nsd)+pinvN102e*(N210e*reshape(ue,[],nsd));
+    ueDeg1=reshape(ue,[],nsd); ueDeg1=ueDeg1(1:nsd+1,:);
+    Xe(:,1:nsd)=X0e(:,1:nsd)+ueDeg1;
   end
 end
 
