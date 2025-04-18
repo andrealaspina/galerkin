@@ -465,7 +465,21 @@ for iFace=1:NumElementFaces
     % Compute weights at Gauss points
     FaceNodes=RefElement(iD1,iD1).FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
-    [~,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement(iD1,iD1),RefElement(iD1,iD1),Xf,nsd);
+    d1=Xf(2  ,:)-Xf(1,:);
+    d2=Xf(end,:)-Xf(1,:);
+    if nsd==2
+      n=[d1(2),-d1(1)];
+      wfg=norm(d1);
+    elseif nsd==3
+      n=cross(d1,d2);
+      wfg=norm(cross(d1,d2))/2;
+    end
+    n=n/norm(n);
+    nx=n(1);
+    ny=n(2);
+    if nsd==3
+      nz=n(3);
+    end
     
     % Check boundary
     isExterior=Faces.Exterior(iFace);
