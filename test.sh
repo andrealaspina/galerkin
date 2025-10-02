@@ -23,6 +23,5 @@ matlab -nodisplay -nosplash -r                                                  
    addpath('/galerkin/geometry');                                                         \
    addpath('/galerkin/input');                                                            \
    addpath('/galerkin/output');                                                           \
-   addpath('/galerkin/symbolic');                                                         \
    addpath('/galerkin/tests');                                                            \
    run(sprintf('./%s.m',getenv('SLURM_JOB_NAME'))); quit"
