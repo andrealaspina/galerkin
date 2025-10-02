@@ -146,8 +146,6 @@ The project is organized into the following directories:
 
 - `output/`: Simulation results
 
-- `symbolic/`: Symbolic computations
-
 - `tests/`: Test cases for validation and verification
 
 ## Simulation Types 📌
