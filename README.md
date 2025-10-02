@@ -1,4 +1,4 @@
-# ***galerkin***: A Versatile Finite Element Framework for MATLAB
+# ***galerkin***: A Versatile Finite Element Framework for MATLAB 
 
 <p align="center">
   <img src="https://github.com/user-attachments/files/18724203/logo.pdf" width="300">
