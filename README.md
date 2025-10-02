@@ -8,7 +8,7 @@
 
 ***galerkin*** is a powerful and extensible [**MATLAB**](https://www.mathworks.com/products/matlab.html) framework designed for developing and testing advanced **finite element** formulations. It provides an integrated environment for simulating a variety of **2D/3D** **linear/nonlinear** **single/multi-physics** **single/multi-scale** problems in the **time/frequency** domain.
 
-During the early stages of my PhD, I struggled with the complexity of large-scale research codes and faced major significant challenges in implementing complex finite element formulations for fluid-structure interaction. This motivated me to create an **accessible** and **flexible** framework that facilitates rapid **development**, **testing**, and **deployment** of novel numerical methods. This code is particularly beneficial for both early-career and experienced researchers striving to advance the field of **computational science and engineering**.
+During the early stages of my PhD, I struggled with the complexity of large-scale research codes and faced significant challenges in implementing complex finite element formulations for fluid-structure interaction. This motivated me to create an **accessible** and **flexible** framework that facilitates rapid **development**, **testing**, and **deployment** of novel numerical methods. This code is particularly beneficial for both early-career and experienced researchers striving to advance the field of **computational science and engineering**.
 
 ## Features ✨
 
