@@ -134,8 +134,6 @@ A key feature of ***galerkin*** is the ability to **monolithically couple** $N$ 
 
 The project is organized into the following directories:
 
-- `advanpix/`: Routines for arbitrary precision computations using [**Advanpix**](https://www.advanpix.com)
-
 - `formulations/`: Implemented finite element formulations
 
 - `functions/`: Auxiliary functions
