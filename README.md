@@ -208,7 +208,7 @@ The structs created in the **main file** are:
 
 ## Formulation Class 🧩
 
-The facilitate the implementation of new finite element methods, ***galerkin*** allows you to declare a new class (likely the only part of the code you need to touch) that inherits from the base `Formulation` class.
+To facilitate the implementation of new finite element methods, ***galerkin*** allows you to declare a new class (likely the only part of the code you need to touch) that inherits from the base `Formulation` class.
 
 Its main **properties** are:
 
