@@ -8,7 +8,7 @@
 
 ***galerkin*** is a powerful and extensible [**MATLAB**](https://www.mathworks.com/products/matlab.html) framework designed for developing and testing advanced **finite element** formulations. It provides an integrated environment for simulating a variety of **2D/3D** **linear/nonlinear** **single/multi-physics** **single/multi-scale** problems in the **time/frequency** domain.
 
-During the early stages of my PhD, I struggled with the complexity of large-scale research codes and faced significant challenges in implementing complex finite element formulations for fluid-structure interaction. This motivated me to create an **accessible** and **flexible** framework that facilitates rapid **development**, **testing**, and **deployment** of novel numerical methods. This code is particularly beneficial for both early-career and experienced researchers striving to advance the field of **computational science and engineering**.
+During the early stages of my PhD, I struggled with the complexity of large-scale research codes and faced significant challenges in implementing advanced finite element formulations for fluid-structure interaction. This motivated me to create an **accessible** and **flexible** framework that facilitates rapid **development**, **testing**, and **deployment** of novel numerical methods. This code is particularly beneficial for both early-career and experienced researchers striving to advance the field of **computational science and engineering**.
 
 ## Features ✨
 
@@ -222,7 +222,7 @@ Its main **properties** are:
 
 - `TimeDerOrder`: Time derivative order (e.g., 1 for thermal problems and 2 for elastic problems)
 
-- `Domain`: Problem domain (time of frequency)
+- `Domain`: Problem domain (time or frequency)
 
 Its main **methods** are:
 
@@ -272,7 +272,7 @@ Here, a glimpse of the main numerical methods behind ***galerkin*** is given.
 
 ### Time Integration ⏳
 
-- **Backward Differentiation Formulas** (BDF): From order 1 to 6. BFD2 is initialized with the backward Euler method (BDF1) at the first time step. Schemes with $\text{BDFOrder}$ > 2 are initialized (the analytical solution needs to be available!) with the solution at the times $t = −n\Delta t$ with $n = [1,2,\dots,\text{BDFOrder}−1]$
+- **Backward Differentiation Formulas** (BDF): From order 1 to 6. BDF2 is initialized with the backward Euler method (BDF1) at the first time step. Schemes with $\text{BDFOrder}$ > 2 are initialized (the analytical solution needs to be available!) with the solution at the times $t = −n\Delta t$ with $n = [1,2,\dots,\text{BDFOrder}−1]$
 
 - **Predictor**: Arbitrary order (0 for constant prediction, 1 for linear extrapolation, etc.)
 
@@ -342,7 +342,7 @@ Although ***galerkin*** can manage the main pre-processing, processing, and post
 
 	- [**Advanpix**](https://www.advanpix.com): A **multiprecision computing toolbox** for MATLAB
 
-	- [**Comsol Multiphysics**](https://www.comsol.com): A powerful and versitle **simulation software**
+	- [**Comsol Multiphysics**](https://www.comsol.com): A powerful and versatile **simulation software**
 
 ## Getting Started 🚀
 
@@ -357,7 +357,7 @@ run test.m
 ```
 This command executes all scripts in the `tests/` folder in ~3 minutes.
 
-If all tests pass successfully, start by exploring `main.m`, which is structured into three sections: **Pre-processing**, **Processing**, and **Post-processing**. Although lengthy (~1500 lines), this file helps track the sequence of tasks from start to finish of the simulation.
+If all tests pass successfully, start by exploring `main.m`, which is structured into three sections: **Pre-processing**, **Processing**, and **Post-processing**. Although lengthy (~1500 lines), this file helps track the sequence of tasks from start to end of the simulation.
 
 Next, check out some **test files**, which are named descriptively for easy navigation.
 
