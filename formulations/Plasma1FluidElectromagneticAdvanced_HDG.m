@@ -167,9 +167,9 @@ classdef Plasma1FluidElectromagneticAdvanced_HDG < Formulation
         MatLocal{iElem}=MatLocalElem;
         VecLocal{iElem}=VecLocalElem;
       end
-      Block(iD,iD).LhsGlobal=fsparse(Block(iD,iD).LhsRowIndices,...
-                                     Block(iD,iD).LhsColIndices,LhsCoef(:));
-      Block(iD,iD).RhsGlobal=fsparse(Block(iD,iD).RhsRowIndices,1,RhsCoef(:));
+      Block(iD,iD).LhsGlobal=sparse(Block(iD,iD).LhsRowIndices,...
+                                    Block(iD,iD).LhsColIndices,LhsCoef(:));
+      Block(iD,iD).RhsGlobal=sparse(Block(iD,iD).RhsRowIndices,1,RhsCoef(:));
       Elements(iD).MatLocal=MatLocal;
       Elements(iD).VecLocal=VecLocal;
     end

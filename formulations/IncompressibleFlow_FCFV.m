@@ -118,9 +118,9 @@ classdef IncompressibleFlow_FCFV < Formulation
         MatLocal{iElem}=MatLocalElem;
         VecLocal{iElem}=VecLocalElem;
       end
-      Block(iD1,iD1).LhsGlobal=fsparse(Block(iD1,iD1).LhsRowIndices,...
-                                       Block(iD1,iD1).LhsColIndices,LhsCoef(:));
-      Block(iD1,iD1).RhsGlobal=fsparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
+      Block(iD1,iD1).LhsGlobal=sparse(Block(iD1,iD1).LhsRowIndices,...
+                                      Block(iD1,iD1).LhsColIndices,LhsCoef(:));
+      Block(iD1,iD1).RhsGlobal=sparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
       Elements(iD1).MatLocal=MatLocal;
       Elements(iD1).VecLocal=VecLocal;
     end
@@ -138,11 +138,11 @@ classdef IncompressibleFlow_FCFV < Formulation
             Parameters,Mesh,Faces,Time,RefElement,Sizes);
           LhsCoupCoef(:,iFaceInterface)=reshape(LhsCoupElem',[],1);
         end
-        Block(iD1,iD2).LhsGlobal=fsparse(Block(iD1,iD2).LhsRowIndices,...
-                                         Block(iD1,iD2).LhsColIndices,[LhsCoupCoef(:);0]);
+        Block(iD1,iD2).LhsGlobal=sparse(Block(iD1,iD2).LhsRowIndices,...
+                                        Block(iD1,iD2).LhsColIndices,[LhsCoupCoef(:);0]);
       else
-        Block(iD1,iD2).LhsGlobal=fsparse(Block(iD1,iD2).LhsRowIndices,...
-                                         Block(iD1,iD2).LhsColIndices,0);
+        Block(iD1,iD2).LhsGlobal=sparse(Block(iD1,iD2).LhsRowIndices,...
+                                        Block(iD1,iD2).LhsColIndices,0);
       end
     end
     

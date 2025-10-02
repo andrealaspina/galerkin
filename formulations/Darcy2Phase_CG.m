@@ -81,9 +81,9 @@ classdef Darcy2Phase_CG < Formulation
         LhsCoef(:,iElem)=reshape(LhsGlobalElem',[],1);
         RhsCoef(:,iElem)=reshape(RhsGlobalElem',[],1);
       end
-      Block(iD1,iD1).LhsGlobal=fsparse(Block(iD1,iD1).LhsRowIndices,...
-                                       Block(iD1,iD1).LhsColIndices,LhsCoef(:));
-      Block(iD1,iD1).RhsGlobal=fsparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
+      Block(iD1,iD1).LhsGlobal=sparse(Block(iD1,iD1).LhsRowIndices,...
+                                      Block(iD1,iD1).LhsColIndices,LhsCoef(:));
+      Block(iD1,iD1).RhsGlobal=sparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
     end
     
     %% Store results

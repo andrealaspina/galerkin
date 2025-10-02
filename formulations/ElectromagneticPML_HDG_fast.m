@@ -88,8 +88,8 @@ classdef ElectromagneticPML_HDG_fast < Formulation
           Elements(iD).LhsLLinv{iElem}=LhsLLinvElem;
           Elements(iD).LhsGL{iElem}=LhsGLElem;
         end
-        Block(iD,iD).LhsGlobal=fsparse(Block(iD,iD).LhsRowIndices,...
-                                       Block(iD,iD).LhsColIndices,LhsCoef(:));
+        Block(iD,iD).LhsGlobal=sparse(Block(iD,iD).LhsRowIndices,...
+                                      Block(iD,iD).LhsColIndices,LhsCoef(:));
       end
       
       % Extract element data
@@ -114,7 +114,7 @@ classdef ElectromagneticPML_HDG_fast < Formulation
         RhsGlobalElem=RhsG{iElem}-Elements(iD).LhsGL{iElem}*Elements(iD).VecLocal{iElem};
         RhsCoef(:,iElem)=reshape(RhsGlobalElem',[],1);
       end
-      Block(iD,iD).RhsGlobal=fsparse(Block(iD,iD).RhsRowIndices,1,RhsCoef(:));
+      Block(iD,iD).RhsGlobal=sparse(Block(iD,iD).RhsRowIndices,1,RhsCoef(:));
     end
     
     %% Do post-process

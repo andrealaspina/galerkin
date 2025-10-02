@@ -62,8 +62,8 @@ Options.ComputeError=...                         % Compute error
   {'MainDisplacement','L2';
    'NaturalFrequency','Number'};
 Options.Test=...                                 % Test
-  ['abs(Results.MainDisplacementErrorL2    -1.007416330309386e-02)<1e-12 && ',...
-   'abs(Results.NaturalFrequencyErrorNumber-5.995651270992140e-03)<1e-12'];
+  ['abs(Results.MainDisplacementErrorL2    -1.007416329630360e-02)<1e-12 && ',...
+   'abs(Results.NaturalFrequencyErrorNumber-5.995651273984403e-03)<1e-12'];
 % --------------------------------------------------------------------------------------------------
 
 %% Main

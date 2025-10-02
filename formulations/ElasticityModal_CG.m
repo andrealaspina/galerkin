@@ -44,10 +44,10 @@ classdef ElasticityModal_CG < Formulation
         LhsCoef(:,iElem)=reshape(LhsGlobalElem',[],1);
         RhsCoef(:,iElem)=reshape(RhsGlobalElem',[],1);
       end
-      Block(iD,iD).LhsGlobal=fsparse(Block(iD,iD).LhsRowIndices,...
-                                     Block(iD,iD).LhsColIndices,LhsCoef(:));
-      Block(iD,iD).RhsGlobal=fsparse(Block(iD,iD).LhsRowIndices,...
-                                     Block(iD,iD).LhsColIndices,RhsCoef(:));
+      Block(iD,iD).LhsGlobal=sparse(Block(iD,iD).LhsRowIndices,...
+                                    Block(iD,iD).LhsColIndices,LhsCoef(:));
+      Block(iD,iD).RhsGlobal=sparse(Block(iD,iD).LhsRowIndices,...
+                                    Block(iD,iD).LhsColIndices,RhsCoef(:));
     end
     
     %% Store results

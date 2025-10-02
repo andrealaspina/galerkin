@@ -105,9 +105,9 @@ classdef Darcy2PhaseRichards_HDG < Formulation
         Volume=Volume+VolumeElem;
       end
       Block(iD1).FillFactor=Fill/Volume;
-      Block(iD1,iD1).LhsGlobal=fsparse(Block(iD1,iD1).LhsRowIndices,...
-                                       Block(iD1,iD1).LhsColIndices,LhsCoef(:));
-      Block(iD1,iD1).RhsGlobal=fsparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
+      Block(iD1,iD1).LhsGlobal=sparse(Block(iD1,iD1).LhsRowIndices,...
+                                      Block(iD1,iD1).LhsColIndices,LhsCoef(:));
+      Block(iD1,iD1).RhsGlobal=sparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
       Elements(iD1).MatLocal=MatLocal;
       Elements(iD1).VecLocal=VecLocal;
     end

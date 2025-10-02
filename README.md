@@ -32,7 +32,7 @@ During the early stages of my PhD, I struggled with the complexity of large-scal
 
 - **Parallel computing** capabilities (limited) via MATLAB's `parfor`.
 
-- Easy integration with **external tools** such as [**GMSH**](https://gmsh.info), [**ParaView**](https://www.paraview.org), [**DistMesh**](https://doi.org/10.1137/S0036144503429121), [**fsparse**](https://doi.org/10.1016/j.parco.2016.04.001), [**Advanpix**](https://www.advanpix.com), and [**Comsol**](https://www.comsol.com).
+- Easy integration with **external tools** such as [**GMSH**](https://gmsh.info), [**ParaView**](https://www.paraview.org), [**DistMesh**](https://doi.org/10.1137/S0036144503429121), [**Advanpix**](https://www.advanpix.com), and [**Comsol**](https://www.comsol.com).
 
 ## Implemented Formulations 📚
 
@@ -341,8 +341,6 @@ Although ***galerkin*** can manage the main pre-processing, processing, and post
 	- [**ParaView**](https://www.paraview.org): The world’s leading open-source **post-processing visualization engine**
  
 	- [**DistMesh**](https://doi.org/10.1137/S0036144503429121): A simple yet powerful unstructured **mesh generator** for MATLAB
-
-	- [**fsparse**](https://doi.org/10.1016/j.parco.2016.04.001): A fast **sparse assembly function** outperforming the built-in MATLAB `sparse()` counterpart
 
 - **Licensed** software:
 

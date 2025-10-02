@@ -55,7 +55,7 @@ classdef Thermal_CG < Formulation
     end
     
     %% Build block
-    function [Block,Elements]=buildBlock(~,iD1,Block,Elements,Simulation,Parameters,~,Faces,Time,...
+    function [Block,Elements]=buildBlock(~,iD1,Block,Elements,~,Parameters,~,Faces,Time,...
         RefElement,Sizes)
       NodesElem=Elements(iD1).Nodes;
       FacesElem=Elements(iD1).Faces;
@@ -83,19 +83,13 @@ classdef Thermal_CG < Formulation
         LhsCoef(:,iElem)=reshape(LhsGlobalElem',[],1);
         RhsCoef(:,iElem)=reshape(RhsGlobalElem',[],1);
       end
-      if Simulation.Digits==16
-        Block(iD1,iD1).LhsGlobal=fsparse(Block(iD1,iD1).LhsRowIndices,...
-                                         Block(iD1,iD1).LhsColIndices,LhsCoef(:));
-        Block(iD1,iD1).RhsGlobal=fsparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
-      else
-        Block(iD1,iD1).LhsGlobal=sparse(Block(iD1,iD1).LhsRowIndices,...
-                                        Block(iD1,iD1).LhsColIndices,LhsCoef(:));
-        Block(iD1,iD1).RhsGlobal=sparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
-      end
+      Block(iD1,iD1).LhsGlobal=sparse(Block(iD1,iD1).LhsRowIndices,...
+                                      Block(iD1,iD1).LhsColIndices,LhsCoef(:));
+      Block(iD1,iD1).RhsGlobal=sparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
     end
     
     %% Do coupling
-    function [Block]=doCoupling(~,iD1,iD2,Block,~,Simulation,Parameters,Mesh,Faces,~,RefElement,...
+    function [Block]=doCoupling(~,iD1,iD2,Block,~,~,Parameters,Mesh,Faces,~,RefElement,...
         Sizes)
       if matchField(Faces(iD1,iD1),'Interface') && not(isempty(Faces(iD1,iD1).Interface))
         LhsCoupCoef=MP*zeros(Sizes(iD1).NumElementLhsCoupCoef(iD2),...
@@ -105,21 +99,11 @@ classdef Thermal_CG < Formulation
             doCouplingElement(iFaceInterface,iD1,iD2,Parameters,Mesh,Faces,RefElement,Sizes);
           LhsCoupCoef(:,iFaceInterface)=reshape(LhsCoupElem',[],1);
         end
-        if Simulation.Digits==16
-          Block(iD1,iD2).LhsGlobal=fsparse(Block(iD1,iD2).LhsRowIndices,...
-                                           Block(iD1,iD2).LhsColIndices,[LhsCoupCoef(:);0]);
-        else
-          Block(iD1,iD2).LhsGlobal=sparse(Block(iD1,iD2).LhsRowIndices,...
-                                          Block(iD1,iD2).LhsColIndices,[LhsCoupCoef(:);0]);
-        end
+        Block(iD1,iD2).LhsGlobal=sparse(Block(iD1,iD2).LhsRowIndices,...
+                                        Block(iD1,iD2).LhsColIndices,[LhsCoupCoef(:);0]);
       else
-        if Simulation.Digits==16
-          Block(iD1,iD2).LhsGlobal=fsparse(Block(iD1,iD2).LhsRowIndices,...
-                                           Block(iD1,iD2).LhsColIndices,0);
-        else
-          Block(iD1,iD2).LhsGlobal=sparse(Block(iD1,iD2).LhsRowIndices,...
-                                          Block(iD1,iD2).LhsColIndices,0);
-        end
+        Block(iD1,iD2).LhsGlobal=sparse(Block(iD1,iD2).LhsRowIndices,...
+                                        Block(iD1,iD2).LhsColIndices,0);
       end
     end
     
