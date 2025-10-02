@@ -56,13 +56,13 @@ Here is a non-exhaustive list of the currently implemented **formulations**:
 
 ### Fluid Dynamics 🌊
 
-- `IncompressibleFlow_FCFV`: Solves the **Navier-Stokes equations** for incompressible flows with the FCFV method [^8].
-
 - `CompressibleFlow_HDG`: Solves the **compressible Euler equations** with the HDG method.
 
 - `WeaklyCompressibleFlowDM_HDG`: Solves the **Navier-Stokes equations** for weakly compressible flows with the HDG method using a density-momentum formulation [^3].
 
 - `WeaklyCompressibleFlowVP_HDG`: Solves the **Navier-Stokes equations** for weakly compressible flows with the HDG method using a velocity-pressure formulation [^3].
+
+- `IncompressibleFlow_FCFV`: Solves the **Navier-Stokes equations** for incompressible flows with the FCFV method [^8].
 
 ### Electromagnetics 🧲
 
@@ -404,4 +404,4 @@ _If it doesn’t converge to machine precision, it’s simply wrong_.
 [^5]: **A. La Spina**, J. Fish, [_Time- and frequency-domain hybridizable discontinuous Galerkin solvers for the calculation of the Cherenkov radiation_](https://doi.org/10.1016/j.cma.2022.115170), CMAME (2022).
 [^6]: J. Cui, **A. La Spina**, J. Fish, [_Data-physics driven multiscale approach for high-pressure resin transfer molding (HP-RTM)_](https://doi.org/10.1016/j.cma.2023.116405), CMAME (2023).
 [^7]: **A. La Spina**, J. Fish, [_A hybridizable discontinuous Galerkin formulation for the Euler-Maxwell plasma model_](https://doi.org/10.1016/j.jcp.2023.112535), JCP (2024).
-[^8]: XXX, XXX, XXX, XXX, XXX , [_A hybrid pressure formulation of the face-centred finite volume method for viscous laminar incompressible flows_](https://doi.org/10.1002/nme.70037), IJNME (2025).
+[^8]: M. Giacomini, D. Cortellessa, L. M. Vieira, R. Sevilla, A. Huerta, [_A hybrid pressure formulation of the face-centred finite volume method for viscous laminar incompressible flows_](https://doi.org/10.1002/nme.70037), IJNME (2025).
