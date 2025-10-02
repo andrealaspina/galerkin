@@ -22,7 +22,7 @@ During the early stages of my PhD, I struggled with the complexity of large-scal
 
 	- Hybridizable Discontinuous Galerkin (**HDG**)
 
-	- Coupled **CG-HDG** discretizations
+	- Face-Centred Finite Volume (**FCFV**)
 
 - Applicability to a broad range of **physical problems**.
 
@@ -55,6 +55,8 @@ Here is a non-exhaustive list of the currently implemented **formulations**:
 - `ElasticityModal_CG`: Solves the eigenvalue problem of **linear elasticity** for modal analysis using the CG method.
 
 ### Fluid Dynamics 🌊
+
+- `IncompressibleFlow_FCFV`: Solves the **Navier-Stokes equations** for incompressible flows with the FCFV method [^8].
 
 - `CompressibleFlow_HDG`: Solves the **compressible Euler equations** with the HDG method.
 
@@ -216,11 +218,11 @@ Its main **properties** are:
 
 - `NumGlobalComp`: Number of components for the global problem
 
-- `NumLocalComp`: Number of components for the local problems (for the HDG method)
+- `NumLocalComp`: Number of components for the local problems (for HDG and FCFV)
 
-- `NumPostComp`: Number of components of the post-processed variable(s) (for the HDG method)
+- `NumPostComp`: Number of components of the post-processed variable(s) (for HDG)
 
-- `DiscretizationType`: Discretization type (CG or HDG)
+- `DiscretizationType`: Discretization type (CG, HDG, or FCFV)
 
 - `TimeDerOrder`: Time derivative order (e.g., 1 for thermal problems and 2 for elastic problems)
 
@@ -402,3 +404,4 @@ _If it doesn’t converge to machine precision, it’s simply wrong_.
 [^5]: **A. La Spina**, J. Fish, [_Time- and frequency-domain hybridizable discontinuous Galerkin solvers for the calculation of the Cherenkov radiation_](https://doi.org/10.1016/j.cma.2022.115170), CMAME (2022).
 [^6]: J. Cui, **A. La Spina**, J. Fish, [_Data-physics driven multiscale approach for high-pressure resin transfer molding (HP-RTM)_](https://doi.org/10.1016/j.cma.2023.116405), CMAME (2023).
 [^7]: **A. La Spina**, J. Fish, [_A hybridizable discontinuous Galerkin formulation for the Euler-Maxwell plasma model_](https://doi.org/10.1016/j.jcp.2023.112535), JCP (2024).
+[^8]: XXX, XXX, XXX, XXX, XXX , [_A hybrid pressure formulation of the face-centred finite volume method for viscous laminar incompressible flows_](https://doi.org/10.1002/nme.70037), IJNME (2025).
