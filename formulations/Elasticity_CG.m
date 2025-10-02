@@ -550,6 +550,7 @@ for iFace=1:NumElementFaces
           iD2=find(contains({Parameters.Problem},'Fluid'));
           isFluidDM=strcmp(Parameters(iD2).Formulation,'WeaklyCompressibleFlowDM_HDG');
           isFluidVP=strcmp(Parameters(iD2).Formulation,'WeaklyCompressibleFlowVP_HDG');
+          isFluidFCFV=strcmp(Parameters(iD2).Formulation,'IncompressibleFlow_FCFV');
         end
       end
       iFace2=Faces.Interface(2,iFace);
@@ -640,7 +641,7 @@ for iFace=1:NumElementFaces
         n2ef4=n2ef4(order);
         
         % Compute variables at nodes
-        if isFluidVP
+        if isFluidVP || isFluidFCFV
           v2xf=U2e(n2ef1);
           v2yf=U2e(n2ef2);
           if nsd==3
@@ -1213,6 +1214,7 @@ if isFSI
   isStructure=strcmp(Parameters(iD1).Problem,'Structural');
   isFluidDM=strcmp(Parameters(iD2).Formulation,'WeaklyCompressibleFlowDM_HDG');
   isFluidVP=strcmp(Parameters(iD2).Formulation,'WeaklyCompressibleFlowVP_HDG');
+  isFluidFCFV=strcmp(Parameters(iD2).Formulation,'IncompressibleFlow_FCFV');
 end
 iElem1=Faces(iD1,iD2).Interface(iFaceInterface,1);
 iFace1=Faces(iD1,iD2).Interface(iFaceInterface,2);
@@ -1244,7 +1246,7 @@ if isStructural
   Ku1U2=zeros(nsd*NumElementNodes1,nsd*NumElementFaces2*NumFaceNodes2);
 elseif isFSI && isMesh
   Ku1u2=zeros(nsd*NumElementNodes1,nsd*NumElementNodes2);
-elseif isFSI && isStructure && isFluidVP
+elseif isFSI && isStructure && (isFluidVP || isFluidFCFV)
   Ku1V2=zeros(nsd*NumElementNodes1,nsd*NumElementFaces2*NumFaceNodes2);
 elseif isFSI && isStructure && isFluidDM
   Ku1R2=zeros(nsd*NumElementNodes1,NumElementFaces2*NumFaceNodes2);
@@ -1303,7 +1305,7 @@ if isStructural || (isFSI && isStructure)
   n2ef3=n2ef2+NumFaceNodes2;
   n2ef4=n2ef3+NumFaceNodes2;
 end
-if isFSI && isStructure && isFluidVP
+if isFSI && isStructure && (isFluidVP || isFluidFCFV)
   n2efV1=(iFace2-1)*nsd*NumFaceNodes2+(1:NumFaceNodes2);
   n2efV2=n2efV1+NumFaceNodes2;
   n2efV3=n2efV2+NumFaceNodes2;
@@ -1327,7 +1329,7 @@ elseif isFSI && isMesh
   n2f2=n2f2(order);
   n2f3=n2f3(order);
 end
-if isFSI && isStructure && isFluidVP
+if isFSI && isStructure && (isFluidVP || isFluidFCFV)
   n2efV1=n2efV1(order);
   n2efV2=n2efV2(order);
   n2efV3=n2efV3(order);
@@ -1540,7 +1542,7 @@ if isFSI && isMesh
   end
 end
 
-if isFSI && isStructure && isFluidVP
+if isFSI && isStructure && (isFluidVP || isFluidFCFV)
   Ku1V2(n1f1,n2efV1)=Ku1V2(n1f1,n2efV1)-gamma/h*M12f;
   Ku1V2(n1f2,n2efV2)=Ku1V2(n1f2,n2efV2)-gamma/h*M12f;
   if nsd==3
@@ -1711,7 +1713,7 @@ if isFSI && isStructure && isFluidDM
 end
 
 % Indices
-if isFSI && isStructure && isFluidVP
+if isFSI && isStructure && (isFluidVP || isFluidFCFV)
   iu1=1:nsd*NumElementNodes1;
   iV2=reshape((0:NumElementFaces2-1)*(nsd+1)*NumFaceNodes2+repmat((1:nsd*NumFaceNodes2)',...
     1,NumElementFaces2),1,[]);
@@ -1733,7 +1735,7 @@ if isStructural
   LhsCoup=Ku1U2;
 elseif isFSI && isMesh
   LhsCoup=Ku1u2;
-elseif isFSI && isStructure && isFluidVP  
+elseif isFSI && isStructure && (isFluidVP || isFluidFCFV)
   LhsCoup(iu1,iV2)=Ku1V2;
 elseif isFSI && isStructure && isFluidDM
   LhsCoup(iu1,iR2)=Ku1R2;

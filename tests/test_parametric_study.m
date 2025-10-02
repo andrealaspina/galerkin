@@ -67,7 +67,7 @@ Options.ComputeError=...                         % Compute error
    'Temperature';
    'TemperaturePost'};
 Options.Test=...                                 % Test
-  ['abs(Results.CenterTemperature(end)-1.284292372076179e+00)<1e-12 && ',...
+  ['abs(Results.CenterTemperature(end)-1.284292372076179e-00)<1e-12 && ',...
    'abs(Results.ConditionNumber(end)  -1.579099980331070e+02)<1e-11'];
 % --------------------------------------------------------------------------------------------------
 

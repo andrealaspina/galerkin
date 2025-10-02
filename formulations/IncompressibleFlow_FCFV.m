@@ -198,9 +198,9 @@ isArbitraryLagrangianEulerian=strcmp(Parameters(iD1).ArbitraryLagrangianEulerian
 isTimeDependent=strcmp(Time.TimeDependent,'yes');
 nsd=Sizes(iD1).NumSpaceDim;
 msd=nsd*(nsd+1)/2;
+NumElementNodesDeg1=nsd+1;
 NumElementFaces=Sizes(iD1).NumElementFaces;
 mu=Parameters(iD1).DynamicViscosity;
-lambda=-2/3*Parameters(iD1).DynamicViscosity;
 r=Parameters(iD1).Density;
 vD=Parameters(iD1).Velocity;
 pD=Parameters(iD1).Pressure;
@@ -229,7 +229,7 @@ if isArbitraryLagrangianEulerian
   if isFluid
     ue=reshape(Parameters(iD1).Displacement(X0e(:,1),X0e(:,2),X0e(:,3),t),[],1);
     if isTimeDependent
-      uolde=zeros(nsd*(nsd+1),BDFo);
+      uolde=zeros(nsd*NumElementNodesDeg1,BDFo);
       for iBDF=1:BDFo
         uolde(:,iBDF)=reshape(Parameters(iD1).Displacement(X0e(:,1),X0e(:,2),X0e(:,3),t-iBDF*dt),...
           [],1);
@@ -269,14 +269,7 @@ fP=zeros(NumElementFaces,1);
 
 % Update nodes coordinates
 if isArbitraryLagrangianEulerian
-  if isFluid
-    Xe(:,1:nsd)=X0e(:,1:nsd)+reshape(ue,[],nsd);
-  elseif isFluidALE || isFSI
-    N210e=RefElement(iD2,iD1).ShapeFunctionsElem;
-    pinvN102e=RefElement(iD1,iD2).PseudoinverseShapeFunctionsElem;
-    ueDeg1=reshape(ue,[],nsd); ueDeg1=ueDeg1(1:nsd+1,:);
-    Xe(:,1:nsd)=X0e(:,1:nsd)+ueDeg1;
-  end
+  Xe(:,1:nsd)=X0e(:,1:nsd)+reshape(ue,[],nsd);
 end
 
 % Compute weights at Gauss points
@@ -309,16 +302,19 @@ if isTimeDependent
 end
 if isArbitraryLagrangianEulerian
   if isFluid
-    uxe=ue(1);
-    uye=ue(2);
+    ne1=1:NumElementNodesDeg1;
+    ne2=ne1+NumElementNodesDeg1;
+    ne3=ne2+NumElementNodesDeg1;
+    uxe=ue(ne1);
+    uye=ue(ne2);
     if nsd==3
-      uze=ue(3);
+      uze=ue(ne3);
     end
     if isTimeDependent
-      uoldxe=uolde(1,:);
-      uoldye=uolde(2,:);
+      uoldxe=uolde(ne1,:);
+      uoldye=uolde(ne2,:);
       if nsd==3
-        uoldze=uolde(3,:);
+        uoldze=uolde(ne3,:);
       end
     end
   elseif isFluidALE || isFSI
@@ -340,24 +336,16 @@ if isArbitraryLagrangianEulerian
   end
 end
 if isArbitraryLagrangianEulerian && isTimeDependent
-  if isFluid
-    axe=1/dt*uxe*alpha(1)+1/dt*uoldxe*alpha(2:BDFo+1,1);
-    aye=1/dt*uye*alpha(1)+1/dt*uoldye*alpha(2:BDFo+1,1);
-    if nsd==3
-      aze=1/dt*uze*alpha(1)+1/dt*uoldze*alpha(2:BDFo+1,1);
-    end
-  elseif isFluidALE || isFSI
-    axe=pinvN102e*(N210e*(1/dt*uxe*alpha(1)+1/dt*uoldxe*alpha(2:BDFo+1,1)));
-    aye=pinvN102e*(N210e*(1/dt*uye*alpha(1)+1/dt*uoldye*alpha(2:BDFo+1,1)));
-    if nsd==3
-      aze=pinvN102e*(N210e*(1/dt*uze*alpha(1)+1/dt*uoldze*alpha(2:BDFo+1,1)));
-    end
+  axe=1/dt*uxe*alpha(1)+1/dt*uoldxe*alpha(2:BDFo+1,1);
+  aye=1/dt*uye*alpha(1)+1/dt*uoldye*alpha(2:BDFo+1,1);
+  if nsd==3
+    aze=1/dt*uze*alpha(1)+1/dt*uoldze*alpha(2:BDFo+1,1);
   end
 else
-  axe=vxe*0;
-  aye=vye*0;
+  axe=zeros(NumElementNodesDeg1,1);
+  aye=zeros(NumElementNodesDeg1,1);
   if nsd==3
-    aze=vze*0;
+    aze=zeros(NumElementNodesDeg1,1);
   end
 end
 
@@ -395,15 +383,9 @@ if nsd==3
 end
 
 % Compute linearization of viscous stress
-if nsd==2
-  Voigt1=(sqrt(2*(mu+lambda))+sqrt(2*mu))/2;
-  Voigt2=(sqrt(2*(mu+lambda))-sqrt(2*mu))/2;
-  Voigt3=sqrt(mu);
-elseif nsd==3
-  Voigt1=(sqrt(2*mu+3*lambda)+2*sqrt(2*mu))/3;
-  Voigt2=(sqrt(2*mu+3*lambda)-1*sqrt(2*mu))/3;
-  Voigt3=sqrt(mu);
-end
+Voigt1=+4/3;
+Voigt2=-2/3;
+Voigt3=1;
 
 % Compute lhs
 KLL(1,1)=-weg;
@@ -525,10 +507,10 @@ for iFace=1:NumElementFaces
       vzf=vze(1);
     end
     pf=pe(1);
-    axf=axe(1);
-    ayf=aye(1);
+    axf=mean(axe); % <------------------------------------------------------------------------------ CHECK!
+    ayf=mean(aye);
     if nsd==3
-      azf=aze(1);
+      azf=mean(aze);
     end
     Vxf=Ue(nefU1);
     Vyf=Ue(nefU2);
@@ -746,7 +728,7 @@ for iFace=1:NumElementFaces
     end
     
     Kpp(1,1)=Kpp(1,1)+tauP*wfg;
-
+    
     if not(isDirichlet_v_x)
       if nsd==2
         KLV(1,nefV1)=KLV(1,nefV1)-Voigt1*wfg*nx;
@@ -857,38 +839,30 @@ for iFace=1:NumElementFaces
     
     if not(isExterior) || isNeumann_t_x || (isFSI && isInterface)
       if nsd==2
-        KVL(nefV1,1)=KVL(nefV1,1)-Voigt1*wfg*nx;
-        KVL(nefV1,2)=KVL(nefV1,2)-Voigt2*wfg*nx;
-        KVL(nefV1,3)=KVL(nefV1,3)-Voigt3*wfg*ny;
+        KVL(nefV1,1)=KVL(nefV1,1)-wfg*mu*nx;
+        KVL(nefV1,3)=KVL(nefV1,3)-wfg*mu*ny;
       elseif nsd==3
-        KVL(nefV1,1)=KVL(nefV1,1)-Voigt1*wfg*nx;
-        KVL(nefV1,2)=KVL(nefV1,2)-Voigt2*wfg*nx;
-        KVL(nefV1,3)=KVL(nefV1,3)-Voigt2*wfg*nx;
-        KVL(nefV1,4)=KVL(nefV1,4)-Voigt3*wfg*ny;
-        KVL(nefV1,5)=KVL(nefV1,5)-Voigt3*wfg*nz;
+        KVL(nefV1,1)=KVL(nefV1,1)-wfg*mu*nx;
+        KVL(nefV1,4)=KVL(nefV1,4)-wfg*mu*ny;
+        KVL(nefV1,5)=KVL(nefV1,5)-wfg*mu*nz;
       end
     end
     
     if not(isExterior) || isNeumann_t_y || (isFSI && isInterface)
       if nsd==2
-        KVL(nefV2,1)=KVL(nefV2,1)-Voigt2*wfg*ny;
-        KVL(nefV2,2)=KVL(nefV2,2)-Voigt1*wfg*ny;
-        KVL(nefV2,3)=KVL(nefV2,3)-Voigt3*wfg*nx;
+        KVL(nefV2,2)=KVL(nefV2,2)-wfg*mu*ny;
+        KVL(nefV2,3)=KVL(nefV2,3)-wfg*mu*nx;
       elseif nsd==3
-        KVL(nefV2,1)=KVL(nefV2,1)-Voigt2*wfg*ny;
-        KVL(nefV2,2)=KVL(nefV2,2)-Voigt1*wfg*ny;
-        KVL(nefV2,3)=KVL(nefV2,3)-Voigt2*wfg*ny;
-        KVL(nefV2,4)=KVL(nefV2,4)-Voigt3*wfg*nx;
-        KVL(nefV2,6)=KVL(nefV2,6)-Voigt3*wfg*nz;
+        KVL(nefV2,2)=KVL(nefV2,2)-wfg*mu*ny;
+        KVL(nefV2,4)=KVL(nefV2,4)-wfg*mu*nx;
+        KVL(nefV2,6)=KVL(nefV2,6)-wfg*mu*nz;
       end
     end
     
     if nsd==3 && (not(isExterior) || isNeumann_t_z || (isFSI && isInterface))
-      KVL(nefV3,1)=KVL(nefV3,1)-Voigt2*wfg*nz;
-      KVL(nefV3,2)=KVL(nefV3,2)-Voigt2*wfg*nz;
-      KVL(nefV3,3)=KVL(nefV3,3)-Voigt1*wfg*nz;
-      KVL(nefV3,5)=KVL(nefV3,5)-Voigt3*wfg*nx;
-      KVL(nefV3,6)=KVL(nefV3,6)-Voigt3*wfg*ny;
+      KVL(nefV3,3)=KVL(nefV3,3)-wfg*mu*nz;
+      KVL(nefV3,5)=KVL(nefV3,5)-wfg*mu*nx;
+      KVL(nefV3,6)=KVL(nefV3,6)-wfg*mu*ny;
     end
     
     if not(isDirichlet_v_x)
@@ -915,15 +889,15 @@ for iFace=1:NumElementFaces
       KVV(nefV3,nefV3)=KVV(nefV3,nefV3)+tauV*wfg;
     end
     
-    if (not(isExterior) || isNeumann_t_x || (isFSI && isInterface)) && not(isDirichlet_p)
+    if (isNeumann_t_x || (isFSI && isInterface)) && not(isDirichlet_p)
       KVP(nefV1,nefP1)=KVP(nefV1,nefP1)-wfg*nx;
     end
     
-    if (not(isExterior) || isNeumann_t_y || (isFSI && isInterface)) && not(isDirichlet_p)
+    if (isNeumann_t_y || (isFSI && isInterface)) && not(isDirichlet_p)
       KVP(nefV2,nefP1)=KVP(nefV2,nefP1)-wfg*ny;
     end
     
-    if nsd==3 && (not(isExterior) || isNeumann_t_z || (isFSI && isInterface)) && not(isDirichlet_p)
+    if nsd==3 && (isNeumann_t_z || (isFSI && isInterface)) && not(isDirichlet_p)
       KVP(nefV3,nefP1)=KVP(nefV3,nefP1)-wfg*nz;
     end
     
@@ -953,28 +927,16 @@ for iFace=1:NumElementFaces
     fp(1,1)=fp(1,1)-wfg*(tauP*pfg);
     
     if nsd==2
-      fL(1,1)=fL(1,1)+wfg*(+Voigt1*nx*Vxfg...
-                           +Voigt2*ny*Vyfg);
-      fL(2,1)=fL(2,1)+wfg*(+Voigt2*nx*Vxfg...
-                           +Voigt1*ny*Vyfg);
-      fL(3,1)=fL(3,1)+wfg*(+Voigt3*ny*Vxfg...
-                           +Voigt3*nx*Vyfg);
+      fL(1,1)=fL(1,1)+wfg*(Voigt1*nx*Vxfg+Voigt2*ny*Vyfg);
+      fL(2,1)=fL(2,1)+wfg*(Voigt2*nx*Vxfg+Voigt1*ny*Vyfg);
+      fL(3,1)=fL(3,1)+wfg*(Voigt3*ny*Vxfg+Voigt3*nx*Vyfg);
     elseif nsd==3
-      fL(1,1)=fL(1,1)+wfg*(+Voigt1*nx*Vxfg...
-                           +Voigt2*ny*Vyfg...
-                           +Voigt2*nz*Vzfg);
-      fL(2,1)=fL(2,1)+wfg*(+Voigt2*nx*Vxfg...
-                           +Voigt1*ny*Vyfg...
-                           +Voigt2*nz*Vzfg);
-      fL(3,1)=fL(3,1)+wfg*(+Voigt2*nx*Vxfg...
-                           +Voigt2*ny*Vyfg...
-                           +Voigt1*nz*Vzfg);
-      fL(4,1)=fL(4,1)+wfg*(+Voigt3*nx*Vyfg...
-                           +Voigt3*ny*Vxfg);
-      fL(5,1)=fL(5,1)+wfg*(+Voigt3*nx*Vzfg...
-                           +Voigt3*nz*Vxfg);
-      fL(6,1)=fL(6,1)+wfg*(+Voigt3*ny*Vzfg...
-                           +Voigt3*nz*Vyfg);
+      fL(1,1)=fL(1,1)+wfg*(Voigt1*nx*Vxfg+Voigt2*ny*Vyfg+Voigt2*nz*Vzfg);
+      fL(2,1)=fL(2,1)+wfg*(Voigt2*nx*Vxfg+Voigt1*ny*Vyfg+Voigt2*nz*Vzfg);
+      fL(3,1)=fL(3,1)+wfg*(Voigt2*nx*Vxfg+Voigt2*ny*Vyfg+Voigt1*nz*Vzfg);
+      fL(4,1)=fL(4,1)+wfg*(Voigt3*nx*Vyfg+Voigt3*ny*Vxfg);
+      fL(5,1)=fL(5,1)+wfg*(Voigt3*nx*Vzfg+Voigt3*nz*Vxfg);
+      fL(6,1)=fL(6,1)+wfg*(Voigt3*ny*Vzfg+Voigt3*nz*Vyfg);
     end
     
     if isConvectiveFlow
@@ -1000,61 +962,64 @@ for iFace=1:NumElementFaces
       fv(3,1)=fv(3,1)-wfg*(Pfg*nz);
     end
     
-    fp(1,1)=fp(1,1)-wfg*(r*((Vxfg-axfg)*nx+(Vyfg-ayfg)*ny)-tauP*Pfg);
-    if nsd==3
-      fp(1,1)=fp(1,1)-wfg*(r*(Vzfg-azfg)*nz);
+    if nsd==2
+      fp(1,1)=fp(1,1)-wfg*(r*((Vxfg-axfg)*nx+(Vyfg-ayfg)*ny)-tauP*Pfg);
+    elseif nsd==3
+      fp(1,1)=fp(1,1)-wfg*(r*((Vxfg-axfg)*nx+(Vyfg-ayfg)*ny+(Vzfg-azfg)*nz)-tauP*Pfg);
     end
-    
+
     if not(isExterior) || isNeumann_t_x || (isFSI && isInterface)
       if nsd==2
-        fV(nefV1,1)=fV(nefV1,1)+wfg*(+Voigt1*nx*Lxxfg+Voigt2*nx*Lyyfg...
-                                     +Voigt3*ny*Lxyfg...
-                                     +Pfg*nx);
+        fV(nefV1,1)=fV(nefV1,1)+wfg*(mu*(Lxxfg*nx+Lxyfg*ny));
       elseif nsd==3
-        fV(nefV1,1)=fV(nefV1,1)+wfg*(+Voigt1*nx*Lxxfg+Voigt2*nx*Lyyfg+Voigt2*nx*Lzzfg...
-                                     +Voigt3*ny*Lxyfg+Voigt3*nz*Lxzfg...
-                                     +Pfg*nx);
+        fV(nefV1,1)=fV(nefV1,1)+wfg*(mu*(Lxxfg*nx+Lxyfg*ny+Lxzfg*nz));
       end
     end
     
     if not(isExterior) || isNeumann_t_y || (isFSI && isInterface)
       if nsd==2
-        fV(nefV2,1)=fV(nefV2,1)+wfg*(+Voigt2*ny*Lxxfg+Voigt1*ny*Lyyfg...
-                                     +Voigt3*nx*Lxyfg...
-                                     +Pfg*ny);
+        fV(nefV2,1)=fV(nefV2,1)+wfg*(mu*(Lxyfg*nx+Lyyfg*ny));
       elseif nsd==3
-        fV(nefV2,1)=fV(nefV2,1)+wfg*(+Voigt2*ny*Lxxfg+Voigt1*ny*Lyyfg+Voigt2*ny*Lzzfg...
-                                     +Voigt3*nx*Lxyfg+Voigt3*nz*Lyzfg...
-                                     +Pfg*ny);
+        fV(nefV2,1)=fV(nefV2,1)+wfg*(mu*(Lxyfg*nx+Lyyfg*ny+Lyzfg*nz));
       end
     end
     
     if nsd==3 && (not(isExterior) || isNeumann_t_z || (isFSI && isInterface))
-      fV(nefV3,1)=fV(nefV3,1)+wfg*(+Voigt2*nz*Lxxfg+Voigt2*nz*Lyyfg+Voigt1*nz*Lzzfg...
-                                   +Voigt3*nx*Lxzfg+Voigt3*ny*Lyzfg...
-                                   +Pfg*nz);
+      fV(nefV3,1)=fV(nefV3,1)+wfg*(mu*(Lxzfg*nx+Lyzfg*ny+Lzzfg*nz));
+    end
+
+    if isNeumann_t_x || (isFSI && isInterface)
+      fV(nefV1,1)=fV(nefV1,1)+wfg*(Pfg*nx);
+    end
+    
+    if isNeumann_t_y || (isFSI && isInterface)
+      fV(nefV2,1)=fV(nefV2,1)+wfg*(Pfg*ny);
+    end
+    
+    if nsd==3 && (isNeumann_t_z || (isFSI && isInterface))
+      fV(nefV3,1)=fV(nefV3,1)+wfg*(Pfg*nz);
     end
     
     if not(isDirichlet_v_x)
-      fV(nefV1,1)=fV(nefV1,1)+wfg*(+tauV*(vxfg-Vxfg));
+      fV(nefV1,1)=fV(nefV1,1)+wfg*(tauV*(vxfg-Vxfg));
     end
     
     if not(isDirichlet_v_y)
-      fV(nefV2,1)=fV(nefV2,1)+wfg*(+tauV*(vyfg-Vyfg));
+      fV(nefV2,1)=fV(nefV2,1)+wfg*(tauV*(vyfg-Vyfg));
     end
     
     if nsd==3 && not(isDirichlet_v_z)
-      fV(nefV3,1)=fV(nefV3,1)+wfg*(+tauV*(vzfg-Vzfg));
+      fV(nefV3,1)=fV(nefV3,1)+wfg*(tauV*(vzfg-Vzfg));
     end
     
     if isFSI && isInterface
       if nsd==2
-        fV(nefV1,1)=fV(nefV1,1)-Nw12fT*(+s2xxfg.*(-n12x)+s2xyfg.*(-n12y));
-        fV(nefV2,1)=fV(nefV2,1)-Nw12fT*(+s2yxfg.*(-n12x)+s2yyfg.*(-n12y));
+        fV(nefV1,1)=fV(nefV1,1)-Nw12fT*(s2xxfg*(-n12x)+s2xyfg*(-n12y));
+        fV(nefV2,1)=fV(nefV2,1)-Nw12fT*(s2yxfg*(-n12x)+s2yyfg*(-n12y));
       elseif nsd==3
-        fV(nefV1,1)=fV(nefV1,1)-Nw12fT*(+s2xxfg.*(-n12x)+s2xyfg.*(-n12y)+s2xzfg.*(-n12z));
-        fV(nefV2,1)=fV(nefV2,1)-Nw12fT*(+s2yxfg.*(-n12x)+s2yyfg.*(-n12y)+s2yzfg.*(-n12z));
-        fV(nefV3,1)=fV(nefV3,1)-Nw12fT*(+s2zxfg.*(-n12x)+s2zyfg.*(-n12y)+s2zzfg.*(-n12z));
+        fV(nefV1,1)=fV(nefV1,1)-Nw12fT*(s2xxfg*(-n12x)+s2xyfg*(-n12y)+s2xzfg*(-n12z));
+        fV(nefV2,1)=fV(nefV2,1)-Nw12fT*(s2yxfg*(-n12x)+s2yyfg*(-n12y)+s2yzfg*(-n12z));
+        fV(nefV3,1)=fV(nefV3,1)-Nw12fT*(s2zxfg*(-n12x)+s2zyfg*(-n12y)+s2zzfg*(-n12z));
       end
       
       if isTimeDependent
@@ -1067,6 +1032,15 @@ for iFace=1:NumElementFaces
                                                   +1/dt*u2oldzfg(:,1:BDFo)*alpha(2:BDFo+1,1)));
         end
       end
+      
+      % --------------------------------------------------------------------------------------------
+%       if isTimeDependent
+%         vF=mean(Vyfg);
+%         vS=mean(1/dt*u2yfg*alpha(1)+1/dt*u2oldyfg(:,1:BDFo)*alpha(2:BDFo+1,1));
+%         fprintf(' vF=%.2e',vF)
+%         fprintf(' vS=%.2e',vS)
+%       end
+      % --------------------------------------------------------------------------------------------
       
       fV(nefV1,1)=fV(nefV1,1)-wfg*(gamma/h*Vxfg);
       fV(nefV2,1)=fV(nefV2,1)-wfg*(gamma/h*Vyfg);
@@ -1187,7 +1161,6 @@ nsd=Sizes(iD1).NumSpaceDim;
 NumElementNodes2=Sizes(iD2).NumElementNodes;
 NumElementFaces1=Sizes(iD1).NumElementFaces;
 NumElementFaces2=Sizes(iD2).NumElementFaces;
-NumFaceNodes1=Sizes(iD1).NumFaceNodes;
 C1e=Mesh(iD1).Elements(:,iElem1)';
 C2e=Mesh(iD2).Elements(:,iElem2)';
 X1e=Mesh(iD1).Nodes(:,C1e)';
@@ -1209,13 +1182,11 @@ if isArbitraryLagrangianEulerian
 end
 
 % Initialize lhs
-KV1u2=zeros(nsd*NumElementFaces1*NumFaceNodes1,nsd*NumElementNodes2);
+KV1u2=zeros(nsd*NumElementFaces1,nsd*NumElementNodes2);
 
 % Update nodes coordinates
 if isArbitraryLagrangianEulerian
-  N310e=RefElement(iD3,iD1).ShapeFunctionsElem;
-  pinvN103e=RefElement(iD1,iD3).PseudoinverseShapeFunctionsElem;
-  X1e(:,1:nsd)=X10e(:,1:nsd)+pinvN103e*(N310e*reshape(u3e,[],nsd));
+  X1e(:,1:nsd)=X10e(:,1:nsd)+reshape(u3e,[],nsd);
 end
 
 % Compute weights at Gauss points
@@ -1255,9 +1226,9 @@ N21f=RefElement(iD2,iD1).ShapeFunctionsFace;
 h=sum(w2fg);
 
 % Indices
-n1efV1=(iFace1-1)*nsd*NumFaceNodes1+(1:NumFaceNodes1);
-n1efV2=n1efV1+NumFaceNodes1;
-n1efV3=n1efV2+NumFaceNodes1;
+n1efV1=(iFace1-1)*nsd+1;
+n1efV2=n1efV1+1;
+n1efV3=n1efV2+1;
 n2f1=FaceNodes2(iFace2,:);
 n2f2=n2f1+NumElementNodes2;
 n2f3=n2f2+NumElementNodes2;
@@ -1332,54 +1303,54 @@ end
 % Compute lhs
 if nsd==2
   KV1u2(n1efV1,n2e1)=KV1u2(n1efV1,n2e1)...
-            +Nw12fT*((+ds2xxdF2xxfg.*(-n12x)+ds2xydF2xxfg.*(-n12y)).*N21xf)...
-            +Nw12fT*((+ds2xxdF2xyfg.*(-n12x)+ds2xydF2xyfg.*(-n12y)).*N21yf);
+                +Nw12fT*((ds2xxdF2xxfg*(-n12x)+ds2xydF2xxfg*(-n12y)).*N21xf)...
+                +Nw12fT*((ds2xxdF2xyfg*(-n12x)+ds2xydF2xyfg*(-n12y)).*N21yf);
   KV1u2(n1efV1,n2e2)=KV1u2(n1efV1,n2e2)...
-            +Nw12fT*((+ds2xxdF2yxfg.*(-n12x)+ds2xydF2yxfg.*(-n12y)).*N21xf)...
-            +Nw12fT*((+ds2xxdF2yyfg.*(-n12x)+ds2xydF2yyfg.*(-n12y)).*N21yf);
+                +Nw12fT*((ds2xxdF2yxfg*(-n12x)+ds2xydF2yxfg*(-n12y)).*N21xf)...
+                +Nw12fT*((ds2xxdF2yyfg*(-n12x)+ds2xydF2yyfg*(-n12y)).*N21yf);
   KV1u2(n1efV2,n2e1)=KV1u2(n1efV2,n2e1)...
-            +Nw12fT*((+ds2yxdF2xxfg.*(-n12x)+ds2yydF2xxfg.*(-n12y)).*N21xf)...
-            +Nw12fT*((+ds2yxdF2xyfg.*(-n12x)+ds2yydF2xyfg.*(-n12y)).*N21yf);
+                +Nw12fT*((ds2yxdF2xxfg*(-n12x)+ds2yydF2xxfg*(-n12y)).*N21xf)...
+                +Nw12fT*((ds2yxdF2xyfg*(-n12x)+ds2yydF2xyfg*(-n12y)).*N21yf);
   KV1u2(n1efV2,n2e2)=KV1u2(n1efV2,n2e2)...
-            +Nw12fT*((+ds2yxdF2yxfg.*(-n12x)+ds2yydF2yxfg.*(-n12y)).*N21xf)...
-            +Nw12fT*((+ds2yxdF2yyfg.*(-n12x)+ds2yydF2yyfg.*(-n12y)).*N21yf);
+                +Nw12fT*((ds2yxdF2yxfg*(-n12x)+ds2yydF2yxfg*(-n12y)).*N21xf)...
+                +Nw12fT*((ds2yxdF2yyfg*(-n12x)+ds2yydF2yyfg*(-n12y)).*N21yf);
 elseif nsd==3
   KV1u2(n1efV1,n2e1)=KV1u2(n1efV1,n2e1)...
-            +Nw12fT*((+ds2xxdF2xxfg.*(-n12x)+ds2xydF2xxfg.*(-n12y)+ds2xzdF2xxfg.*(-n12z)).*N21xf)...
-            +Nw12fT*((+ds2xxdF2xyfg.*(-n12x)+ds2xydF2xyfg.*(-n12y)+ds2xzdF2xyfg.*(-n12z)).*N21yf)...
-            +Nw12fT*((+ds2xxdF2xzfg.*(-n12x)+ds2xydF2xzfg.*(-n12y)+ds2xzdF2xzfg.*(-n12z)).*N21zf);
+                +Nw12fT*((ds2xxdF2xxfg*(-n12x)+ds2xydF2xxfg*(-n12y)+ds2xzdF2xxfg*(-n12z)).*N21xf)...
+                +Nw12fT*((ds2xxdF2xyfg*(-n12x)+ds2xydF2xyfg*(-n12y)+ds2xzdF2xyfg*(-n12z)).*N21yf)...
+                +Nw12fT*((ds2xxdF2xzfg*(-n12x)+ds2xydF2xzfg*(-n12y)+ds2xzdF2xzfg*(-n12z)).*N21zf);
   KV1u2(n1efV1,n2e2)=KV1u2(n1efV1,n2e2)...
-            +Nw12fT*((+ds2xxdF2yxfg.*(-n12x)+ds2xydF2yxfg.*(-n12y)+ds2xzdF2yxfg.*(-n12z)).*N21xf)...
-            +Nw12fT*((+ds2xxdF2yyfg.*(-n12x)+ds2xydF2yyfg.*(-n12y)+ds2xzdF2yyfg.*(-n12z)).*N21yf)...
-            +Nw12fT*((+ds2xxdF2yzfg.*(-n12x)+ds2xydF2yzfg.*(-n12y)+ds2xzdF2yzfg.*(-n12z)).*N21zf);
+                +Nw12fT*((ds2xxdF2yxfg*(-n12x)+ds2xydF2yxfg*(-n12y)+ds2xzdF2yxfg*(-n12z)).*N21xf)...
+                +Nw12fT*((ds2xxdF2yyfg*(-n12x)+ds2xydF2yyfg*(-n12y)+ds2xzdF2yyfg*(-n12z)).*N21yf)...
+                +Nw12fT*((ds2xxdF2yzfg*(-n12x)+ds2xydF2yzfg*(-n12y)+ds2xzdF2yzfg*(-n12z)).*N21zf);
   KV1u2(n1efV1,n2e3)=KV1u2(n1efV1,n2e3)...
-            +Nw12fT*((+ds2xxdF2zxfg.*(-n12x)+ds2xydF2zxfg.*(-n12y)+ds2xzdF2zxfg.*(-n12z)).*N21xf)...
-            +Nw12fT*((+ds2xxdF2zyfg.*(-n12x)+ds2xydF2zyfg.*(-n12y)+ds2xzdF2zyfg.*(-n12z)).*N21yf)...
-            +Nw12fT*((+ds2xxdF2zzfg.*(-n12x)+ds2xydF2zzfg.*(-n12y)+ds2xzdF2zzfg.*(-n12z)).*N21zf);
+                +Nw12fT*((ds2xxdF2zxfg*(-n12x)+ds2xydF2zxfg*(-n12y)+ds2xzdF2zxfg*(-n12z)).*N21xf)...
+                +Nw12fT*((ds2xxdF2zyfg*(-n12x)+ds2xydF2zyfg*(-n12y)+ds2xzdF2zyfg*(-n12z)).*N21yf)...
+                +Nw12fT*((ds2xxdF2zzfg*(-n12x)+ds2xydF2zzfg*(-n12y)+ds2xzdF2zzfg*(-n12z)).*N21zf);
   KV1u2(n1efV2,n2e1)=KV1u2(n1efV2,n2e1)...
-            +Nw12fT*((+ds2yxdF2xxfg.*(-n12x)+ds2yydF2xxfg.*(-n12y)+ds2yzdF2xxfg.*(-n12z)).*N21xf)...
-            +Nw12fT*((+ds2yxdF2xyfg.*(-n12x)+ds2yydF2xyfg.*(-n12y)+ds2yzdF2xyfg.*(-n12z)).*N21yf)...
-            +Nw12fT*((+ds2yxdF2xzfg.*(-n12x)+ds2yydF2xzfg.*(-n12y)+ds2yzdF2xzfg.*(-n12z)).*N21zf);
+                +Nw12fT*((ds2yxdF2xxfg*(-n12x)+ds2yydF2xxfg*(-n12y)+ds2yzdF2xxfg*(-n12z)).*N21xf)...
+                +Nw12fT*((ds2yxdF2xyfg*(-n12x)+ds2yydF2xyfg*(-n12y)+ds2yzdF2xyfg*(-n12z)).*N21yf)...
+                +Nw12fT*((ds2yxdF2xzfg*(-n12x)+ds2yydF2xzfg*(-n12y)+ds2yzdF2xzfg*(-n12z)).*N21zf);
   KV1u2(n1efV2,n2e2)=KV1u2(n1efV2,n2e2)...
-            +Nw12fT*((+ds2yxdF2yxfg.*(-n12x)+ds2yydF2yxfg.*(-n12y)+ds2yzdF2yxfg.*(-n12z)).*N21xf)...
-            +Nw12fT*((+ds2yxdF2yyfg.*(-n12x)+ds2yydF2yyfg.*(-n12y)+ds2yzdF2yyfg.*(-n12z)).*N21yf)...
-            +Nw12fT*((+ds2yxdF2yzfg.*(-n12x)+ds2yydF2yzfg.*(-n12y)+ds2yzdF2yzfg.*(-n12z)).*N21zf);
+                +Nw12fT*((ds2yxdF2yxfg*(-n12x)+ds2yydF2yxfg*(-n12y)+ds2yzdF2yxfg*(-n12z)).*N21xf)...
+                +Nw12fT*((ds2yxdF2yyfg*(-n12x)+ds2yydF2yyfg*(-n12y)+ds2yzdF2yyfg*(-n12z)).*N21yf)...
+                +Nw12fT*((ds2yxdF2yzfg*(-n12x)+ds2yydF2yzfg*(-n12y)+ds2yzdF2yzfg*(-n12z)).*N21zf);
   KV1u2(n1efV2,n2e3)=KV1u2(n1efV2,n2e3)...
-            +Nw12fT*((+ds2yxdF2zxfg.*(-n12x)+ds2yydF2zxfg.*(-n12y)+ds2yzdF2zxfg.*(-n12z)).*N21xf)...
-            +Nw12fT*((+ds2yxdF2zyfg.*(-n12x)+ds2yydF2zyfg.*(-n12y)+ds2yzdF2zyfg.*(-n12z)).*N21yf)...
-            +Nw12fT*((+ds2yxdF2zzfg.*(-n12x)+ds2yydF2zzfg.*(-n12y)+ds2yzdF2zzfg.*(-n12z)).*N21zf);
+                +Nw12fT*((ds2yxdF2zxfg*(-n12x)+ds2yydF2zxfg*(-n12y)+ds2yzdF2zxfg*(-n12z)).*N21xf)...
+                +Nw12fT*((ds2yxdF2zyfg*(-n12x)+ds2yydF2zyfg*(-n12y)+ds2yzdF2zyfg*(-n12z)).*N21yf)...
+                +Nw12fT*((ds2yxdF2zzfg*(-n12x)+ds2yydF2zzfg*(-n12y)+ds2yzdF2zzfg*(-n12z)).*N21zf);
   KV1u2(n1efV3,n2e1)=KV1u2(n1efV3,n2e1)...
-            +Nw12fT*((+ds2zxdF2xxfg.*(-n12x)+ds2zydF2xxfg.*(-n12y)+ds2zzdF2xxfg.*(-n12z)).*N21xf)...
-            +Nw12fT*((+ds2zxdF2xyfg.*(-n12x)+ds2zydF2xyfg.*(-n12y)+ds2zzdF2xyfg.*(-n12z)).*N21yf)...
-            +Nw12fT*((+ds2zxdF2xzfg.*(-n12x)+ds2zydF2xzfg.*(-n12y)+ds2zzdF2xzfg.*(-n12z)).*N21zf);
+                +Nw12fT*((ds2zxdF2xxfg*(-n12x)+ds2zydF2xxfg*(-n12y)+ds2zzdF2xxfg*(-n12z)).*N21xf)...
+                +Nw12fT*((ds2zxdF2xyfg*(-n12x)+ds2zydF2xyfg*(-n12y)+ds2zzdF2xyfg*(-n12z)).*N21yf)...
+                +Nw12fT*((ds2zxdF2xzfg*(-n12x)+ds2zydF2xzfg*(-n12y)+ds2zzdF2xzfg*(-n12z)).*N21zf);
   KV1u2(n1efV3,n2e2)=KV1u2(n1efV3,n2e2)...
-            +Nw12fT*((+ds2zxdF2yxfg.*(-n12x)+ds2zydF2yxfg.*(-n12y)+ds2zzdF2yxfg.*(-n12z)).*N21xf)...
-            +Nw12fT*((+ds2zxdF2yyfg.*(-n12x)+ds2zydF2yyfg.*(-n12y)+ds2zzdF2yyfg.*(-n12z)).*N21yf)...
-            +Nw12fT*((+ds2zxdF2yzfg.*(-n12x)+ds2zydF2yzfg.*(-n12y)+ds2zzdF2yzfg.*(-n12z)).*N21zf);
+                +Nw12fT*((ds2zxdF2yxfg*(-n12x)+ds2zydF2yxfg*(-n12y)+ds2zzdF2yxfg*(-n12z)).*N21xf)...
+                +Nw12fT*((ds2zxdF2yyfg*(-n12x)+ds2zydF2yyfg*(-n12y)+ds2zzdF2yyfg*(-n12z)).*N21yf)...
+                +Nw12fT*((ds2zxdF2yzfg*(-n12x)+ds2zydF2yzfg*(-n12y)+ds2zzdF2yzfg*(-n12z)).*N21zf);
   KV1u2(n1efV3,n2e3)=KV1u2(n1efV3,n2e3)...
-            +Nw12fT*((+ds2zxdF2zxfg.*(-n12x)+ds2zydF2zxfg.*(-n12y)+ds2zzdF2zxfg.*(-n12z)).*N21xf)...
-            +Nw12fT*((+ds2zxdF2zyfg.*(-n12x)+ds2zydF2zyfg.*(-n12y)+ds2zzdF2zyfg.*(-n12z)).*N21yf)...
-            +Nw12fT*((+ds2zxdF2zzfg.*(-n12x)+ds2zydF2zzfg.*(-n12y)+ds2zzdF2zzfg.*(-n12z)).*N21zf);
+                +Nw12fT*((ds2zxdF2zxfg*(-n12x)+ds2zydF2zxfg*(-n12y)+ds2zzdF2zxfg*(-n12z)).*N21xf)...
+                +Nw12fT*((ds2zxdF2zyfg*(-n12x)+ds2zydF2zyfg*(-n12y)+ds2zzdF2zyfg*(-n12z)).*N21yf)...
+                +Nw12fT*((ds2zxdF2zzfg*(-n12x)+ds2zydF2zzfg*(-n12y)+ds2zzdF2zzfg*(-n12z)).*N21zf);
 end
 
 if isTimeDependent
@@ -1391,12 +1362,11 @@ if isTimeDependent
 end
 
 % Indices
-iV1=reshape((0:NumElementFaces1-1)*(nsd+1)*NumFaceNodes1+repmat((1:nsd*NumFaceNodes1)',...
-  1,NumElementFaces1),1,[]);
+iV1=reshape((0:NumElementFaces1-1)*(nsd+1)+repmat((1:nsd)',1,NumElementFaces1),1,[]);
 iu2=1:nsd*NumElementNodes2;
 
 % Initialization of lhs and rhs
-LhsCoup=zeros((nsd+1)*NumElementFaces1*NumFaceNodes1,nsd*NumElementNodes2);
+LhsCoup=zeros((nsd+1)*NumElementFaces1,nsd*NumElementNodes2);
 
 % Compute elemental contributions to lhs
 LhsCoup(iV1,iu2)=KV1u2;
