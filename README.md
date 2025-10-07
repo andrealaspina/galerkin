@@ -1,4 +1,4 @@
-# ***galerkin***: A Versatile Finite Element Framework for MATLAB
+# ***galerkin***: A Versatile Finite Element Framework for MATLAB [![File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/182193-galerkin)
 
 <p align="center">
   <img src="https://github.com/user-attachments/files/18724203/logo.pdf" width="300">
