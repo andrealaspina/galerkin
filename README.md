@@ -160,7 +160,7 @@ Two files in `functions/` are third-party code kept as distributed by their auth
 
 A **single**, **consistent** style is used throughout the code:
 
-- **Layout**: 2-space indentation, lines never exceeding **100 columns**, and continuation lines indented by 2 further spaces. Each block of statements is introduced by a short comment, without decorative rules.
+- **Layout**: 2-space indentation, lines never exceeding **100 columns**, and continuation lines indented by 2 further spaces, or aligned whenever alignment makes a parallel structure evident (e.g. the BDF coefficients or the Jacobian entries). Each block of statements is introduced by a short comment, without decorative rules.
 
 - **Naming**: `PascalCase` for structures and their fields (`Sizes.NumElementNodes`), `lowerCamelCase` for functions (`computeError`), and the `i` prefix for loop indices (`iD` for the discretization, `iElem` for the element, `iFace` for the face). Counts stored in structures carry the `Num` prefix, while the number of discretizations, which appears in almost every loop, is kept in the short local `nD`. Inside the element kernels, the usual mathematical shorthands are preserved (`Ne`, `Xe`, `weg`).
 

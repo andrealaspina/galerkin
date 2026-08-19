@@ -2271,7 +2271,7 @@ if not(SolveEnergyEquation)
   fE=zeros(size(fE));
 end
 
-% **************************************************************************************************
+% Solve the energy equation only, freezing the other unknowns
 if matchField(Parameters,'SolveEnergyEquationOnly','yes')
   KLL=eye(size(KLL));
   KLr=zeros(size(KLr));
@@ -2314,7 +2314,6 @@ if matchField(Parameters,'SolveEnergyEquationOnly','yes')
   fR=zeros(size(fR));
   fW=zeros(size(fW));
 end
-% **************************************************************************************************
 
 % Lhs local-local
 LhsLL(iL,[iL,   ir,iw   ])=[KLL,    KLr,KLw    ];
