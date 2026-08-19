@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='ConvergenceTime';               % Simulation type
 Simulation.Problem='Thermal';                    % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Thermal_CG';             % Formulation
 Parameters.Problem='Thermal';                    % Problem
 Parameters.PredictorDegree=2;                    % Predictor degree
@@ -24,38 +23,32 @@ Parameters.ThermalFlux=@(x,y,z,t) 0*x;           % Thermal flux
 Parameters.HeatSource=...                        % Heat source
   @(x,y,z,t) (x.^3+y.^3)*Parameters.PredictorDegree*t^(Parameters.PredictorDegree-1)...
              -6*(x+y)*t^Parameters.PredictorDegree;
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_square_1'};                     % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-12;                          % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='yes';                        % Time dependent problem
 Time.InitialTime=0;                              % Initial time
 Time.FinalTime=1;                                % Final time
 Time.TimeStepSize=1/4;                           % Time step size
 Time.BDFOrder=Parameters.PredictorDegree+1;      % BDF order
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=[1,2,3,4];                  % Dirichlet portion
 Boundaries.Neumann=[];                           % Neumann portion
 Boundaries.Robin=[];                             % Robin portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.PlotConvergence='no';                    % Plot convergence
@@ -66,7 +59,6 @@ Options.Test=...                                 % Test
 Options.Test=...                                 % Test
   ['Results.TemperatureErrorL2<1e-12 && ',...
    'System.Iteration==1'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

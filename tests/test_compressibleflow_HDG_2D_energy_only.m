@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Fluid';                      % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='CompressibleFlow_HDG';   % Formulation
 Parameters.Problem='Fluid';                      % Problem
 Parameters.PostProcessingHDG='yes';              % Perform HDG postprocessing
@@ -54,32 +53,26 @@ Parameters.ComputeTemperatureLinearization=...   % Compute temperature lineariza
     -1/Parameters.SpecificHeatConstantVolume*Momentum./Density.^2,...
     +1/Parameters.SpecificHeatConstantVolume*1./Density];
 clear cv
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_square_1'};                     % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-10;                          % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=[1,2,3,4];                  % Dirichlet portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -98,7 +91,6 @@ Options.Test=...                                 % Test
    'Results.EnergyErrorL2                   <1e-12 && ',...
    'Results.VelocityPostErrorL2             <1e-12 && ',...
    'Results.TemperaturePostErrorL2          <1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

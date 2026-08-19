@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='FluidALE';                   % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters(1).Formulation='WeaklyCompressibleFlowDM_HDG';% Formulation
 Parameters(1).Problem='Fluid';                   % Problem
 Parameters(1).PostProcessingHDG='no';            % Perform HDG postprocessing
@@ -71,32 +70,27 @@ Parameters(2).Force=...                          % Force
 Parameters(2).DisplacementCenter=...             % Displacement at the center
   @(t) Parameters(2).Displacement(0.5,0.5,0,t);
 clear r0 p0 eps mu vx vy p
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_square01_ale_2'};               % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-3;                           % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='yes';                        % Time dependent problem
 Time.InitialTime=0;                              % Initial time
 Time.FinalTime=0.5;                              % Final time
 Time.TimeStepSize=2^(-3);                        % Time step size
 Time.BDFOrder=4;                                 % BDF order
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries(1).Dirichlet_r=[1,2,3,4];             % Dirichlet portion for density
 Boundaries(1).Dirichlet_w_x=[1,2,3,4];           % Dirichlet portion for x-momentum
 Boundaries(1).Dirichlet_w_y=[1,2,3,4];           % Dirichlet portion for y-momentum
@@ -104,9 +98,8 @@ Boundaries(1).Neumann_t_x=[];                    % Neumann portion for x-tractio
 Boundaries(1).Neumann_t_y=[];                    % Neumann portion for y-traction
 Boundaries(2).Dirichlet=[1,2,3,4];               % Dirichlet portion
 Boundaries(2).Neumann=[];                        % Neumann portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -126,7 +119,6 @@ Options.Test=...                                 % Test
    'abs(Results(1).DensityCenterErrorNumber         -5.817783923417474e-04)<1e-12 && ',...
    'abs(Results(1).MomentumCenterErrorNumber        -1.707277959521197e-02)<1e-12 && ',...
    'abs(Results(2).DisplacementCenterErrorNumber    -3.491163760141627e-17)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

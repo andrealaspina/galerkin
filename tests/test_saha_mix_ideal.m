@@ -2,7 +2,7 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.ElectronMass=9.1093837015e-31;        % Electron mass
 Parameters.PlanckConstant=6.62607015e-34;        % Planck’s constant
 Parameters.BoltzmannConstant=1.380649e-23;       % Boltzmann’s constant
@@ -21,15 +21,13 @@ Parameters.StatisticalWeightsGroundState=...     % Statistical weights of the gr
 Parameters.MaxIonization=[6;6];                  % Maximum ionization
 Parameters.SahaToleranceLinear=eps;              % Linear tolerance for Saha equation
 Parameters.SahaNonIdeal='no';                    % Non-ideality for Saha equation
-% --------------------------------------------------------------------------------------------------
 
-% State variables ----------------------------------------------------------------------------------
+% State variables
 IndependentVariables='PressureTemperature';      % Independent variables
 Pressure=101325;                                 % Pressure
 Temperature=50000;                               % Temperature
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.Test=...                                 % Test
   ['abs(Results.AverageChargeState-3.461810360383030e-00                            )<1e-12 && ',...
    'abs(Results.Composition(1,1)  -3.426171348955255e-10*Parameters.MolarFraction(1))<1e-12 && ',...
@@ -47,7 +45,6 @@ Options.Test=...                                 % Test
    'abs(Results.Composition(1,7)  -2.221833586136860e-07*Parameters.MolarFraction(1))<1e-12 && ',...
    'abs(Results.Composition(2,7)  -2.221833586136860e-07*Parameters.MolarFraction(2))<1e-12 && ',...
    'abs(Results.Iterations        -0.000000000000000e-00                            )<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

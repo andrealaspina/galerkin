@@ -2,7 +2,7 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.ElectronMass=9.1093837015e-31;        % Electron mass
 Parameters.PlanckConstant=6.62607015e-34;        % Planck’s constant
 Parameters.BoltzmannConstant=1.380649e-23;       % Boltzmann’s constant
@@ -25,15 +25,13 @@ Parameters.DebyeLengthDefinition='Complete';     % Debye length definition
 Parameters.SahaToleranceNonLinear=1e-12;         % Non-linear tolerance for Saha equation
 Parameters.SahaMaxIterations=inf;                % Maximum number of iterations for Saha equation
 Parameters.SahaRelaxation=1;                     % Relaxation parameter for Saha equation
-% --------------------------------------------------------------------------------------------------
 
-% State variables ----------------------------------------------------------------------------------
+% State variables
 IndependentVariables='DensityTemperature';       % Independent variables
 Density=100;                                     % Density
 Temperature=30000;                               % Temperature
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.Test=...                                 % Test
   ['abs(Results.AverageChargeState-2.931480445658541e-00)<1e-12 && ',...
    'abs(Results.Composition(1)    -4.109655275779428e-04)<1e-12 && ',...
@@ -44,7 +42,6 @@ Options.Test=...                                 % Test
    'abs(Results.Composition(6)    -1.230969413327780e-27)<1e-12 && ',...
    'abs(Results.Composition(7)    -4.496367579070234e-48)<1e-12 && ',...
    'abs(Results.Iterations        -2.800000000000000e+01)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

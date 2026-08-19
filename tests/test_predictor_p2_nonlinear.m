@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='ConvergenceTime';               % Simulation type
 Simulation.Problem='Structural';                 % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Elasticity_CG';          % Formulation
 Parameters.Problem='Structural';                 % Problem
 Parameters.Model='StVenantKirchhoff';            % Model
@@ -26,37 +25,31 @@ Parameters.Traction=...                          % Traction
 Parameters.Force=...                             % Force
   @(x,y,z,t) [-48*t^6*x.^2-48*t^6*y.^2-32*t^4*x-16*t^4*y-4*t^2+2*x.^2+2*y.^2,...
               -48*t^6*x.^2-48*t^6*y.^2-16*t^4*x-32*t^4*y-4*t^2+2*x.^2+2*y.^2];
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_square_1'};                     % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-10;                          % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='yes';                        % Time dependent problem
 Time.InitialTime=0;                              % Initial time
 Time.FinalTime=1;                                % Final time
 Time.TimeStepSize=1/4;                           % Time step size
 Time.BDFOrder=3;                                 % BDF order
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=[1,2,3,4];                  % Dirichlet portion
 Boundaries.Neumann=[];                           % Neumann portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.PlotConvergence='no';                    % Plot convergence
@@ -65,7 +58,6 @@ Options.ComputeError={'Displacement'};           % Compute error
 Options.Test=...                                 % Test
   ['Results.DisplacementErrorL2<1e-12 && ',...
    'System.Iteration==1'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

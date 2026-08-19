@@ -1,17 +1,17 @@
-classdef PlasmaTransportElectromagnetic_HDG < Formulation  
-  
+classdef PlasmaTransportElectromagnetic_HDG < Formulation
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) 1+NumSpaceDim-1;
-    
+
     % Number of Voigt components
     NumVoigtComp=@(NumSpaceDim) 0;
-    
+
     % Number of local components
     NumLocalComp=@(NumSpaceDim) 1+NumSpaceDim*(NumSpaceDim-1)/2+NumSpaceDim+...
                                   NumSpaceDim*(NumSpaceDim-1)/2+NumSpaceDim;
-    
+
     % Number of post-processed components
     NumPostComp=@(NumSpaceDim) NumSpaceDim;
 
@@ -20,14 +20,14 @@ classdef PlasmaTransportElectromagnetic_HDG < Formulation
 
     % Time derivative order
     TimeDerOrder=1;
-    
+
     % Domain
     Domain='Time';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,Parameters,Time,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes*Sizes(iD).NumGlobalComp,1);
@@ -37,7 +37,7 @@ classdef PlasmaTransportElectromagnetic_HDG < Formulation
           Parameters(iD).TimeDerOrder);
       end
     end
-    
+
     %% Compute initial conditions
     function [Block]=computeInitialConditions(~,iD,Block,Parameters,Mesh,~,Time,~,~)
       if strcmp(Time.TimeDependent,'yes')
@@ -53,7 +53,7 @@ classdef PlasmaTransportElectromagnetic_HDG < Formulation
           Parameters(iD).ElectricFieldAux(...
           Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',Time.InitialTime)];
         Block(iD,iD).SolutionOld(:,:,1)=Block(iD,iD).SolutionLocal;
-        
+
         % Get ghost solutions for BDF order > 2
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder-1
@@ -73,7 +73,7 @@ classdef PlasmaTransportElectromagnetic_HDG < Formulation
         end
       end
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD,Block,Elements,~,Parameters,~,~,Time,RefElement,Sizes)
       NodesElem=Elements(iD).Nodes;
@@ -101,7 +101,7 @@ classdef PlasmaTransportElectromagnetic_HDG < Formulation
       Elements(iD).MatLocal=MatLocal;
       Elements(iD).VecLocal=VecLocal;
     end
-    
+
     %% Do post-process
     function [Elements]=doPostProcess(~,Elements,~,Parameters,~,Time,RefElement,Sizes)
       RefElement.PostLowHigh=createReferenceElement(Sizes.NumSpaceDim,...
@@ -126,7 +126,7 @@ classdef PlasmaTransportElectromagnetic_HDG < Formulation
       Elements.LhsPost=LhsPost;
       Elements.RhsPost=RhsPost;
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,iST,Results,Block,~,Parameters,~,Time,~,Sizes)
       if iST==1
@@ -154,7 +154,7 @@ classdef PlasmaTransportElectromagnetic_HDG < Formulation
         Results(iD).ElectricFieldPost=Block(iD,iD).SolutionPost;
       end
     end
-    
+
     %% Compute radiation
     function [Results]=computeRadiation(~,iD,Results,Elements,Mesh,Faces,RefElement,Sizes)
       NodesElem=Elements(iD).Nodes;
@@ -173,7 +173,7 @@ classdef PlasmaTransportElectromagnetic_HDG < Formulation
       end
       Results(iD).Radiation=Radiation;
     end
-    
+
     %% Compute divergence
     function [Results]=computeDivergence(~,iD,Results,Elements,Parameters,RefElement,Sizes)
       NodesElem=Elements(iD).Nodes;
@@ -191,9 +191,9 @@ classdef PlasmaTransportElectromagnetic_HDG < Formulation
       Results(iD).MagneticFieldDiv=MagneticFieldDiv(:);
       Results(iD).ElectricFieldDiv=ElectricFieldDiv(:);
     end
-    
+
   end
-  
+
 end
 
 %% Build block element
@@ -536,7 +536,7 @@ end
 
 if nsd==2
   KJe(ne1,ne1)=+epsilon*NweT*(((sigmaxeg-sigmayeg).*(sigmaxeg)).*Ne);
-  KJe(ne2,ne2)=+epsilon*NweT*(((sigmayeg-sigmaxeg).*(sigmayeg)).*Ne);  
+  KJe(ne2,ne2)=+epsilon*NweT*(((sigmayeg-sigmaxeg).*(sigmayeg)).*Ne);
 elseif nsd==3
   KJe(ne1,ne1)=+epsilon*NweT*(((sigmaxeg-sigmayeg).*(sigmaxeg-sigmazeg)).*Ne);
   KJe(ne2,ne2)=+epsilon*NweT*(((sigmayeg-sigmaxeg).*(sigmayeg-sigmazeg)).*Ne);
@@ -691,7 +691,7 @@ end
 
 if nsd==2
   fJ(ne1,1)=fJ(ne1,1)-NweT*(epsilon*(sigmaxeg-sigmayeg).*(sigmaxeg).*exeg);
-  fJ(ne2,1)=fJ(ne2,1)-NweT*(epsilon*(sigmayeg-sigmaxeg).*(sigmayeg).*eyeg);  
+  fJ(ne2,1)=fJ(ne2,1)-NweT*(epsilon*(sigmayeg-sigmaxeg).*(sigmayeg).*eyeg);
 elseif nsd==3
   fJ(ne1,1)=fJ(ne1,1)-NweT*(epsilon*(sigmaxeg-sigmayeg).*(sigmaxeg-sigmazeg).*exeg);
   fJ(ne2,1)=fJ(ne2,1)-NweT*(epsilon*(sigmayeg-sigmaxeg).*(sigmayeg-sigmazeg).*eyeg);
@@ -700,22 +700,22 @@ end
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=true;
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
     [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf(1:nsd,:),nsd);
-    
+
     % Check boundary
     isDirichlet_r=Faces.Dirichlet_r(iFace);
     isDirichlet_e=Faces.Dirichlet_e(iFace);
     isAbsorbing=Faces.Absorbing(iFace);
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
     nf2=nf1+NumElementNodes;
@@ -727,7 +727,7 @@ for iFace=1:NumElementFaces
     nefE1=(iFace-1)*(nsd-1)*NumFaceNodes+(1:NumFaceNodes);
     nefE2=nefE1+NumFaceNodes;
     nefR=1:nsd;
-    
+
     % Flip face
     Node2Match1stNode1=Faces.Interior(2,iFace);
     FlipFace=max(Node2Match1stNode1);
@@ -741,7 +741,7 @@ for iFace=1:NumElementFaces
       nefE2=nefE2(order);
       nefR=circshift(flip(nefR(1:nsd)),Node2Match1stNode1);
     end
-    
+
     % Flip face (periodic (slave))
     if matchField(Faces,'Periodic') && not(isempty(Faces.Periodic))
       Node2Match1stNode1=Faces.Periodic(2,iFace);
@@ -765,7 +765,7 @@ for iFace=1:NumElementFaces
     if nsd==3
       R(:,2)=(W(:,2)-(R(:,1)'*W(:,2))*R(:,1))/norm(W(:,2)-(R(:,1)'*W(:,2))*R(:,1));
     end
-    
+
     % Get rotation operator
     if nsd==2
       Rxt1=R(1,1);
@@ -775,7 +775,7 @@ for iFace=1:NumElementFaces
       Ryt1=R(2,1); Ryt2=R(2,2);
       Rzt1=R(3,1); Rzt2=R(3,2);
     end
-    
+
     % Compute variables at nodes
     rf=re(nf1);
     if nsd==2
@@ -795,7 +795,7 @@ for iFace=1:NumElementFaces
     if nsd==3
       Et2f=Ue(nefU3);
     end
-    
+
     % Compute variables at Gauss points
     Xfg=Nf*Xf;
     rfg=Nf*rf;
@@ -858,7 +858,7 @@ for iFace=1:NumElementFaces
     if nsd==3
       vzfg=vfg(:,3);
     end
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
     Mf=NwfT*Nf;
@@ -880,10 +880,10 @@ for iFace=1:NumElementFaces
       Mfnynz=Mf*ny*nz;
       Mfnznz=Mf*nz*nz;
     end
-    
+
     % Compute lhs
     Krr(nf1,nf1)=Krr(nf1,nf1)+tauR*Mf;
-    
+
     if nsd==2
       Kee(nf1,nf1)=Kee(nf1,nf1)+tauE*Mfnyny;
       Kee(nf2,nf1)=Kee(nf2,nf1)-tauE*Mfnxny;
@@ -900,27 +900,27 @@ for iFace=1:NumElementFaces
       Kee(nf2,nf3)=Kee(nf2,nf3)-tauE*Mfnynz;
       Kee(nf3,nf3)=Kee(nf3,nf3)+tauE*Mfnxnx+tauE*Mfnyny;
     end
-    
+
     if not(isDirichlet_r)
       if nsd==2
         KrR(nf1,nefR1)=KrR(nf1,nefR1)+NwfT*((vxfg*nx+vyfg*ny).*Nf);
       elseif nsd==3
         KrR(nf1,nefR1)=KrR(nf1,nefR1)+NwfT*((vxfg*nx+vyfg*ny+vzfg*nz).*Nf);
       end
-      
+
       KrR(nf1,nefR1)=KrR(nf1,nefR1)-tauR*Mf;
-      
+
       KRr(nefR1,nf1)=KRr(nefR1,nf1)-tauR*Mf;
-      
+
       if nsd==2
         KRR(nefR1,nefR1)=KRR(nefR1,nefR1)-NwfT*((vxfg*nx+vyfg*ny).*Nf);
       elseif nsd==3
         KRR(nefR1,nefR1)=KRR(nefR1,nefR1)-NwfT*((vxfg*nx+vyfg*ny+vzfg*nz).*Nf);
       end
-      
+
       KRR(nefR1,nefR1)=KRR(nefR1,nefR1)+tauR*Mf;
     end
-    
+
     if not(isDirichlet_e)
       if nsd==2
         KHE(nf1,nefE1)=KHE(nf1,nefE1)+Rxt1*Mfny...
@@ -939,7 +939,7 @@ for iFace=1:NumElementFaces
         KHE(nf3,nefE2)=KHE(nf3,nefE2)-Ryt2*Mfnx...
                                      +Rxt2*Mfny;
       end
-      
+
       if nsd==2
         KeE(nf1,nefE1)=KeE(nf1,nefE1)-Rxt1*tauE*Mf;
         KeE(nf2,nefE1)=KeE(nf2,nefE1)-Ryt1*tauE*Mf;
@@ -951,7 +951,7 @@ for iFace=1:NumElementFaces
         KeE(nf2,nefE2)=KeE(nf2,nefE2)-Ryt2*tauE*Mf;
         KeE(nf3,nefE2)=KeE(nf3,nefE2)-Rzt2*tauE*Mf;
       end
-      
+
       if nsd==2
         KEE(nefE1,nefE1)=KEE(nefE1,nefE1)+Rxt1*Rxt1*tauE*Mf...
                                          +Ryt1*Ryt1*tauE*Mf;
@@ -970,7 +970,7 @@ for iFace=1:NumElementFaces
                                          +Rzt2*Rzt2*tauE*Mf;
       end
     end
-    
+
     if isAbsorbing
       if nsd==2
         KEE(nefE1,nefE1)=KEE(nefE1,nefE1)+Rxt1*Rxt1*sqrt(epsilon/mu)*Mf...
@@ -990,18 +990,18 @@ for iFace=1:NumElementFaces
                                          +Rzt2*Rzt2*sqrt(epsilon/mu)*Mf;
       end
     end
-    
+
     % Compute rhs
     if nsd==2
       fr(nf1,1)=fr(nf1,1)-NwfT*(Rfg.*(vxfg*nx+vyfg*ny));
     elseif nsd==3
       fr(nf1,1)=fr(nf1,1)-NwfT*(Rfg.*(vxfg*nx+vyfg*ny+vzfg*nz));
     end
-    
+
     fr(nf1,1)=fr(nf1,1)-NwfT*(tauR*rfg);
-    
+
     fr(nf1,1)=fr(nf1,1)+NwfT*(tauR*Rfg);
-    
+
     if nsd==2
       fH(nf1,1)=fH(nf1,1)+NwfT*(nx*Etyfg-ny*Etxfg);
     elseif nsd==3
@@ -1009,7 +1009,7 @@ for iFace=1:NumElementFaces
       fH(nf2,1)=fH(nf2,1)+NwfT*(nz*Etxfg-nx*Etzfg);
       fH(nf3,1)=fH(nf3,1)+NwfT*(nx*Etyfg-ny*Etxfg);
     end
-    
+
     if nsd==2
       fe(nf1,1)=fe(nf1,1)-NwfT*(tauE*(-ny*(nx*eyfg-ny*exfg)));
       fe(nf2,1)=fe(nf2,1)-NwfT*(tauE*(+nx*(nx*eyfg-ny*exfg)));
@@ -1021,25 +1021,25 @@ for iFace=1:NumElementFaces
       fe(nf3,1)=fe(nf3,1)-NwfT*(tauE*(-nx*(nz*exfg-nx*ezfg)...
                                       +ny*(ny*ezfg-nz*eyfg)));
     end
-    
+
     fe(nf1,1)=fe(nf1,1)+NwfT*(tauE*Etxfg);
     fe(nf2,1)=fe(nf2,1)+NwfT*(tauE*Etyfg);
     if nsd==3
       fe(nf3,1)=fe(nf3,1)+NwfT*(tauE*Etzfg);
     end
-    
+
     if not(isDirichlet_r)
       if nsd==2
         fR(nefR1,1)=fR(nefR1,1)+NwfT*(Rfg.*(vxfg*nx+vyfg*ny));
       elseif nsd==3
         fR(nefR1,1)=fR(nefR1,1)+NwfT*(Rfg.*(vxfg*nx+vyfg*ny+vzfg*nz));
       end
-      
+
       fR(nefR1,1)=fR(nefR1,1)+NwfT*(tauR*rfg);
-      
+
       fR(nefR1,1)=fR(nefR1,1)-NwfT*(tauR*Rfg);
     end
-    
+
     if not(isDirichlet_e)
       if nsd==2
         fE(nefE1,1)=fE(nefE1,1)+NwfT*(Rxt1*(-ny*Hzfg)+...
@@ -1052,7 +1052,7 @@ for iFace=1:NumElementFaces
                                       Ryt2*(nx*Hzfg-nz*Hxfg)+...
                                       Rzt2*(ny*Hxfg-nx*Hyfg));
       end
-      
+
       if nsd==2
         fE(nefE1,1)=fE(nefE1,1)+NwfT*(Rxt1*(tauE*exfg)+...
                                       Ryt1*(tauE*eyfg));
@@ -1064,7 +1064,7 @@ for iFace=1:NumElementFaces
                                       Ryt2*(tauE*eyfg)+...
                                       Rzt2*(tauE*ezfg));
       end
-      
+
       if nsd==2
         fE(nefE1,1)=fE(nefE1,1)-NwfT*(Rxt1*(tauE*Etxfg)+...
                                       Ryt1*(tauE*Etyfg));
@@ -1077,7 +1077,7 @@ for iFace=1:NumElementFaces
                                       Rzt2*(tauE*Etzfg));
       end
     end
-    
+
     if isAbsorbing
       if nsd==2
         fE(nefE1,1)=fE(nefE1,1)-NwfT*(Rxt1*(sqrt(epsilon/mu)*Etxfg)+...
@@ -1090,7 +1090,7 @@ for iFace=1:NumElementFaces
                                       Ryt2*(sqrt(epsilon/mu)*Etyfg)+...
                                       Rzt2*(sqrt(epsilon/mu)*Etzfg));
       end
-      
+
       if nsd==2
         fE(nefE1,1)=fE(nefE1,1)-NwfT*(Rxt1*(ixfg)+...
                                       Ryt1*(iyfg));
@@ -1103,7 +1103,7 @@ for iFace=1:NumElementFaces
                                       Rzt2*(izfg));
       end
     end
-    
+
     % Remove undetermination
     if isDirichlet_r
       KRR(nefR1,nefR1)=eye(NumFaceNodes);
@@ -1182,15 +1182,15 @@ if nsd==2 && matchField(Parameters,'Axisymmetric','yes')
   Krr_axisym=zeros(NumElementNodes,NumElementNodes);
   Krr_axisym(ne1,ne1)=+NweT*((1./(Ne*Xe(:,2)).*vyeg).*Ne);
   LhsLL(ir,ir)=LhsLL(ir,ir)+Krr_axisym;
-  
+
   fr_axisym=zeros(NumElementNodes,1);
   fr_axisym(ne1,1)=-NweT*(1./(Ne*Xe(:,2)).*reg.*vyeg);
   RhsL(ir,1)=RhsL(ir,1)+fr_axisym;
-  
+
   KeH_axisym=zeros(nsd*NumElementNodes,qsd*NumElementNodes);
   KeH_axisym(ne1,ne1)=-NweT*((1./(Ne*Xe(:,2))).*Ne);
   LhsLL(ie,iH)=LhsLL(ie,iH)+KeH_axisym;
-  
+
   fe_axisym=zeros(nsd*NumElementNodes,1);
   fe_axisym(ne1,1)=+NweT*(1./(Ne*Xe(:,2)).*Hzeg);
   RhsL(ie,1)=RhsL(ie,1)+fe_axisym;

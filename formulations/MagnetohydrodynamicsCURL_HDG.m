@@ -1,19 +1,19 @@
-classdef MagnetohydrodynamicsCURL_HDG < Formulation  
-  
+classdef MagnetohydrodynamicsCURL_HDG < Formulation
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) NumSpaceDim+1+...
                                  NumSpaceDim+1;
-    
+
     % Number of Voigt components
     NumVoigtComp=@(NumSpaceDim) NumSpaceDim*(NumSpaceDim+1)/2;
-    
+
     % Number of local components
     NumLocalComp=@(NumSpaceDim) NumSpaceDim*(NumSpaceDim+1)/2+NumSpaceDim+1+...
                                (NumSpaceDim*(NumSpaceDim+1)/2-NumSpaceDim)+...
                                 NumSpaceDim*(NumSpaceDim+1)/2+NumSpaceDim+1;
-    
+
     % Number of post-processed components
     NumPostComp=@(NumSpaceDim) NumSpaceDim+...
                                NumSpaceDim;
@@ -23,14 +23,14 @@ classdef MagnetohydrodynamicsCURL_HDG < Formulation
 
     % Time derivative order
     TimeDerOrder=1;
-    
+
     % Domain
     Domain='Time';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,Parameters,Time,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes*Sizes(iD).NumGlobalComp,1);
@@ -39,7 +39,7 @@ classdef MagnetohydrodynamicsCURL_HDG < Formulation
         Block(iD,iD).SolutionOld=zeros(Sizes(iD).NumLocalNodes,Sizes(iD).NumLocalComp,...
           Parameters(iD).TimeDerOrder);
       end
-      
+
       % Consider reference pressure instead of zero
       for iFace=1:Sizes(iD).NumFaces
         Block(iD,iD).SolutionGlobal((iFace-1)*Sizes(iD).NumGlobalComp.*Sizes(iD).NumFaceNodes+...
@@ -49,7 +49,7 @@ classdef MagnetohydrodynamicsCURL_HDG < Formulation
       Block(iD,iD).SolutionLocal(:,Sizes(iD).NumVoigtComp+Sizes(iD).NumSpaceDim)=...
         Parameters(iD).ReferencePressure;
     end
-    
+
     %% Compute initial conditions
     function [Block]=computeInitialConditions(~,iD,Block,Parameters,Mesh,~,Time,~,Sizes)
       if strcmp(Time.TimeDependent,'yes')
@@ -65,7 +65,7 @@ classdef MagnetohydrodynamicsCURL_HDG < Formulation
           Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',Time.InitialTime),...
           zeros(Sizes(iD).NumLocalNodes,1)];
         Block(iD,iD).SolutionOld(:,:,1)=Block(iD,iD).SolutionLocal;
-        
+
         % Get ghost solutions for BDF order > 2
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder-1
@@ -85,7 +85,7 @@ classdef MagnetohydrodynamicsCURL_HDG < Formulation
         end
       end
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD,Block,Elements,~,Parameters,~,~,Time,RefElement,Sizes)
       NodesElem=Elements(iD).Nodes;
@@ -113,7 +113,7 @@ classdef MagnetohydrodynamicsCURL_HDG < Formulation
       Elements(iD).MatLocal=MatLocal;
       Elements(iD).VecLocal=VecLocal;
     end
-    
+
     %% Do post-process
     function [Elements]=doPostProcess(~,Elements,~,Parameters,~,~,RefElement,Sizes)
       NodesElem=Elements.Nodes;
@@ -133,7 +133,7 @@ classdef MagnetohydrodynamicsCURL_HDG < Formulation
       Elements.LhsPost=LhsPost;
       Elements.RhsPost=RhsPost;
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,iST,Results,Block,~,Parameters,~,Time,~,Sizes)
       if iST==1
@@ -172,9 +172,9 @@ classdef MagnetohydrodynamicsCURL_HDG < Formulation
           (1:Sizes(iD).NumSpaceDim));
       end
     end
-    
+
   end
-  
+
 end
 
 %% Build block element
@@ -502,19 +502,19 @@ if isTimeDependent
   if nsd==3
     Kvv(ne3,ne3)=alpha(1)/dt*NweT*((reg).*Ne);
   end
-  
+
   Kvv(ne1,ne1)=Kvv(ne1,ne1)+NweT*((drdpeg.*(1/dt*peg*alpha(1)+1/dt*poldeg*alpha(2:BDFo+1,1))).*Ne);
   Kvv(ne2,ne2)=Kvv(ne2,ne2)+NweT*((drdpeg.*(1/dt*peg*alpha(1)+1/dt*poldeg*alpha(2:BDFo+1,1))).*Ne);
   if nsd==3
     Kvv(ne3,ne3)=Kvv(ne3,ne3)+NweT*((drdpeg.*(1/dt*peg*alpha(1)+1/dt*poldeg*alpha(2:BDFo+1,1))).*Ne);
   end
-  
+
   Kvp(ne1,ne1)=NweT*((drdpeg.*(1/dt*vxeg*alpha(1)+1/dt*voldxeg*alpha(2:BDFo+1,1))).*Ne);
   Kvp(ne2,ne1)=NweT*((drdpeg.*(1/dt*vyeg*alpha(1)+1/dt*voldyeg*alpha(2:BDFo+1,1))).*Ne);
   if nsd==3
     Kvp(ne3,ne1)=NweT*((drdpeg.*(1/dt*vzeg*alpha(1)+1/dt*voldzeg*alpha(2:BDFo+1,1))).*Ne);
   end
-  
+
   Kvp(ne1,ne1)=Kvp(ne1,ne1)+alpha(1)/dt*NweT*((drdpeg.*vxeg).*Ne);
   Kvp(ne2,ne1)=Kvp(ne2,ne1)+alpha(1)/dt*NweT*((drdpeg.*vyeg).*Ne);
   if nsd==3
@@ -547,7 +547,7 @@ if isConvectiveFlow
                              -NweyT*((reg.*vyeg).*Ne)...
                              -NwezT*((2*reg.*vzeg).*Ne);
   end
-  
+
   if nsd==2
     Kvp(ne1,ne1)=Kvp(ne1,ne1)-NwexT*((drdpeg.*vxeg.*vxeg).*Ne)...
                              -NweyT*((drdpeg.*vxeg.*vyeg).*Ne);
@@ -686,7 +686,7 @@ if isCouplingTerms
     Kbb(ne3,ne3)=Kbb(ne3,ne3)-NwexT*((+vxeg).*Ne)...
                              -NweyT*((+vyeg).*Ne);
   end
-  
+
   if nsd==2
     Kbv(ne1,ne1)=-NweyT*((-byeg).*Ne);
     Kbv(ne2,ne1)=-NwexT*((+byeg).*Ne);
@@ -937,17 +937,17 @@ end
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=true;
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
     [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf,nsd);
-    
+
     % Check boundary
     isExterior=Faces.Exterior(iFace);
     isDirichlet_v_x=Faces.Dirichlet_v_x(iFace);
@@ -968,7 +968,7 @@ for iFace=1:NumElementFaces
     isNeumann_t=isNeumann_t_x || isNeumann_t_y || (nsd==3 && isNeumann_t_z);
     isDirichlet_b=isDirichlet_b_x || isDirichlet_b_y || (nsd==3 && isDirichlet_b_z);
     isNeumann_s=isNeumann_s_x || isNeumann_s_y || (nsd==3 && isNeumann_s_z);
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
     nf2=nf1+NumElementNodes;
@@ -992,7 +992,7 @@ for iFace=1:NumElementFaces
     nefB2=nefB1+NumFaceNodes;
     nefB3=nefB2+NumFaceNodes;
     nefQ1=(iFace-1)*NumFaceNodes+(1:NumFaceNodes);
-    
+
     % Flip face
     Node2Match1stNode1=Faces.Interior(2,iFace);
     FlipFace=max(Node2Match1stNode1);
@@ -1015,7 +1015,7 @@ for iFace=1:NumElementFaces
       nefB3=nefB3(order);
       nefQ1=nefQ1(order);
     end
-    
+
     % Compute variables at nodes
     if nsd==2
       Lxxf=Lxxe(nf1);
@@ -1076,7 +1076,7 @@ for iFace=1:NumElementFaces
     elseif nsd==3
       Qf=Ue(nefU8);
     end
-    
+
     % Compute variables at Gauss points
     Xfg=Nf*Xf;
     if nsd==2
@@ -1167,7 +1167,7 @@ for iFace=1:NumElementFaces
     end
     rfg=r(Pfg);
     drdPfg=drdp(Pfg);
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
     Mf=NwfT*Nf;
@@ -1177,8 +1177,8 @@ for iFace=1:NumElementFaces
     if nsd==3
       Mfnz=NwfT*(nz.*Nf);
     end
-    
-    % Compute lhs    
+
+    % Compute lhs
     if nsd==2
       KLV(nf1,nefV1)=KLV(nf1,nefV1)-VoigtV1*Mfnx;
       KLV(nf2,nefV1)=KLV(nf2,nefV1)-VoigtV2*Mfnx;
@@ -1203,13 +1203,13 @@ for iFace=1:NumElementFaces
       KLV(nf5,nefV3)=KLV(nf5,nefV3)-VoigtV3*Mfnx;
       KLV(nf6,nefV3)=KLV(nf6,nefV3)-VoigtV3*Mfny;
     end
-    
+
     Kvv(nf1,nf1)=Kvv(nf1,nf1)+tauV*Mf;
     Kvv(nf2,nf2)=Kvv(nf2,nf2)+tauV*Mf;
     if nsd==3
       Kvv(nf3,nf3)=Kvv(nf3,nf3)+tauV*Mf;
     end
-    
+
     if isConvectiveFlow
       if nsd==2
         KvV(nf1,nefV1)=KvV(nf1,nefV1)+NwfT*((2*rfg.*Vxfg.*nx+rfg.*Vyfg.*ny).*Nf);
@@ -1227,7 +1227,7 @@ for iFace=1:NumElementFaces
         KvV(nf2,nefV3)=KvV(nf2,nefV3)+NwfT*((rfg.*Vyfg.*nz).*Nf);
         KvV(nf3,nefV3)=KvV(nf3,nefV3)+NwfT*((rfg.*Vxfg.*nx+rfg.*Vyfg.*ny+2*rfg.*Vzfg.*nz).*Nf);
       end
-      
+
       if nsd==2
         KvP(nf1,nefP1)=KvP(nf1,nefP1)+NwfT*((drdPfg.*(Vxfg.*nx+Vyfg.*ny).*Vxfg).*Nf);
         KvP(nf2,nefP1)=KvP(nf2,nefP1)+NwfT*((drdPfg.*(Vxfg.*nx+Vyfg.*ny).*Vyfg).*Nf);
@@ -1237,29 +1237,29 @@ for iFace=1:NumElementFaces
         KvP(nf3,nefP1)=KvP(nf3,nefP1)+NwfT*((drdPfg.*(Vxfg.*nx+Vyfg.*ny+Vzfg.*nz).*Vzfg).*Nf);
       end
     end
-    
+
     KvV(nf1,nefV1)=KvV(nf1,nefV1)-tauV*Mf;
     KvV(nf2,nefV2)=KvV(nf2,nefV2)-tauV*Mf;
     if nsd==3
       KvV(nf3,nefV3)=KvV(nf3,nefV3)-tauV*Mf;
     end
-    
+
     Kpp(nf1,nf1)=Kpp(nf1,nf1)+tauP*Mf;
-    
+
     KpV(nf1,nefV1)=KpV(nf1,nefV1)+NwfT*((rfg.*nx).*Nf);
     KpV(nf1,nefV2)=KpV(nf1,nefV2)+NwfT*((rfg.*ny).*Nf);
     if nsd==3
       KpV(nf1,nefV3)=KpV(nf1,nefV3)+NwfT*((rfg.*nz).*Nf);
     end
-    
+
     if nsd==2
       KpP(nf1,nefP1)=KpP(nf1,nefP1)+NwfT*((drdPfg.*(Vxfg.*nx+Vyfg.*ny)).*Nf);
     elseif nsd==3
       KpP(nf1,nefP1)=KpP(nf1,nefP1)+NwfT*((drdPfg.*(Vxfg.*nx+Vyfg.*ny+Vzfg.*nz)).*Nf);
     end
-    
+
     KpP(nf1,nefP1)=KpP(nf1,nefP1)-tauP*Mf;
-    
+
     if nsd==2
       KJB(nf1,nefB1)=KJB(nf1,nefB1)+mu_m^(-1/2)*Mfny;
       KJB(nf1,nefB2)=KJB(nf1,nefB2)-mu_m^(-1/2)*Mfnx;
@@ -1271,7 +1271,7 @@ for iFace=1:NumElementFaces
       KJB(nf1,nefB3)=KJB(nf1,nefB3)-mu_m^(-1/2)*Mfny;
       KJB(nf2,nefB3)=KJB(nf2,nefB3)+mu_m^(-1/2)*Mfnx;
     end
-    
+
     if nsd==2
       KGB(nf1,nefB1)=KGB(nf1,nefB1)-VoigtB1*Mfnx;
       KGB(nf3,nefB1)=KGB(nf3,nefB1)-VoigtB3*Mfny;
@@ -1288,13 +1288,13 @@ for iFace=1:NumElementFaces
       KGB(nf5,nefB3)=KGB(nf5,nefB3)-VoigtB3*Mfnx;
       KGB(nf6,nefB3)=KGB(nf6,nefB3)-VoigtB3*Mfny;
     end
-    
+
     Kbb(nf1,nf1)=Kbb(nf1,nf1)+tauB*Mf;
     Kbb(nf2,nf2)=Kbb(nf2,nf2)+tauB*Mf;
     if nsd==3
       Kbb(nf3,nf3)=Kbb(nf3,nf3)+tauB*Mf;
     end
-    
+
     if isCouplingTerms
       if nsd==2
         KbV(nf1,nefV1)=KbV(nf1,nefV1)+NwfT*((-Byfg.*ny).*Nf);
@@ -1312,7 +1312,7 @@ for iFace=1:NumElementFaces
         KbV(nf2,nefV3)=KbV(nf2,nefV3)+NwfT*((+Byfg.*nz).*Nf);
         KbV(nf3,nefV3)=KbV(nf3,nefV3)+NwfT*((-Bxfg.*nx-Byfg.*ny).*Nf);
       end
-      
+
       if nsd==2
         KbB(nf1,nefB1)=KbB(nf1,nefB1)+NwfT*((+Vyfg.*ny).*Nf);
         KbB(nf2,nefB1)=KbB(nf2,nefB1)+NwfT*((-Vyfg.*nx).*Nf);
@@ -1330,79 +1330,79 @@ for iFace=1:NumElementFaces
         KbB(nf3,nefB3)=KbB(nf3,nefB3)+NwfT*((+Vxfg.*nx+Vyfg.*ny).*Nf);
       end
     end
-    
+
     KbB(nf1,nefB1)=KbB(nf1,nefB1)-tauB*Mf;
     KbB(nf2,nefB2)=KbB(nf2,nefB2)-tauB*Mf;
     if nsd==3
       KbB(nf3,nefB3)=KbB(nf3,nefB3)-tauB*Mf;
     end
-    
+
     Kqq(nf1,nf1)=Kqq(nf1,nf1)-tauQ*Mf;
-    
+
     KqB(nf1,nefB1)=KqB(nf1,nefB1)-Mfnx;
     KqB(nf1,nefB2)=KqB(nf1,nefB2)-Mfny;
     if nsd==3
       KqB(nf1,nefB3)=KqB(nf1,nefB3)-Mfnz;
     end
-    
+
     KqQ(nf1,nefQ1)=KqQ(nf1,nefQ1)+tauQ*Mf;
-    
+
     if not(isExterior) || isNeumann_t_x
       KVp(nefV1,nf1)=KVp(nefV1,nf1)-Mfnx;
     end
-    
+
     if not(isExterior) || isNeumann_t_y
       KVp(nefV2,nf1)=KVp(nefV2,nf1)-Mfny;
     end
-    
+
     if nsd==3 && (not(isExterior) || isNeumann_t_z)
       KVp(nefV2,nf1)=KVp(nefV2,nf1)-Mfnz;
     end
-    
+
     if not(isDirichlet_v_x)
       KVv(nefV1,nf1)=KVv(nefV1,nf1)-tauV*Mf;
     end
-    
+
     if not(isDirichlet_v_y)
       KVv(nefV2,nf2)=KVv(nefV2,nf2)-tauV*Mf;
     end
-    
+
     if nsd==3 && not(isDirichlet_v_z)
       KVv(nefV3,nf3)=KVv(nefV3,nf3)-tauV*Mf;
     end
-    
+
     KVV(nefV1,nefV1)=KVV(nefV1,nefV1)+tauV*Mf;
     KVV(nefV2,nefV2)=KVV(nefV2,nefV2)+tauV*Mf;
     if nsd==3
       KVV(nefV3,nefV3)=KVV(nefV3,nefV3)+tauV*Mf;
     end
-    
+
     if not(isDirichlet_p)
       KPp(nefP1,nf1)=KPp(nefP1,nf1)+tauP*Mf;
     end
-    
+
     KPP(nefP1,nefP1)=KPP(nefP1,nefP1)-tauP*Mf;
-    
+
     if not(isDirichlet_b_x)
       KBb(nefB1,nf1)=KBb(nefB1,nf1)-tauB*Mf;
     end
-    
+
     if not(isDirichlet_b_y)
       KBb(nefB2,nf2)=KBb(nefB2,nf2)-tauB*Mf;
     end
-    
+
     if nsd==3 && not(isDirichlet_b_z)
       KBb(nefB3,nf3)=KBb(nefB3,nf3)-tauB*Mf;
     end
-    
+
     KBB(nefB1,nefB1)=KBB(nefB1,nefB1)+tauB*Mf;
     KBB(nefB2,nefB2)=KBB(nefB2,nefB2)+tauB*Mf;
     if nsd==3
       KBB(nefB3,nefB3)=KBB(nefB3,nefB3)+tauB*Mf;
     end
-    
+
     KQQ(nefQ1,nefQ1)=KQQ(nefQ1,nefQ1)-tauQ*Mf;
-    
+
     % Compute rhs
     if nsd==2
       fL(nf1,1)=fL(nf1,1)+NwfT*(+VoigtV1*nx.*Vxfg...
@@ -1428,13 +1428,13 @@ for iFace=1:NumElementFaces
       fL(nf6,1)=fL(nf6,1)+NwfT*(+VoigtV3*ny.*Vzfg...
                                 +VoigtV3*nz.*Vyfg);
     end
-    
+
     fv(nf1,1)=fv(nf1,1)-NwfT*(tauV*vxfg);
     fv(nf2,1)=fv(nf2,1)-NwfT*(tauV*vyfg);
     if nsd==3
       fv(nf3,1)=fv(nf3,1)-NwfT*(tauV*vzfg);
     end
-    
+
     if isConvectiveFlow
       if nsd==2
         fv(nf1,1)=fv(nf1,1)-NwfT*((Vxfg.*nx+Vyfg.*ny).*r(Pfg).*Vxfg);
@@ -1445,20 +1445,20 @@ for iFace=1:NumElementFaces
         fv(nf3,1)=fv(nf3,1)-NwfT*((Vxfg.*nx+Vyfg.*ny+Vzfg.*nz).*r(Pfg).*Vzfg);
       end
     end
-    
+
     fv(nf1,1)=fv(nf1,1)+NwfT*(tauV*Vxfg);
     fv(nf2,1)=fv(nf2,1)+NwfT*(tauV*Vyfg);
     if nsd==3
       fv(nf3,1)=fv(nf3,1)+NwfT*(tauV*Vzfg);
     end
-    
+
     fp(nf1,1)=fp(nf1,1)-NwfT*(tauP*pfg);
-    
+
     fp(nf1,1)=fp(nf1,1)-NwfT*((r(Pfg).*(Vxfg.*nx+Vyfg.*ny)-tauP*Pfg));
     if nsd==3
       fp(nf1,1)=fp(nf1,1)-NwfT*(r(Pfg).*Vzfg.*nz);
     end
-    
+
     if nsd==2
       fJ(nf1,1)=fJ(nf1,1)+NwfT*(mu_m^(-1/2)*(nx.*Byfg-ny.*Bxfg));
     elseif nsd==3
@@ -1466,7 +1466,7 @@ for iFace=1:NumElementFaces
       fJ(nf2,1)=fJ(nf2,1)+NwfT*(mu_m^(-1/2)*(nz.*Bxfg-nx.*Bzfg));
       fJ(nf3,1)=fJ(nf3,1)+NwfT*(mu_m^(-1/2)*(nx.*Byfg-ny.*Bxfg));
     end
-    
+
     if nsd==2
       fG(nf1,1)=fG(nf1,1)+NwfT*(+VoigtB1*nx.*Bxfg);
       fG(nf2,1)=fG(nf2,1)+NwfT*(+VoigtB1*ny.*Byfg);
@@ -1483,13 +1483,13 @@ for iFace=1:NumElementFaces
       fG(nf6,1)=fG(nf6,1)+NwfT*(+VoigtB3*ny.*Bzfg...
                                 +VoigtB3*nz.*Byfg);
     end
-    
+
     fb(nf1,1)=fb(nf1,1)-NwfT*(tauB*bxfg);
     fb(nf2,1)=fb(nf2,1)-NwfT*(tauB*byfg);
     if nsd==3
       fb(nf3,1)=fb(nf3,1)-NwfT*(tauB*bzfg);
     end
-    
+
     if isCouplingTerms
       if nsd==2
         fb(nf1,1)=fb(nf1,1)-NwfT*((Bxfg.*Vyfg-Vxfg.*Byfg).*ny);
@@ -1503,20 +1503,20 @@ for iFace=1:NumElementFaces
                                   +(Bzfg.*Vyfg-Vzfg.*Byfg).*ny);
       end
     end
-    
+
     fb(nf1,1)=fb(nf1,1)+NwfT*(tauB*Bxfg);
     fb(nf2,1)=fb(nf2,1)+NwfT*(tauB*Byfg);
     if nsd==3
       fb(nf3,1)=fb(nf3,1)+NwfT*(tauB*Bzfg);
     end
-    
+
     fq(nf1,1)=fq(nf1,1)+NwfT*(tauQ*qfg);
-    
+
     fq(nf1,1)=fq(nf1,1)+NwfT*(Bxfg.*nx+Byfg.*ny-tauQ*Qfg);
     if nsd==3
       fq(nf1,1)=fq(nf1,1)+NwfT*(Bzfg.*nz);
     end
-    
+
     if not(isExterior) || isNeumann_t_x
       if nsd==2
         fV(nefV1,1)=fV(nefV1,1)+NwfT*(+VoigtV1*nx.*Lxxfg+VoigtV2*nx.*Lyyfg...
@@ -1528,7 +1528,7 @@ for iFace=1:NumElementFaces
                                       +pfg.*nx);
       end
     end
-    
+
     if not(isExterior) || isNeumann_t_y
       if nsd==2
         fV(nefV2,1)=fV(nefV2,1)+NwfT*(+VoigtV2*ny.*Lxxfg+VoigtV1*ny.*Lyyfg...
@@ -1540,25 +1540,25 @@ for iFace=1:NumElementFaces
                                       +pfg.*ny);
       end
     end
-    
+
     if nsd==3 && (not(isExterior) || isNeumann_t_z)
       fV(nefV3,1)=fV(nefV3,1)+NwfT*(+VoigtV2*nz.*Lxxfg+VoigtV2*nz.*Lyyfg+VoigtV1*nz.*Lzzfg...
                                     +VoigtV3*nx.*Lxzfg+VoigtV3*ny.*Lyzfg...
                                     +pfg.*nz);
     end
-    
+
     if not(isDirichlet_v_x)
       fV(nefV1,1)=fV(nefV1,1)+NwfT*(+tauV*vxfg);
     end
-    
+
     if not(isDirichlet_v_y)
       fV(nefV2,1)=fV(nefV2,1)+NwfT*(+tauV*vyfg);
     end
-    
+
     if  nsd==3 && not(isDirichlet_v_z)
       fV(nefV3,1)=fV(nefV3,1)+NwfT*(+tauV*vzfg);
     end
-    
+
     if nsd==2
       fV(nefV1,1)=fV(nefV1,1)-NwfT*(tauV*Vxfg);
       fV(nefV2,1)=fV(nefV2,1)-NwfT*(tauV*Vyfg);
@@ -1567,25 +1567,25 @@ for iFace=1:NumElementFaces
       fV(nefV2,1)=fV(nefV2,1)-NwfT*(tauV*Vyfg);
       fV(nefV3,1)=fV(nefV3,1)-NwfT*(tauV*Vzfg);
     end
-    
+
     if isDirichlet_v_x
       fV(nefV1,1)=fV(nefV1,1)+NwfT*(tauV*vDxfg);
     end
-    
+
     if isDirichlet_v_y
       fV(nefV2,1)=fV(nefV2,1)+NwfT*(tauV*vDyfg);
     end
-    
+
     if nsd==3 && isDirichlet_v_z
       fV(nefV3,1)=fV(nefV3,1)+NwfT*(tauV*vDzfg);
     end
-    
+
     if not(isDirichlet_p)
       fP(nefP1,1)=fP(nefP1,1)-NwfT*(tauP*pfg);
     end
-    
+
     fP(nefP1,1)=fP(nefP1,1)+NwfT*(tauP*Pfg);
-    
+
     if isDirichlet_p
       fP(nefP1,1)=fP(nefP1,1)-NwfT*(tauP*pDfg);
     end
@@ -1601,7 +1601,7 @@ for iFace=1:NumElementFaces
                                       +qfg.*nx);
       end
     end
-    
+
     if not(isExterior) || isNeumann_s_y
       if nsd==2
         fB(nefB2,1)=fB(nefB2,1)+NwfT*(+VoigtB1*ny.*Gyyfg...
@@ -1613,25 +1613,25 @@ for iFace=1:NumElementFaces
                                       +qfg.*ny);
       end
     end
-    
+
     if nsd==3 && (not(isExterior) || isNeumann_s_z)
       fB(nefB3,1)=fB(nefB3,1)+NwfT*(+VoigtB1*nz.*Gzzfg...
                                     +VoigtB3*nx.*Gxzfg+VoigtB3*ny.*Gyzfg...
                                     +qfg.*nz);
     end
-    
+
     if not(isDirichlet_b_x)
       fB(nefB1,1)=fB(nefB1,1)+NwfT*(+tauB*bxfg);
     end
-    
+
     if not(isDirichlet_b_y)
       fB(nefB2,1)=fB(nefB2,1)+NwfT*(+tauB*byfg);
     end
-    
+
     if nsd==3 && not(isDirichlet_b_z)
       fB(nefB3,1)=fB(nefB3,1)+NwfT*(+tauB*bzfg);
     end
-    
+
     if nsd==2
       fB(nefB1,1)=fB(nefB1,1)-NwfT*(tauB*Bxfg);
       fB(nefB2,1)=fB(nefB2,1)-NwfT*(tauB*Byfg);
@@ -1640,53 +1640,53 @@ for iFace=1:NumElementFaces
       fB(nefB2,1)=fB(nefB2,1)-NwfT*(tauB*Byfg);
       fB(nefB3,1)=fB(nefB3,1)-NwfT*(tauB*Bzfg);
     end
-    
+
     if isDirichlet_b_x
       fB(nefB1,1)=fB(nefB1,1)+NwfT*(tauB*bDxfg);
     end
-    
+
     if isDirichlet_b_y
       fB(nefB2,1)=fB(nefB2,1)+NwfT*(tauB*bDyfg);
     end
-    
+
     if nsd==3 && isDirichlet_b_z
       fB(nefB3,1)=fB(nefB3,1)+NwfT*(tauB*bDzfg);
     end
-    
+
     if not(isDirichlet_q)
       fQ(nefQ1,1)=fQ(nefQ1,1)-NwfT*(tauQ*qfg);
     end
-    
+
     fQ(nefQ1,1)=fQ(nefQ1,1)+NwfT*(tauQ*Qfg);
-    
+
     if isDirichlet_q
       fQ(nefQ1,1)=fQ(nefQ1,1)-NwfT*(tauQ*qDfg);
     end
-    
+
     if isNeumann_t_x
       fV(nefV1,1)=fV(nefV1,1)+NwfT*(tNxfg);
     end
-    
+
     if isNeumann_t_y
       fV(nefV2,1)=fV(nefV2,1)+NwfT*(tNyfg);
     end
-    
+
     if nsd==3 && isNeumann_t_z
       fV(nefV3,1)=fV(nefV3,1)+NwfT*(tNzfg);
     end
-    
+
     if isNeumann_s_x
       fB(nefB1,1)=fB(nefB1,1)+NwfT*(sNxfg);
     end
-    
+
     if isNeumann_s_y
       fB(nefB2,1)=fB(nefB2,1)+NwfT*(sNyfg);
     end
-    
+
     if nsd==3 && isNeumann_s_z
       fB(nefB3,1)=fB(nefB3,1)+NwfT*(sNzfg);
     end
-    
+
     % Clear blocks
     if nsd==2
       KVL(nefV1,nf1)=KLV(nf1,nefV1)'*(not(isExterior) || isNeumann_t_x);
@@ -1712,7 +1712,7 @@ for iFace=1:NumElementFaces
       KVL(nefV2,nf6)=KLV(nf6,nefV2)'*(not(isExterior) || isNeumann_t_y);
       KVL(nefV3,nf6)=KLV(nf6,nefV3)'*(not(isExterior) || isNeumann_t_z);
     end
-    
+
     if nsd==2
       KBG(nefB1,nf1)=KGB(nf1,nefB1)'*(not(isExterior) || isNeumann_s_x);
       KBG(nefB1,nf3)=KGB(nf3,nefB1)'*(not(isExterior) || isNeumann_s_x);
@@ -1729,13 +1729,13 @@ for iFace=1:NumElementFaces
       KBG(nefB3,nf5)=KGB(nf5,nefB3)'*(not(isExterior) || isNeumann_s_z);
       KBG(nefB3,nf6)=KGB(nf6,nefB3)'*(not(isExterior) || isNeumann_s_z);
     end
-    
+
     KBq(nefB1,nf1)=KqB(nf1,nefB1)'*(not(isExterior) || isNeumann_s_x);
     KBq(nefB2,nf1)=KqB(nf1,nefB2)'*(not(isExterior) || isNeumann_s_y);
     if nsd==3
       KBq(nefB3,nf1)=KqB(nf1,nefB3)'*(not(isExterior) || isNeumann_s_z);
     end
-    
+
     KQq(nefQ1,nf1)=KqQ(nf1,nefQ1)'*not(isDirichlet_q);
   end
 end
@@ -1808,7 +1808,7 @@ RhsL(ip,1)=fp;
 RhsL(iJ,1)=fJ;
 RhsL(iG,1)=fG;
 RhsL(ib,1)=fb;
-RhsL(iq,1)=fq; 
+RhsL(iq,1)=fq;
 
 % Lhs global-local
 LhsGL(iV,iL)=KVL;
@@ -2098,7 +2098,7 @@ for iFace=1:NumElementFaces
   Xf=Xe(FaceNodes(iFace,:),:);
   [~,nx,ny,nz,wfg,Nlf]=mapShapeFunctions(0,RefElement.PostLow,RefElement.Post,Xf,nsd);
   N1f=ones(length(wfg),1);
-  
+
   % Indices
   nlefU1=(iFace-1)*(nsd+1+nsd+1)*NumFaceNodes+(1:NumFaceNodes);
   nlefU2=nlefU1+NumFaceNodes;
@@ -2107,7 +2107,7 @@ for iFace=1:NumElementFaces
   nlefU5=nlefU4+NumFaceNodes;
   nlefU6=nlefU5+NumFaceNodes;
   nlefU7=nlefU6+NumFaceNodes;
-  
+
   % Flip face
   Node2Match1stNode1=Faces.Interior(2,iFace);
   FlipFace=max(Node2Match1stNode1);
@@ -2121,7 +2121,7 @@ for iFace=1:NumElementFaces
     nlefU6=nlefU6(order);
     nlefU7=nlefU7(order);
   end
-  
+
   % Compute variables at nodes
   Vxf=Ue(nlefU1);
   Vyf=Ue(nlefU2);
@@ -2136,7 +2136,7 @@ for iFace=1:NumElementFaces
     Byf=Ue(nlefU6);
     Bzf=Ue(nlefU7);
   end
-  
+
   % Compute variables at Gauss points
   Vxfg=Nlf*Vxf;
   Vyfg=Nlf*Vyf;
@@ -2148,11 +2148,11 @@ for iFace=1:NumElementFaces
   if nsd==3
     Bzfg=Nlf*Bzf;
   end
-  
+
   % Compute basic matrices
   Nw1fT=(wfg.*N1f)';
-  
-  % Compute rhs  
+
+  % Compute rhs
   if nsd==2
     fVr(1)=fVr(1)+Nw1fT*(-Vxfg.*ny+Vyfg.*nx);
   elseif nsd==3
@@ -2160,7 +2160,7 @@ for iFace=1:NumElementFaces
     fVr(2)=fVr(2)+Nw1fT*(+Vxfg.*nz-Vzfg.*nx);
     fVr(3)=fVr(3)+Nw1fT*(-Vxfg.*ny+Vyfg.*nx);
   end
-  
+
   if nsd==2
     fBr(1)=fBr(1)+Nw1fT*(-Bxfg.*ny+Byfg.*nx);
   elseif nsd==3

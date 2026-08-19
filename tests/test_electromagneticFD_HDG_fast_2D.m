@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Electromagnetic';            % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='ElectromagneticFD_HDG_fast';% Formulation
 Parameters.Problem='Electromagnetic';            % Problem
 Parameters.PostProcessingHDG='yes';              % Perform HDG postprocessing
@@ -27,24 +26,20 @@ Parameters.CurrentDensity=...                    % Current density
 Parameters.IncidentField=...                     % Incident field for absorbing boundary conditions
  @(x,y,z,w) [0*x,...
              0*x];
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_square_1'};                     % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
 System.IncrementalForm='no';                     % Incremental form
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
 Time.Frequency=1/(2*pi);                         % Frequency of time-harmonic problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='gmres';                             % Type
 Solver.Preconditioner='ilu';                     % Preconditioner
 Solver.PreconditionerAllTimeSteps='no';          % Compute preconditioner at all time steps
@@ -53,14 +48,12 @@ Solver.Restart=[];                               % Restart
 Solver.Tolerance=1e-12;                          % Tolerance
 Solver.MaxIterations=100;                        % Maximum number of iterations
 Solver.Equilibrate='no';                         % Equilibrate matrix
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=[1,2,3,4];                  % Dirichlet portion
 Boundaries.Absorbing=[];                         % Absorbing portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -73,7 +66,6 @@ Options.Test=...                                 % Test
    'Results.ElectricFieldErrorL2       <1e-12 && ',...
    'Results.ElectricFieldErrorHcurl    <1e-12 && ',...
    'Results.ElectricFieldPostErrorHcurl<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

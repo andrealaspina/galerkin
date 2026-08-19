@@ -1,16 +1,16 @@
-classdef ElasticityLinear_HDG < Formulation  
-  
+classdef ElasticityLinear_HDG < Formulation
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) NumSpaceDim;
-    
+
     % Number of Voigt components
     NumVoigtComp=@(NumSpaceDim) NumSpaceDim*(NumSpaceDim+1)/2;
-    
+
     % Number of local components
     NumLocalComp=@(NumSpaceDim) NumSpaceDim*(NumSpaceDim+1)/2+NumSpaceDim;
-    
+
     % Number of post-processed components
     NumPostComp=@(NumSpaceDim) NumSpaceDim;
 
@@ -19,14 +19,14 @@ classdef ElasticityLinear_HDG < Formulation
 
     % Time derivative order
     TimeDerOrder=2;
-    
+
     % Domain
     Domain='Time';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,Parameters,Time,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes*Sizes(iD).NumGlobalComp,1);
@@ -36,7 +36,7 @@ classdef ElasticityLinear_HDG < Formulation
           Parameters(iD).TimeDerOrder);
       end
     end
-    
+
     %% Compute initial conditions
     function [Block]=computeInitialConditions(~,iD,Block,Parameters,Mesh,~,Time,~,Sizes)
       if strcmp(Time.TimeDependent,'yes')
@@ -49,7 +49,7 @@ classdef ElasticityLinear_HDG < Formulation
           zeros(Sizes(iD).NumLocalNodes,Sizes(iD).NumVoigtComp),...
           Parameters(iD).Displacement(...
           Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',-Time.TimeStepSize)];% FIX THIS!!!
-        
+
         % Get ghost solutions for BDF order > 2
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder
@@ -62,7 +62,7 @@ classdef ElasticityLinear_HDG < Formulation
         end
       end
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD1,Block,Elements,~,Parameters,~,Faces,Time,...
         RefElement,Sizes)
@@ -104,7 +104,7 @@ classdef ElasticityLinear_HDG < Formulation
       Elements(iD1).MatLocal=MatLocal;
       Elements(iD1).VecLocal=VecLocal;
     end
-    
+
     %% Do post-process
     function [Elements]=doPostProcess(~,Elements,~,Parameters,Faces,Time,RefElement,Sizes)
       NodesElem=Elements.Nodes;
@@ -123,7 +123,7 @@ classdef ElasticityLinear_HDG < Formulation
       Elements.LhsPost=LhsPost;
       Elements.RhsPost=RhsPost;
     end
-    
+
     %% Do coupling
     function [Block]=doCoupling(~,iD1,iD2,Block,~,~,Parameters,Mesh,Faces,~,RefElement,Sizes)
       if matchField(Faces(iD1,iD1),'Interface') && not(isempty(Faces(iD1,iD1).Interface))
@@ -140,7 +140,7 @@ classdef ElasticityLinear_HDG < Formulation
                                         Block(iD1,iD2).LhsColIndices,0);
       end
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,iST,Results,Block,~,Parameters,~,Time,~,Sizes)
       if iST==1
@@ -157,9 +157,9 @@ classdef ElasticityLinear_HDG < Formulation
         Results(iD).DisplacementPost=Block(iD,iD).SolutionPost;
       end
     end
-    
+
   end
-  
+
 end
 
 %% Build block element
@@ -423,17 +423,17 @@ end
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=true;
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
     FaceNodes=RefElement(iD1,iD1).FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
     [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement(iD1,iD1),RefElement(iD1,iD1),Xf,nsd);
-    
+
     % Check boundary
     Boundary=Faces.Boundary(iFace);
     isDirichlet=Faces.Dirichlet(iFace);
@@ -443,7 +443,7 @@ for iFace=1:NumElementFaces
     else
       isInterface=false;
     end
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
     nf2=nf1+NumElementNodes;
@@ -454,7 +454,7 @@ for iFace=1:NumElementFaces
     nef1=(iFace-1)*nsd*NumFaceNodes+(1:NumFaceNodes);
     nef2=nef1+NumFaceNodes;
     nef3=nef2+NumFaceNodes;
-    
+
     % Flip face
     Node2Match1stNode1=Faces.Interior(2,iFace);
     FlipFace=max(Node2Match1stNode1);
@@ -464,7 +464,7 @@ for iFace=1:NumElementFaces
       nef2=nef2(order);
       nef3=nef3(order);
     end
-    
+
     % Compute variables at nodes
     if nsd==2
       Qxxf=Qxxe(nf1);
@@ -488,7 +488,7 @@ for iFace=1:NumElementFaces
     if nsd==3
       Uzf=Ue(nef3);
     end
-    
+
     % Compute variables at Gauss points
     Xfg=Nf*Xf;
     if nsd==2
@@ -528,7 +528,7 @@ for iFace=1:NumElementFaces
         tNzfg=tNfg(:,3);
       end
     end
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
     Mf=NwfT*Nf;
@@ -538,8 +538,8 @@ for iFace=1:NumElementFaces
     if nsd==3
       Mfnz=NwfT*(nz.*Nf);
     end
-    
-    % Get quantities for coupling ------------------------------------------------------------------
+
+    % Get quantities for coupling
     if isInterface
       % Get general parameters
       iD2=setdiff(1:2,iD1);
@@ -549,19 +549,19 @@ for iFace=1:NumElementFaces
       X2e=NodesCoupled{iFace}';
       X2em=sum(X2e(1:NumElementFaces2,:),1)/NumElementFaces2;
       gamma=Parameters(iD2).NitschePenalty;
-      
+
       % Get solution
       u2e=reshape(SolutionGlobalCoupled{iFace},[],1);
-      
+
       % Compute weights at Gauss points
       [~,N2ex,N2ey,N2ez,~,~,pinvN2e]=mapShapeFunctions(1,RefElement(iD2,iD2),...
                                                          RefElement(iD2,iD2),X2e,nsd);
-      
+
       % Indices
       n2e1=1:NumElementNodes2;
       n2e2=n2e1+NumElementNodes2;
       n2e3=n2e2+NumElementNodes2;
-      
+
       % Compute variables at nodes
       u2xe=u2e(n2e1);
       u2ye=u2e(n2e2);
@@ -576,7 +576,7 @@ for iFace=1:NumElementFaces
         F2yxe=pinvN2e*(N2ex*u2ye);   F2yye=pinvN2e*(N2ey*u2ye+1); F2yze=pinvN2e*(N2ez*u2ye);
         F2zxe=pinvN2e*(N2ex*u2ze);   F2zye=pinvN2e*(N2ey*u2ze);   F2zze=pinvN2e*(N2ez*u2ze+1);
       end
-      
+
       % Compute weights at Gauss points
       FaceNodes2=RefElement(iD2,iD2).FaceNodesElem;
       X2f=X2e(FaceNodes2(iFace2,:),:);
@@ -584,18 +584,18 @@ for iFace=1:NumElementFaces
                                                       RefElement(iD1,iD2),Xf,nsd);
       N21f=RefElement(iD2,iD1).ShapeFunctionsFace;
       [~,~,~,~,w2fg]=mapShapeFunctions(0,RefElement(iD2,iD2),RefElement(iD2,iD2),X2f,nsd);
-      
+
       % Compute characteristic element size
       h=sum(w2fg);
-      
+
       % Indices
       n2f1=FaceNodes2(iFace2,:);
-      
+
       % Flip face
       Node2Match1stNode1=Faces.Interface(3,iFace);
       order=flipFace(nsd,Parameters(iD2).Degree,Node2Match1stNode1);
       n2f1=n2f1(order);
-      
+
       % Compute variables at nodes
       u2xf=u2xe(n2f1);
       u2yf=u2ye(n2f1);
@@ -610,7 +610,7 @@ for iFace=1:NumElementFaces
         F2yxf=F2yxe(n2f1); F2yyf=F2yye(n2f1); F2yzf=F2yze(n2f1);
         F2zxf=F2zxe(n2f1); F2zyf=F2zye(n2f1); F2zzf=F2zze(n2f1);
       end
-      
+
       % Compute variables at Gauss points
       u2xfg=N21f*u2xf;
       u2yfg=N21f*u2yf;
@@ -625,7 +625,7 @@ for iFace=1:NumElementFaces
         F2yxfg=N21f*F2yxf; F2yyfg=N21f*F2yyf; F2yzfg=N21f*F2yzf;
         F2zxfg=N21f*F2zxf; F2zyfg=N21f*F2zyf; F2zzfg=N21f*F2zzf;
       end
-      
+
       % Compute stress
       if nsd==2
         [s2fg]=...
@@ -641,19 +641,18 @@ for iFace=1:NumElementFaces
         s2yxfg=s2fg(:,4); s2yyfg=s2fg(:,5); s2yzfg=s2fg(:,6);
         s2zxfg=s2fg(:,7); s2zyfg=s2fg(:,8); s2zzfg=s2fg(:,9);
       end
-      
+
       % Compute basic matrices
       Nw12fT=(w12fg.*N12f)';
     end
-    % ----------------------------------------------------------------------------------------------
-    
+
     % Compute lhs
     Kuu(nf1,nf1)=Kuu(nf1,nf1)+tauU*Mf;
     Kuu(nf2,nf2)=Kuu(nf2,nf2)+tauU*Mf;
     if nsd==3
       Kuu(nf3,nf3)=Kuu(nf3,nf3)+tauU*Mf;
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         KQU(nf1,nef1)=KQU(nf1,nef1)-Voigt1*Mfnx;
@@ -679,19 +678,19 @@ for iFace=1:NumElementFaces
         KQU(nf5,nef3)=KQU(nf5,nef3)-Voigt3*Mfnx;
         KQU(nf6,nef3)=KQU(nf6,nef3)-Voigt3*Mfny;
       end
-      
+
       KuU(nf1,nef1)=KuU(nf1,nef1)-tauU*Mf;
       KuU(nf2,nef2)=KuU(nf2,nef2)-tauU*Mf;
       if nsd==3
         KuU(nf3,nef3)=KuU(nf3,nef3)-tauU*Mf;
       end
-      
+
       KUU(nef1,nef1)=KUU(nef1,nef1)+tauU*Mf;
       KUU(nef2,nef2)=KUU(nef2,nef2)+tauU*Mf;
       if nsd==3
         KUU(nef3,nef3)=KUU(nef3,nef3)+tauU*Mf;
       end
-      
+
       if isInterface
         KUU(nef1,nef1)=KUU(nef1,nef1)+gamma/h*Mf;
         KUU(nef2,nef2)=KUU(nef2,nef2)+gamma/h*Mf;
@@ -700,14 +699,14 @@ for iFace=1:NumElementFaces
         end
       end
     end
-    
+
     % Compute rhs
     fu(nf1,1)=fu(nf1,1)-NwfT*(tauU*uxfg);
     fu(nf2,1)=fu(nf2,1)-NwfT*(tauU*uyfg);
     if nsd==3
       fu(nf3,1)=fu(nf3,1)-NwfT*(tauU*uzfg);
     end
-    
+
     if isDirichlet
       if nsd==2
         fQ(nf1,1)=fQ(nf1,1)+NwfT*(+Voigt1*nx.*uDxfg+Voigt2*ny.*uDyfg);
@@ -721,14 +720,14 @@ for iFace=1:NumElementFaces
         fQ(nf5,1)=fQ(nf5,1)+NwfT*(+Voigt3*nx.*uDzfg+Voigt3*nz.*uDxfg);
         fQ(nf6,1)=fQ(nf6,1)+NwfT*(+Voigt3*ny.*uDzfg+Voigt3*nz.*uDyfg);
       end
-      
+
       fu(nf1,1)=fu(nf1,1)+NwfT*(tauU*uDxfg);
       fu(nf2,1)=fu(nf2,1)+NwfT*(tauU*uDyfg);
       if nsd==3
         fu(nf3,1)=fu(nf3,1)+NwfT*(tauU*uDzfg);
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         fQ(nf1,1)=fQ(nf1,1)+NwfT*(+Voigt1*nx.*Uxfg+Voigt2*ny.*Uyfg);
@@ -742,13 +741,13 @@ for iFace=1:NumElementFaces
         fQ(nf5,1)=fQ(nf5,1)+NwfT*(+Voigt3*nx.*Uzfg+Voigt3*nz.*Uxfg);
         fQ(nf6,1)=fQ(nf6,1)+NwfT*(+Voigt3*ny.*Uzfg+Voigt3*nz.*Uyfg);
       end
-      
+
       fu(nf1,1)=fu(nf1,1)+NwfT*(tauU*Uxfg);
       fu(nf2,1)=fu(nf2,1)+NwfT*(tauU*Uyfg);
       if nsd==3
         fu(nf3,1)=fu(nf3,1)+NwfT*(tauU*Uzfg);
       end
-      
+
       if nsd==2
         fU(nef1,1)=fU(nef1,1)+NwfT*(+Voigt1*nx.*Qxxfg+Voigt2*nx.*Qyyfg...
                                     +Voigt3*ny.*Qxyfg...
@@ -768,7 +767,7 @@ for iFace=1:NumElementFaces
                                     +tauU*(uzfg-Uzfg));
       end
     end
-    
+
     if isInterface
       if nsd==2
         fU(nef1,1)=fU(nef1,1)-Nw12fT*(+s2xxfg.*(-n12x)+s2xyfg.*(-n12y)...
@@ -783,14 +782,14 @@ for iFace=1:NumElementFaces
         fU(nef3,1)=fU(nef3,1)-Nw12fT*(+s2zxfg.*(-n12x)+s2zyfg.*(-n12y)+s2zzfg.*(-n12z)...
                                       -gamma/h*u2zfg);
       end
-      
+
       fU(nef1,1)=fU(nef1,1)-NwfT*(gamma/h*Uxfg);
       fU(nef2,1)=fU(nef2,1)-NwfT*(gamma/h*Uyfg);
       if nsd==3
         fU(nef3,1)=fU(nef3,1)-NwfT*(gamma/h*Uzfg);
       end
     end
-    
+
     if isNeumann
       fU(nef1,1)=fU(nef1,1)+NwfT*(tNxfg);
       fU(nef2,1)=fU(nef2,1)+NwfT*(tNyfg);
@@ -798,7 +797,7 @@ for iFace=1:NumElementFaces
         fU(nef3,1)=fU(nef3,1)+NwfT*(tNzfg);
       end
     end
-    
+
     % Remove undetermination
     if isDirichlet
       KUU(nef1,nef1)=eye(NumFaceNodes);
@@ -869,7 +868,7 @@ end
 
 %% Do coupling element
 function [LhsCoup]=doCouplingElement(...
-  iFaceInterface,iD1,iD2,Block,Parameters,Mesh,Faces,RefElement,Sizes)       
+  iFaceInterface,iD1,iD2,Block,Parameters,Mesh,Faces,RefElement,Sizes)
 
 % Get general parameters
 iElem1=Faces(iD1,iD2).Interface(iFaceInterface,1);
@@ -1230,23 +1229,23 @@ ft(2,1)=Nw1eT*(uyeg);
 if nsd==3
   ft(3,1)=Nw1eT*(uzeg);
 end
-    
+
 % Faces loop
 for iFace=1:NumElementFaces
   % Compute weights at Gauss points
   Xf=Xe(FaceNodes(iFace,:),:);
   [~,nx,ny,nz,wfg,Nlf]=mapShapeFunctions(0,RefElement.PostLow,RefElement.Post,Xf,nsd);
   N1f=ones(length(wfg),1);
-  
+
   % Check boundary
   isDirichlet=max((Faces.Dirichlet(:,1)==iElem) &...
                   (Faces.Dirichlet(:,2)==iFace));
-  
+
   % Indices
   nlef1=(iFace-1)*nsd*NumFaceNodes+(1:NumFaceNodes);
   nlef2=nlef1+NumFaceNodes;
   nlef3=nlef2+NumFaceNodes;
-  
+
   % Flip face
   [FlipFace,FaceRow]=max((Faces.Interior(:,3)==iElem) &...
                          (Faces.Interior(:,4)==iFace));
@@ -1257,14 +1256,14 @@ for iFace=1:NumElementFaces
     nlef2=nlef2(order);
     nlef3=nlef3(order);
   end
-  
+
   % Compute variables at nodes
   Uxf=Ue(nlef1);
   Uyf=Ue(nlef2);
   if nsd==3
     Uzf=Ue(nlef3);
   end
-  
+
   % Compute variables at Gauss points
   Xfg=Nlf*Xf;
   Uxfg=Nlf*Uxf;
@@ -1280,10 +1279,10 @@ for iFace=1:NumElementFaces
       uDzfg=uDfg(:,3);
     end
   end
-  
+
   % Compute basic matrices
   Nw1fT=(wfg.*N1f)';
-  
+
   % Compute rhs
   if isDirichlet
     if nsd==2
@@ -1294,7 +1293,7 @@ for iFace=1:NumElementFaces
       fr(3)=fr(3)+Nw1fT*(-uDxfg.*ny+uDyfg.*nx);
     end
   end
-  
+
   if not(isDirichlet)
     if nsd==2
       fr(1)=fr(1)+Nw1fT*(-Uxfg.*ny+Uyfg.*nx);

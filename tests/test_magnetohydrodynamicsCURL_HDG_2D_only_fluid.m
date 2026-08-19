@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Magnetohydrodynamic';        % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='MagnetohydrodynamicsCURL_HDG';% Formulation
 Parameters.Problem='Magnetohydrodynamic';        % Problem
 Parameters.PostProcessingHDG='yes';              % Perform HDG postprocessing
@@ -71,28 +70,23 @@ Parameters.LagrangeMultiplier=@(x,y,z,t) 0*x;    % Lagrange multiplier
 Parameters.PseudoTraction=@(x,y,z,t) [0*x,0*x];  % Pseudo-traction
 Parameters.Source=@(x,y,z,t) [0*x,0*x];          % Source
 clear r0 p0 eps mu eta mu_m L R U vx vy p
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_poiseuille_1'};                 % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-10;                          % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_v_x=[1,3,4];                % Dirichlet portion for x-velocity
 Boundaries.Dirichlet_v_y=[1,2,3,4];              % Dirichlet portion for y-velocity
 Boundaries.Dirichlet_p=[];                       % Dirichlet portion for pressure
@@ -103,9 +97,8 @@ Boundaries.Dirichlet_b_y=[1,2,3,4];              % Dirichlet portion for y-magne
 Boundaries.Dirichlet_q=[1,2,3,4];                % Dirichlet portion for lagrange multiplier
 Boundaries.Neumann_s_x=[];                       % Neumann portion for x-pseudo-traction
 Boundaries.Neumann_s_y=[];                       % Neumann portion for y-pseudo-traction
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -128,7 +121,6 @@ Options.Test=...                                 % Test
    'Results.MagneticInductionErrorL2     <1e-12 && ',...
    'Results.LagrangeMultiplierErrorL2    <1e-12 && ',...
    'Results.MagneticInductionPostErrorL2 <1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

@@ -1,29 +1,29 @@
-function []=plotSolution(...
-         Simulation,Mesh,Faces,Results,Parameters,RefElement,Sizes,Options,Index)
-         % Plot solution
+function plotSolution(Simulation,Mesh,Faces,Results,Parameters,RefElement,Sizes,Options,Index)
+% Plot the real (and imaginary) part of each component of each variable of each discretization
 
-% Get axis limits
-MinMax=minmax(double([Mesh.Nodes]));
-XMinMax=MinMax(1,:)+[-1,+1]*(MinMax(1,1)==MinMax(1,2));
-YMinMax=MinMax(2,:)+[-1,+1]*(MinMax(2,1)==MinMax(2,2));
-if Sizes(1).NumSpaceDim==3
-  ZMinMax=MinMax(3,:)+[-1,+1]*(MinMax(3,1)==MinMax(3,2));
-end
+% Axis limits
+Limits=minmax(double([Mesh.Nodes]));
+Limits=Limits+[-1,+1].*(Limits(:,1)==Limits(:,2));
+ThreeD=Sizes(1).NumSpaceDim==3;
 
-% Plot real (and imaginary) part of each component of each variable of each discretization
 for iP=1:length(Options.PlotSolution)
+  Variable=Options.PlotSolution{iP};
+  Post=strcmp(Variable(end-3:end),'Post');
+  NumComp=size(vertcat(Results.(Variable)),2);
+
+  % Abscissa against which the variable is stored
   if     matchField(Results,'Time') && not(matchField(Results,'Frequency'))
     Domain='Time';
   elseif matchField(Results,'Frequency') && not(matchField(Results,'Time'))
     Domain='Frequency';
-  elseif find(strcmp(fieldnames(Results),'Time')) < find(strcmp(fieldnames(Results),'Frequency'))
-    if not(strcmp(Options.PlotSolution{iP}(end-2:end),'FFT'))
+  elseif find(strcmp(fieldnames(Results),'Time'))<find(strcmp(fieldnames(Results),'Frequency'))
+    if not(strcmp(Variable(end-2:end),'FFT'))
       Domain='Time';
     else
       Domain='Frequency';
     end
-  elseif find(strcmp(fieldnames(Results),'Frequency')) < find(strcmp(fieldnames(Results),'Time'))
-    if not(strcmp(Options.PlotSolution{iP}(end-2:end),'IFFT'))
+  elseif find(strcmp(fieldnames(Results),'Frequency'))<find(strcmp(fieldnames(Results),'Time'))
+    if not(strcmp(Variable(end-2:end),'IFFT'))
       Domain='Frequency';
     else
       Domain='Time';
@@ -31,107 +31,85 @@ for iP=1:length(Options.PlotSolution)
   elseif matchField(Results,'Mode')
     Domain='Mode';
   end
-  for iC=1:size(vertcat(Results.([Options.PlotSolution{iP}])),2)
+
+  for iC=1:NumComp
     figure('Color','w');
-    isComplex=not(isreal(Results(1).([Options.PlotSolution{iP}])));
+    isComplex=not(isreal(Results(1).(Variable)));
     for iRI=1:(1+isComplex)
       subplot(1,1+isComplex,iRI)
       for iD=1:Simulation.NumDiscretizations
-        if not(isempty(Results(iD).([Options.PlotSolution{iP}])))
+        if not(isempty(Results(iD).(Variable)))
           hold on
+          if Post
+            MeshPlot=Mesh(iD).Post;
+            RefElementPlot=RefElement(iD,iD).Post;
+          else
+            MeshPlot=Mesh(iD);
+            RefElementPlot=RefElement(iD,iD);
+          end
+          u=Results(iD).(Variable)(:,iC,Index);
+          if iRI==1
+            u=real(u);
+          elseif iRI==2
+            u=imag(u);
+          end
           if Sizes(iD).NumSpaceDim==2
+
+            % Surface of each element
             for iElem=1:Sizes(iD).NumElements
-              if not(strcmp(Options.PlotSolution{iP}(end-3:end),'Post'))
-                Ce=Mesh(iD).Elements(:,iElem)';
-                Xe=double(Mesh(iD).Nodes(1:2,Ce)');
-              else
-                Ce=Mesh(iD).Post.Elements(:,iElem)';
-                Xe=double(Mesh(iD).Post.Nodes(1:2,Ce)');
-              end
+              Ce=MeshPlot.Elements(:,iElem)';
+              Xe=double(MeshPlot.Nodes(1:2,Ce)');
               if Parameters(iD).Degree==0
-                ue=repelem(double(Results(iD).([Options.PlotSolution{iP}])(iElem,iC,Index)),...
-                  Sizes(iD).NumSpaceDim+1);
+                ue=repelem(double(u(iElem)),Sizes(iD).NumSpaceDim+1);
               else
-                ue=double(Results(iD).([Options.PlotSolution{iP}])(Ce,iC,Index));
+                ue=double(u(Ce));
               end
-              if iRI==1
-                ue=real(ue);
-              elseif iRI==2
-                ue=imag(ue);
+              trisurf(delaunayn(Xe),Xe(:,1),Xe(:,2),ue)
+            end
+          elseif strcmp(Parameters(iD).DiscretizationType,'HDG')
+
+            % Faces of the sub-elements of each element on the exterior boundary
+            for iFaceExt=1:size(Faces(iD,iD).Exterior,1)
+              iElem=Faces(iD,iD).Exterior(iFaceExt,1);
+              Ce=MeshPlot.Elements(:,iElem)';
+              Xe=double(MeshPlot.Nodes(:,Ce)');
+              if Parameters(iD).Degree==0
+                ue=repelem(double(u(iElem)),Sizes(iD).NumSpaceDim+1);
+              else
+                ue=double(u(Ce));
               end
               De=delaunayn(Xe);
-              trisurf(De,Xe(:,1),Xe(:,2),ue)
-            end
-          elseif Sizes(iD).NumSpaceDim==3
-            if strcmp(Parameters(iD).DiscretizationType,'HDG')
-              for iFaceExt=1:size(Faces(iD,iD).Exterior,1)
-                iElem=Faces(iD,iD).Exterior(iFaceExt,1);
-                if not(strcmp(Options.PlotSolution{iP}(end-3:end),'Post'))
-                  Ce=Mesh(iD).Elements(:,iElem)';
-                  Xe=double(Mesh(iD).Nodes(:,Ce)');
-                else
-                  Ce=Mesh(iD).Post.Elements(:,iElem)';
-                  Xe=double(Mesh(iD).Post.Nodes(:,Ce)');
-                end
-                if Parameters(iD).Degree==0
-                  ue=repelem(double(Results(iD).([Options.PlotSolution{iP}])(iElem,iC,Index)),...
-                    Sizes(iD).NumSpaceDim+1);
-                else
-                  ue=double(Results(iD).([Options.PlotSolution{iP}])(Ce,iC,Index));
-                end
-                if iRI==1
-                  ue=real(ue);
-                elseif iRI==2
-                  ue=imag(ue);
-                end
-                De=delaunayn(Xe);
-                for iElemSub=1:size(De,1)
-                  Ces=De(iElemSub,:);
-                  Xes=Xe(Ces,:);
-                  ues=ue(Ces,:);
-                  for iFaceSub=1:Sizes(iD).NumElementFaces
-                    if not(strcmp(Options.PlotSolution{iP}(end-3:end),'Post'))
-                      Dfs=RefElement(iD,iD).FaceNodesElem(iFaceSub,1:3);
-                    else
-                      Dfs=RefElement(iD,iD).Post.FaceNodesElem(iFaceSub,1:3);
-                    end
-                    Xfs=Xes(Dfs,:);
-                    ufs=ues(Dfs,:);
-                    trisurf(1:3,Xfs(:,1),Xfs(:,2),Xfs(:,3),ufs)
-                  end
+              for iElemSub=1:size(De,1)
+                Xes=Xe(De(iElemSub,:),:);
+                ues=ue(De(iElemSub,:),:);
+                for iFaceSub=1:Sizes(iD).NumElementFaces
+                  Dfs=RefElementPlot.FaceNodesElem(iFaceSub,1:3);
+                  trisurf(1:3,Xes(Dfs,1),Xes(Dfs,2),Xes(Dfs,3),ues(Dfs,:))
                 end
               end
-              view(3)
-            elseif strcmp(Parameters(iD).DiscretizationType,'CG')
-              u=Results(iD).([Options.PlotSolution{iP}])(:,iC,Index);
-              if iRI==1
-                u=real(u);
-              elseif iRI==2
-                u=imag(u);
-              end
-              pdeplot3D(Mesh(iD).Nodes,Mesh(iD).Elements,'ColorMapData',u)
-              ChildrenAux=get(gca,'Children'); delete(ChildrenAux([2,3]));
             end
+            view(3)
+          else
+
+            % Surface of the whole mesh
+            pdeplot3D(Mesh(iD).Nodes,Mesh(iD).Elements,'ColorMapData',u)
+            Children=get(gca,'Children'); delete(Children([2,3]));
           end
         end
         hold on
       end
-      hold off
-      box on
-      axis equal
-      shading interp
-      colormap jet
-      colorbar
+      hold off; box on; axis equal; shading interp; colormap jet; colorbar;
       set(gca,'Visible','on')
-      title([repmat('real(',isComplex&(iRI==1)),...
-             repmat('imag(',isComplex&(iRI==2)),...
-             Options.PlotSolution{iP},...
-             repmat(sprintf(' (%d)',iC),size(vertcat(Results.([Options.PlotSolution{iP}])),2)>1),...
-             repmat(')',isComplex)...              
+      title([repmat('real(',1,isComplex&&iRI==1),...
+             repmat('imag(',1,isComplex&&iRI==2),...
+             Variable,...
+             repmat(sprintf(' (%d)',iC),1,NumComp>1),...
+             repmat(')',1,isComplex),...
              sprintf(' at %s %.2e',lower(Domain),Results(1).(Domain)(Index))]);
-      xlim(XMinMax); xlabel('x'); ylim(YMinMax); ylabel('y');
-      if Sizes(iD).NumSpaceDim==3
-        zlim(ZMinMax); zlabel('z');
+      xlim(Limits(1,:)); xlabel('x');
+      ylim(Limits(2,:)); ylabel('y');
+      if ThreeD
+        zlim(Limits(3,:)); zlabel('z');
       end
     end
     pause(eps);

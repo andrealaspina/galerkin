@@ -1,52 +1,27 @@
-function [Frequency,SolutionFFT]=computeFFT(...
-         Time,Solution)
-         % Compute Fast Fourier Transform
+function [Frequency,SolutionFFT]=computeFFT(Time,Solution)
+% Compute the one-sided spectrum of a signal sampled at uniform time steps
 
-% Time vector
-t=Time;
+% Sampling frequency and signal length
+SamplingFrequency=1/(Time(2)-Time(1));
+Length=length(Time);
 
-% Sampling period
-ts=t(2)-t(1);
-
-% Sampling frequency
-fs=1/ts;
-
-% Signal length
-L=length(t);
-
-% New input length from the next power of 2 (improve performance of FFT)
-n=2^nextpow2(L);
+% Padded length, taken as the next power of two to improve the performance
+LengthPadded=2^nextpow2(Length);
 
 % Frequency vector
-f=0:(fs/n):(fs/2);
+Frequency=0:(SamplingFrequency/LengthPadded):(SamplingFrequency/2);
 
-% Signal in the time domain
-ut=Solution;
+% Dimension along which the signal is sampled
+Dim=find(size(Solution)==Length,1,'last');
 
-% Dimension in which to perform FFT
-dim=find(size(ut)==length(t),1,'last');
-
-% Signal in the frequecy domain
-uf=fft(ut,n,dim);
-
-% Two-sided spectrum (extract then the quantity of interest, ie abs/real/imag...)
-P2=uf/L;
+% Two-sided spectrum (extract afterwards the quantity of interest, e.g. abs/real/imag)
+SolutionFFT=fft(Solution,LengthPadded,Dim)/Length;
 
 % One-sided spectrum
-switch dim
-  case 1
-    P1=P2(1:n/2+1,:);
-    P1(2:end-1,:)=2*P1(2:end-1,:);
-  case 2
-    P1=P2(:,1:n/2+1);
-    P1(:,2:end-1)=2*P1(:,2:end-1);
-  case 3
-    P1=P2(:,:,1:n/2+1);
-    P1(:,:,2:end-1)=2*P1(:,:,2:end-1);
-end
-
-% Save FFT results
-Frequency=f;
-SolutionFFT=P1;
+Half=repmat({':'},1,ndims(SolutionFFT));
+Half{Dim}=1:LengthPadded/2+1;
+SolutionFFT=SolutionFFT(Half{:});
+Half{Dim}=2:LengthPadded/2;
+SolutionFFT(Half{:})=2*SolutionFFT(Half{:});
 
 end

@@ -2,14 +2,13 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='ScalingWeak';                   % Simulation type
 Simulation.Problem='Fluid';                      % Problem
 PoolAux=gcp; if isempty(PoolAux); PoolAux=[]; PoolAux.NumWorkers=1; end
 Simulation.NumProcessors=PoolAux.NumWorkers*[1,1];% Number of processors
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='WeaklyCompressibleFlowDM_HDG';% Formulation
 Parameters.Problem='Fluid';                      % Problem
 Parameters.PostProcessingHDG='no';               % Perform HDG postprocessing
@@ -64,43 +63,36 @@ Parameters.Pressure=@(Density)...                % Equation of state
 Parameters.DPressureDDensity=@(Density)...       % dPressure/dDensity
   1/Parameters.CompressibilityCoeff;
 clear r0 p0 eps mu L R U vx vy p
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_scaling_weak_1',...             % Mesh file
           'Mesh_scaling_weak_1'};
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-6;                           % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_r=[1,2,3,4];                % Dirichlet portion for density
 Boundaries.Dirichlet_w_x=[1,2,3,4];              % Dirichlet portion for x-momentum
 Boundaries.Dirichlet_w_y=[1,2,3,4];              % Dirichlet portion for y-momentum
 Boundaries.Neumann_t_x=[];                       % Neumann portion for x-traction
 Boundaries.Neumann_t_y=[];                       % Neumann portion for y-traction
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.PlotEfficiency='yes';                    % Plot efficiency
 Options.CharacteristicTimer='Evaluation';        % Characteristic timer
 Options.Test='Results.Efficiency(1)==1';         % Test
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

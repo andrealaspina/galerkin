@@ -1,47 +1,32 @@
-function [MeshHigh]=generateMeshHighOrder(...
-         MeshLow,RefElementGeometry,RefElementApproxim)
-         % Generate hybrid mesh (a degree for the geometry and a higher one for the approximation)
+function MeshHigh=generateMeshHighOrder(MeshLow,RefElementGeom,RefElementApprox)
+% Generate a hybrid mesh with a degree for the geometry and a higher one for the approximation
 
-% Get general parameters
+% Vertex nodes, shared by the two degrees
 Cg=MeshLow.Elements';
 Xg=MeshLow.Nodes';
-nsd=size(MeshLow.Nodes,1);
 NumElements=size(MeshLow.Elements,2);
-NumElementNodes1=nsd+1;
-NumElementNodesApp=size(RefElementApproxim.NodesCoordElem,1);
-NumElementNodesAdd=NumElementNodesApp-NumElementNodes1;
+NumVertexNodes=size(MeshLow.Nodes,1)+1;
+NumElementNodes=size(RefElementApprox.NodesCoordElem,1);
+C1=Cg(:,1:NumVertexNodes);
+X1=Xg(1:length(unique(C1)),:);
 
-% Linear mesh
-C1=Cg(:,1:NumElementNodes1);
-N1=length(unique(C1));
-X1=Xg(1:N1,:);
-
-% Get shape functions
-Nga=RefElementGeometry.ShapeFunctionsElem;
-pinvNaa=RefElementApproxim.PseudoinverseShapeFunctionsElem;
-
-% Insert additional nodes connectivity and coordinates
-Xa_add=cell(NumElements,1);
+% Coordinates of the nodes added inside each element
+Nga=RefElementGeom.ShapeFunctionsElem;
+pinvNaa=RefElementApprox.PseudoinverseShapeFunctionsElem;
+XAdd=cell(NumElements,1);
 parfor iElem=1:NumElements
-  Cge=Cg(iElem,:);
-  Xge=Xg(Cge,:); %#ok
+  Xge=Xg(Cg(iElem,:),:); %#ok
   Xae=pinvNaa*(Nga*Xge);
-  Xa_add{iElem}=Xae(NumElementNodes1+1:end,:);
+  XAdd{iElem}=Xae(NumVertexNodes+1:end,:);
 end
-Xa_add=vertcat(Xa_add{:});
+XAdd=vertcat(XAdd{:});
 
-% Condense shared nodes
-tol=1e-9;
-[~,ind1,ind2]=uniquetol(double(Xa_add),tol,'ByRows',true);
-Xa_add_unique=Xa_add(ind1,:);
-Ca_add_unique=reshape(N1+ind2,[NumElementNodesAdd,NumElements])';
+% Condense the added nodes shared by neighboring elements
+[~,iUnique,iShared]=uniquetol(double(XAdd),1e-9,'ByRows',true);
+CAdd=reshape(size(X1,1)+iShared,[NumElementNodes-NumVertexNodes,NumElements])';
 
-% Merge nodes of linear mesh with nodes of high-order mesh
-Xa=[X1;Xa_add_unique];
-Ca=[C1,Ca_add_unique];
-
-% Return hybrid mesh
-MeshHigh.Nodes=Xa';
-MeshHigh.Elements=Ca';
+% Merge the vertex nodes with the added ones
+MeshHigh.Nodes=[X1;XAdd(iUnique,:)]';
+MeshHigh.Elements=[C1,CAdd]';
 
 end

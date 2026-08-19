@@ -2,15 +2,14 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Thermal';                    % Problem
 Simulation.SkipPreProcessing='yes';              % Skip pre-processing
 Simulation.PreProcessingFileName=...             % Pre-processing file name
   'test_preprocessing_only';
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Thermal_CG';             % Formulation
 Parameters.Problem='Thermal';                    % Problem
 Parameters.Degree=1;                             % Degree
@@ -23,36 +22,30 @@ Parameters.AmbientTemperature=@(x,y,z,b) 0;      % Ambient temperature
 Parameters.Temperature=@(x,y,z,t) (x+y)*t^2;     % Temperature
 Parameters.ThermalFlux=@(x,y,z,t) 0*x;           % Thermal flux
 Parameters.HeatSource=@(x,y,z,t) (x+y)*2*t^1;    % Heat source
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_square_1'};                     % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='yes';                        % Time dependent problem
 Time.InitialTime=0;                              % Initial time
 Time.FinalTime=1;                                % Final time
 Time.TimeStepSize=1/2;                           % Time step size
 Time.BDFOrder=3;                                 % BDF order
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=[1,2,3,4];                  % Dirichlet portion
 Boundaries.Neumann=[];                           % Neumann portion
 Boundaries.Robin=[];                             % Robin portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError={'Temperature'};            % Compute error
@@ -60,7 +53,6 @@ Options.SaveResults='yes';                       % Save results
 Options.SaveResultsFolder='tests/';              % Save results folder
 Options.Test=...                                 % Test
   'Results.TemperatureErrorL2<1e-12';
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Structural';                 % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='ElasticityModal_CG';     % Formulation
 Parameters.Problem='Structural';                 % Problem
 Parameters.Model='LinearElasticity';             % Model
@@ -18,34 +17,28 @@ Parameters.PoissonsRatio=0;                      % Poisson's ratio
 Parameters.Displacement=@(x,y,z,n) [0*x,0*x,0*x];% Displacement
 Parameters.analyticalSolution=...                % Analytical solution
   @(Parameters,Mesh,Time) analyticalSolution(Parameters,Mesh,Time);
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Geometry=multicuboid(30,1,1).translate([15,0,0]);% Geometry definition
 Mesh.MinElementSize=1;                           % Minimum element size
 Mesh.MaxElementSize=1;                           % Maximum element size
 Mesh.MeshGradation=1.5;                          % Element size growth rate
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
 Time.Mode=[1,2,4];                               % Mode of modal analysis
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='eigs';                              % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Fixed=5;                              % Fixed portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeQuantityStart=...                 % Compute quantity of interest (start of simulation)
@@ -64,7 +57,6 @@ Options.ComputeError=...                         % Compute error
 Options.Test=...                                 % Test
   ['abs(Results.MainDisplacementErrorL2    -1.007416329630360e-02)<1e-12 && ',...
    'abs(Results.NaturalFrequencyErrorNumber-5.995651273984403e-03)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

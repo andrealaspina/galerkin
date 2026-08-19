@@ -132,7 +132,15 @@ A key feature of ***galerkin*** is the ability to **monolithically couple** $N$ 
 
 ## Project Structure 📁
 
-The project is organized into the following directories:
+The project is organized into the following files and directories:
+
+- `main.m`: Driver of the whole workflow, split into **pre-processing**, **processing**, and **post-processing**
+
+- `init.m`: Resets the workspace and the search path
+
+- `test.m`: Runs the whole test suite
+
+- `test.sh`: Submits a run to a SLURM cluster (set `GALERKIN` to the installation root)
 
 - `formulations/`: Implemented finite element formulations
 
@@ -145,6 +153,20 @@ The project is organized into the following directories:
 - `output/`: Simulation results
 
 - `tests/`: Test cases for validation and verification
+
+Two files in `functions/` are third-party code kept as distributed by their authors (`distmesh.m` and `triquad.m`), whereas `createReferenceElement.m`, `computeStress.m`, and `computeSpectralDecompositionEulerEquations.m` are essentially machine-generated tables of nodes, weights, and symbolic expressions. These files are deliberately left untouched and are exempt from the coding conventions below.
+
+## Coding Conventions ✍️
+
+A **single**, **consistent** style is used throughout the code:
+
+- **Layout**: 2-space indentation, lines never exceeding **100 columns**, and continuation lines indented by 2 further spaces. Each block of statements is introduced by a short comment, without decorative rules.
+
+- **Naming**: `PascalCase` for structures and their fields (`Sizes.NumElementNodes`), `lowerCamelCase` for functions (`computeError`), and the `i` prefix for loop indices (`iD` for the discretization, `iElem` for the element, `iFace` for the face). Counts stored in structures carry the `Num` prefix, while the number of discretizations, which appears in almost every loop, is kept in the short local `nD`. Inside the element kernels, the usual mathematical shorthands are preserved (`Ne`, `Xe`, `weg`).
+
+- **Comments**: every block is introduced by a single sentence, and every function opens with a one-line summary, followed by a short description of its arguments whenever the interface deserves it.
+
+- **Structure**: `main.m` owns the workflow from start to end, so that the sequence of tasks can be read top to bottom without jumping between files. Work that is repeated for every discretization is gathered in a single loop rather than spread over many.
 
 ## Simulation Types 📌
 
@@ -324,7 +346,7 @@ When developing novel finite element formulations, it is crucial to perform a co
 
 ***galerkin*** supports (limited) parallel computing capabilities using MATLAB's `parfor` for element computations. It achieves up to ***~10x speedup*** on relatively large-scale problems.
 
-For cluster execution, modify the `test.sh` script in the main folder.
+For cluster execution, modify the `test.sh` script in the main folder, setting `GALERKIN` to the installation root and the `#SBATCH` directives to the resources of your cluster.
 
 ## External Tools 🛠️
 
@@ -332,7 +354,7 @@ Although ***galerkin*** can manage the main pre-processing, processing, and post
 
 - **Free** tools:
 
-	- [**GMSH**](https://gmsh.info): An open-source software, ideal for **high-order mesh generation**
+	- [**GMSH**](https://gmsh.info): An open-source software, ideal for **high-order mesh generation** (set the environment variable `GMSH` to the local executable to use it from `importGmshMesh`)
 
 	- [**ParaView**](https://www.paraview.org): The world’s leading open-source **post-processing visualization engine**
  
@@ -357,7 +379,7 @@ run test.m
 ```
 This command executes all scripts in the `tests/` folder in ~3 minutes.
 
-If all tests pass successfully, start by exploring `main.m`, which is structured into three sections: **Pre-processing**, **Processing**, and **Post-processing**. Although lengthy (~1500 lines), this file helps track the sequence of tasks from start to end of the simulation.
+If all tests pass successfully, start by exploring `main.m`, which is structured into three sections: **Pre-processing**, **Processing**, and **Post-processing**. Although lengthy (~1300 lines), this file helps track the sequence of tasks from start to end of the simulation.
 
 Next, check out some **test files**, which are named descriptively for easy navigation.
 

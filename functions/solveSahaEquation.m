@@ -1,6 +1,6 @@
-function [Ionization]=solveSahaEquation(...
-         Parameters,IndependentVariable,DensityOrPressure,PressureOrTemperature)
-         % Solve Saha equation
+function Ionization=solveSahaEquation(Parameters,IndependentVariable,DensityOrPressure,...
+  PressureOrTemperature)
+% Solve the Saha equation for the ionization state of a mixture of species
 
 % Physical constants
 me=Parameters.ElectronMass;
@@ -61,7 +61,7 @@ if strcmp(Parameters.SahaNonIdeal,'yes') && ...
   omega=Parameters.SahaRelaxation;
 end
 
-% Linear step --------------------------------------------------------------------------------------
+% Linear step
 % Compute total number density of heavy particles as a function of the unknown average charge state
 switch IndependentVariable
   case 'DensityTemperature'
@@ -183,9 +183,8 @@ nh=c*nH;
 
 % Compute species number density of electrons
 ne=Ze*nH;
-% --------------------------------------------------------------------------------------------------
 
-% Non-linear step ----------------------------------------------------------------------------------
+% Non-linear step
 % Initialization
 it=0;
 err=inf;
@@ -196,16 +195,16 @@ if strcmp(Parameters.SahaNonIdeal,'yes') && ...
     not(strcmp(Parameters.PressureCorrection,'None')))
   % Iterative procedure
   while err>tolN && it<itmax
-    
+
     % Update iteration
     it=it+1;
-    
+
     % Save old Debye length
     lambdaD_old=lambdaD;
-    
+
     % Compute de Broglie wavelength
     LambdaB=h/sqrt(2*pi*me*kb*T);
-    
+
     % Compute lowering of ionization energy
     if strcmp(Parameters.IonizationEnergyLowering,'None')
       DI=zeros(1,max(Z));
@@ -214,24 +213,24 @@ if strcmp(Parameters.SahaNonIdeal,'yes') && ...
     elseif strcmp(Parameters.IonizationEnergyLowering,'Ebeling')
       DI=(1:max(Z))*e^2/(4*pi*eps0*(lambdaD+LambdaB/8));
     end
-    
+
     % Compute pressure correction
     if strcmp(Parameters.PressureCorrection,'None')
       DP=0;
     elseif strcmp(Parameters.PressureCorrection,'Griem')
       DP=kb*T/(24*pi*lambdaD^3);
     end
-    
+
     % Compute total pressure from equation of state
     if strcmp(IndependentVariable,'DensityTemperature')
       P=(1+Zav)*nH*kb*T-DP;
     end
-    
+
     % Compute temperature from equation of state
     if strcmp(IndependentVariable,'DensityPressure')
       T=(P+DP)/((1+Zav)*nH*kb);
     end
-    
+
     % Compute species partion functions
     if strcmp(Parameters.PartitionFunctionsExcitedStates,'yes')
       U=cell(J,1);
@@ -243,7 +242,7 @@ if strcmp(Parameters.SahaNonIdeal,'yes') && ...
         U{j}{end+1}=@(Zav) 1; % not sure about this
       end
     end
-    
+
     % Define species modified Saha function
     eta=zeros(J,max(Z)+1);
     for j=1:J
@@ -253,11 +252,12 @@ if strcmp(Parameters.SahaNonIdeal,'yes') && ...
       end
     end
     etamax=max(max(eta));
-    
+
     % Compute scaling factor to avoid overflow when multiplying the species modified Saha function
     s=max(1,etamax^(max(Z)/2));
-    
-    % Compute ratio of ideal total electron pressure to total pressure by solving a trascendental equation
+
+    % Compute the ratio of the ideal electron pressure to the total pressure, by solving a
+    % transcendental equation
     pe=cell(J,1);
     fun=@(Pe) 0;
     for j=1:J
@@ -279,16 +279,16 @@ if strcmp(Parameters.SahaNonIdeal,'yes') && ...
     else               % Partial ionization
       pE=fzero(@(pE) fun(pE),[tolL,1],opts);
     end
-    
+
     % Compute species contribution to ratio of ideal total electron pressure to total pressure
     pe=feval(@(pE) cellfun(@(pe) pe(pE),pe),pE); %#ok
-    
+
     % Compute total number density of heavy particles from equation of state
     nH=(P+DP)/((1+Zav)*kb*T);
-    
+
     % Compute total number density of electrons
     nE=pE*P/(kb*T);
-    
+
     % Compute species ratio of ideal pressure at various ionization states to total pressure
     p=zeros(J,max(Z)+1);
     for j=1:J
@@ -301,42 +301,41 @@ if strcmp(Parameters.SahaNonIdeal,'yes') && ...
         p(j,r+1)=p(j,r)/(pE*P)*eta(j,r+1);
       end
     end
-    
+
     % Compute species number density at various ionization states
     n=p*P/(kb*T);
-    
+
     % Compute average charge state
     Zav=pE/(1-DP/P-pE); % or Zav=nE/sum(n,1:2); or Zav=pE/sum(p,1:2);
-    
+
     % Compute species contribution to average charge state
     Ze=pe/(1-DP/P-pE); % or Ze=ne/sum(n,1:2); or Ze=pe/sum(p,1:2);
-    
+
     % Compute species composition of various ionization states
     alpha=p/(1-DP/P-pE); % or alpha=n/sum(n,1:2); or alpha=p/sum(p,1:2);
-    
+
     % Compute species number density of heavy particles
     nh=c*nH;
-    
+
     % Compute species number density of electrons
     ne=pe*P/(kb*T);
-    
+
     % Compute Debye length
     if strcmp(Parameters.DebyeLengthDefinition,'Incomplete')
       lambdaD=sqrt(eps0*kb*T/(e^2*nE));
     elseif strcmp(Parameters.DebyeLengthDefinition,'Complete')
       lambdaD=sqrt(eps0*kb*T/(e^2*(nE+sum((0:max(Z)).^2*n'))));
     end
-    
+
     % Relaxation of Debye length
     if it>1
       lambdaD=omega*lambdaD+(1-omega)*lambdaD_old;
     end
-    
+
     % Compute error
     err=abs(lambdaD/lambdaD_old-1);
   end
 end
-% --------------------------------------------------------------------------------------------------
 
 % Store ionization info
 Ionization.AverageChargeState=Zav;

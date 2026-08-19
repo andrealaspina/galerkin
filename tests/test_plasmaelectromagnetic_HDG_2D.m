@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='PlasmaElectromagnetic';      % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='PlasmaElectromagnetic_HDG';% Formulation
 Parameters.Problem='PlasmaElectromagnetic';      % Problem
 Parameters.PostProcessingHDG='yes';              % Perform HDG postprocessing
@@ -48,38 +47,32 @@ Parameters.Density=...                           % Density
                ((y-sqrt(2)/6*sin(pi/4+t))/0.2).^2)<=1);
 Parameters.Velocity=@(x,y,z,t) [-y,+x];          % Velocity
 Parameters.IncidentField=@(x,y,z,t) [0*x,0*x];   % Incident field for absorbing boundary conditions
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 load('Mesh_square01_3.mat');                    % Mesh file
 Mesh.Nodes(1,:)=(Mesh.Nodes(1,:)-1/2)*(1+2*dx);
 Mesh.Nodes(2,:)=(Mesh.Nodes(2,:)-1/2)*(1+2*dy);
 clear xi xf yi yf dx dy m sigmax sigmay
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='yes';                        % Time dependent problem
 Time.InitialTime=0;                              % Initial time
 Time.FinalTime=2*pi;                             % Final time
 Time.TimeStepSize=2*pi/4;                        % Time step size
 Time.BDFOrder=2;                                 % BDF order
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_e=[];                       % Dirichlet portion for electric field
 Boundaries.Absorbing=[1,2,3,4];                  % Absorbing portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -96,7 +89,6 @@ Options.Test=...                                 % Test
    'abs(Results.ElectricFieldAuxErrorL2    -1.885105947222024e-01)<1e-11 && ',...
    'abs(Results.ElectricFieldErrorHcurl    -6.619126535608760e-02)<1e-12 && ',...
    'abs(Results.ElectricFieldPostErrorHcurl-6.620275665127154e-02)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

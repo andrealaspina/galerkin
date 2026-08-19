@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Structural';                 % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters(1).Formulation='ElasticityLinear_HDG';% Formulation
 Parameters(1).Problem='Structural';              % Problem
 Parameters(1).PostProcessingHDG='yes';           % Perform HDG postprocessing
@@ -46,35 +45,29 @@ Parameters(2).Force=...                          % Force
   @(x,y,z,t) [(24.*pi.^2.*sin(2.*pi.*y)-24.*pi.^2.*nu(x,y,z).*sin(2.*pi.*y)-48.*pi.^2.*nu(x,y,z).^2.*sin(2.*pi.*y)+E(x,y,z).*sin(pi.*x).*sin(pi.*y)-64.*pi.^2.*cos(pi.*x).^2.*cos(pi.*y).*sin(pi.*y)+24.*E(x,y,z).*pi.^2.*nu(x,y,z).*sin(2.*pi.*y)+pi.*E(x,y,z).*x.*cos(pi.*x).*sin(pi.*y)+2.*pi.*E(x,y,z).*x.*cos(pi.*y).*sin(pi.*x)+4.*pi.*E(x,y,z).*y.*cos(pi.*x).*sin(pi.*y)+pi.*E(x,y,z).*y.*cos(pi.*y).*sin(pi.*x)+64.*pi.^2.*nu(x,y,z).*cos(pi.*x).^2.*cos(pi.*y).*sin(pi.*y)+128.*pi.^2.*nu(x,y,z).^2.*cos(pi.*x).^2.*cos(pi.*y).*sin(pi.*y)-4.*pi.*E(x,y,z).*nu(x,y,z).*x.*cos(pi.*y).*sin(pi.*x)-4.*pi.*E(x,y,z).*nu(x,y,z).*y.*cos(pi.*x).*sin(pi.*y)+E(x,y,z).*pi.^2.*x.*y.*cos(pi.*x).*cos(pi.*y)-3.*E(x,y,z).*pi.^2.*x.*y.*sin(pi.*x).*sin(pi.*y)-64.*E(x,y,z).*pi.^2.*nu(x,y,z).*cos(pi.*x).^2.*cos(pi.*y).*sin(pi.*y)+4.*E(x,y,z).*pi.^2.*nu(x,y,z).*x.*y.*sin(pi.*x).*sin(pi.*y))./(2.*nu(x,y,z)-2.*E(x,y,z).*nu(x,y,z)+4.*nu(x,y,z).^2-2),...
               (24.*pi.^2.*nu(x,y,z).*sin(2.*pi.*x)-24.*pi.^2.*sin(2.*pi.*x)+48.*pi.^2.*nu(x,y,z).^2.*sin(2.*pi.*x)+E(x,y,z).*sin(pi.*x).*sin(pi.*y)+64.*pi.^2.*cos(pi.*x).*cos(pi.*y).^2.*sin(pi.*x)-24.*E(x,y,z).*pi.^2.*nu(x,y,z).*sin(2.*pi.*x)+pi.*E(x,y,z).*x.*cos(pi.*x).*sin(pi.*y)+4.*pi.*E(x,y,z).*x.*cos(pi.*y).*sin(pi.*x)+2.*pi.*E(x,y,z).*y.*cos(pi.*x).*sin(pi.*y)+pi.*E(x,y,z).*y.*cos(pi.*y).*sin(pi.*x)-64.*pi.^2.*nu(x,y,z).*cos(pi.*x).*cos(pi.*y).^2.*sin(pi.*x)-128.*pi.^2.*nu(x,y,z).^2.*cos(pi.*x).*cos(pi.*y).^2.*sin(pi.*x)-4.*pi.*E(x,y,z).*nu(x,y,z).*x.*cos(pi.*y).*sin(pi.*x)-4.*pi.*E(x,y,z).*nu(x,y,z).*y.*cos(pi.*x).*sin(pi.*y)+E(x,y,z).*pi.^2.*x.*y.*cos(pi.*x).*cos(pi.*y)-3.*E(x,y,z).*pi.^2.*x.*y.*sin(pi.*x).*sin(pi.*y)+64.*E(x,y,z).*pi.^2.*nu(x,y,z).*cos(pi.*x).*cos(pi.*y).^2.*sin(pi.*x)+4.*E(x,y,z).*pi.^2.*nu(x,y,z).*x.*y.*sin(pi.*x).*sin(pi.*y))./(2.*nu(x,y,z)-2.*E(x,y,z).*nu(x,y,z)+4.*nu(x,y,z).^2-2)];
 clear E nu
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_square_coupled_4parts_2'};      % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries(1).Dirichlet=[1,3,6,8];               % Dirichlet portion
 Boundaries(1).Interface=[2,4,5,7];               % Interface portion
 Boundaries(1).Neumann=[];                        % Neumann portion
 Boundaries(2).Dirichlet=[1,4,6,7];               % Dirichlet portion
 Boundaries(2).Interface=[2,3,5,8];               % Interface portion
 Boundaries(2).Neumann=[];                        % Neumann portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -84,7 +77,6 @@ Options.Test=...                                 % Test
   ['abs(Results(1).DisplacementErrorL2    -1.268947484665224e-01)<1e-12 && ',...
    'abs(Results(1).DisplacementPostErrorL2-1.365742599182946e-01)<1e-12 && ',...
    'abs(Results(2).DisplacementErrorL2    -6.271996067768744e-03)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

@@ -2,13 +2,12 @@ close all; clear; clc;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Plasma1FluidElectromagnetic';% Problem
 Simulation.NumProcessors=1;                      % Number of processors
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Plasma1FluidElectromagneticAdvanced_HDG';% Formulation
 Parameters.Problem='Plasma1FluidElectromagnetic';% Problem
 Parameters.Axisymmetric='no';                    % Axisymmetric
@@ -49,44 +48,38 @@ Parameters.ForceMomentum=@(x,y,z,t) [0*x,0*x];   % Force in momentum equation
 Parameters.ForceEnergy=@(x,y,z,t) 0*x;           % Force in energy equation
 Parameters.CurrentDensity=@(x,y,z,t) [0*x,0*x];  % Current density
 Parameters.IncidentField=@(x,y,z,t) [0*x,0*x];   % Incident field for absorbing boundary conditions
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={...                                   % Mesh file
   ['Mesh_diocotron_instability_structured_full',...
    '_k',num2str(Parameters.Degree),...
    '_r',num2str(Parameters.MeshRefinement)]};
 Parameters.Mesh.File=Mesh.File;
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-6;                           % Tolerance
 System.MaxIterations=5; % =10 in the paper       % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='yes';                        % Time dependent problem
 Time.InitialTime=0;                              % Initial time
 Time.FinalTime=4;                                % Final time
 Time.TimeStepSize=1/2^3; % =1/2^8 in the paper   % Time step size
 Time.BDFOrder=2;                                 % BDF order
-% --------------------------------------------------------------------------------------------------
 
-% Electrostatic initialization and projection correction -------------------------------------------
+% Electrostatic initialization and projection correction
 Parameters.ElectrostaticInitialization=...       % Electrostatic initialization
   @(Parameters) electrostaticInitialization(Parameters);
 Parameters.ProjectionCorrection=...              % Projection correction
   @(Parameters,Block) projectionCorrection(Parameters,Block);
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
 Solver.Equilibrate='yes';                        % Equilibrate matrix
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_r=[];                       % Dirichlet portion for density
 Boundaries.Dirichlet_w=[];                       % Dirichlet portion for momentum
 Boundaries.Dirichlet_g=[];                       % Dirichlet portion for energy
@@ -94,9 +87,8 @@ Boundaries.Dirichlet_e=1;                        % Dirichlet portion for electri
 Boundaries.FarField=[];                          % Far-field portion
 Boundaries.InviscidWall=1;                       % Inviscid wall portion
 Boundaries.Absorbing=[];                         % Absorbing portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='yes';                      % Plot geometry
 Options.PlotMesh='yes';                          % Plot mesh
 Options.PlotMeshDistortion='yes';                % Plot mesh distortion
@@ -115,7 +107,6 @@ Options.SaveResults='yes';                       % Save results
 Options.SaveResultsFolder=...                    % Save results folder
   'diocotron_instability/';
 Options.SaveResultsMatVersion='-v7.3';           % Save results (MAT-file version)
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 
@@ -127,12 +118,11 @@ function [Results] = electrostaticInitialization(ParametersAux)
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='ElectrostaticInitialization';% Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Thermal_HDG';            % Formulation
 Parameters.Problem='ElectrostaticInitialization';% Problem
 Parameters.Axisymmetric=...                      % Axisymmetric
@@ -154,39 +144,32 @@ Parameters.HeatSource=...                        % Heat source
   @(x,y,z,t) 1/ParametersAux.ElectricPermittivity*...
          (ParametersAux.ParticleCharge/ParametersAux.ParticleMass*ParametersAux.Density(x,y,z,t)+...
           ParametersAux.IonCharge/ParametersAux.IonMass*ParametersAux.IonDensity);
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File=ParametersAux.Mesh.File;               % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
 Solver.Equilibrate='yes';                        % Equilibrate matrix
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=1;                          % Dirichlet portion
 Boundaries.Neumann=[];                           % Neumann portion
 Boundaries.Robin=[];                             % Robin portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeQuantityError=...                 % Compute quantity of interest (error computation)
   'Results.ElectricFieldInitial=Results.ScaledTemperatureGradient;';
 Options.SaveResults='no';                        % Save results
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 
@@ -201,12 +184,11 @@ function [Results] = projectionCorrection(ParametersAux,BlockAux)
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='ProjectionCorrection';       % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Thermal_HDG';            % Formulation
 Parameters.Problem='ProjectionCorrection';       % Problem
 Parameters.Axisymmetric=...                      % Axisymmetric
@@ -237,33 +219,27 @@ Parameters.IonMass=...                           % Ion mass
   ParametersAux.IonMass;
 Parameters.IonDensity=...                        % Ion density
   ParametersAux.IonDensity;
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File=ParametersAux.Mesh.File;               % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
 Solver.Equilibrate='yes';                        % Equilibrate matrix
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=1;                          % Dirichlet portion
 Boundaries.Neumann=[];                           % Neumann portion
 Boundaries.Robin=[];                             % Robin portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeQuantityStart=...                 % Compute quantity of interest (start of simulation)
@@ -285,7 +261,6 @@ Options.ComputeQuantityError=...                 % Compute quantity of interest 
    'ElectricFieldCorrectedCG2DG=ElectricFieldCorrectedCG(ElementsCG(1:end),:);',...
    'Results.ElectricFieldCorrected=ElectricFieldCorrectedCG2DG;'];
 Options.SaveResults='no';                        % Save results
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

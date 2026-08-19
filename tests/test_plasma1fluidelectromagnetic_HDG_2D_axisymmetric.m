@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Plasma1FluidElectromagnetic';% Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Plasma1FluidElectromagnetic_HDG';% Formulation
 Parameters.Problem='Plasma1FluidElectromagnetic';% Problem
 Parameters.Axisymmetric='yes';                   % Axisymmetric
@@ -48,32 +47,27 @@ Parameters.CurrentDensity=...                    % Current density
   @(x,y,z,t) [4*t^2*x.^4-2*x.^4.*y.^2-t*x.*(t*x.^2.*y.^2+1)+12*t^2*x.^2.*y.^2,...
               2*x.^3.*y.^3+t*y.*(t*x.^2.*y.^2+1)-6*t^2*x.*y.^3-8*t^2*x.^3.*y];
 Parameters.IncidentField=@(x,y,z,t) [0*x,0*x];   % Incident field for absorbing boundary conditions
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_axisymmetric_euler_maxwell_1'}; % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-12;                          % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='yes';                        % Time dependent problem
 Time.InitialTime=0;                              % Initial time
 Time.FinalTime=1;                                % Final time
 Time.TimeStepSize=1/2^1;                         % Time step size
 Time.BDFOrder=3;                                 % BDF order
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_r=[1,2,3,4];                % Dirichlet portion for density
 Boundaries.Dirichlet_w=[1,2,3,4];                % Dirichlet portion for momentum
 Boundaries.Dirichlet_g=[1,2,3,4];                % Dirichlet portion for energy
@@ -81,9 +75,8 @@ Boundaries.Dirichlet_e=[1,2,3,4];                % Dirichlet portion for electri
 Boundaries.FarField=[];                          % Far-field portion
 Boundaries.InviscidWall=[];                      % Inviscid wall portion
 Boundaries.Absorbing=[];                         % Absorbing portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -106,7 +99,6 @@ Options.Test=...                                 % Test
    'Results.ElectricFieldAuxErrorL2    <1e-12 && ',...
    'Results.ElectricFieldErrorHcurl    <1e-10 && ',...
    'Results.ElectricFieldPostErrorHcurl<1e-10'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

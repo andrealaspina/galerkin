@@ -2,12 +2,11 @@ close all; clear; clc;
 
 %% Input (thermal problem)
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Thermal';                    % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Thermal_CG';             % Formulation
 Parameters.Problem='Thermal';                    % Problem
 Parameters.Degree=1;                             % Degree
@@ -33,41 +32,34 @@ Parameters.Temperature=...                       % Temperature
 Parameters.TemperatureGradient=...               % Temperature gradient
   @(x,y,z,t) [0*x,0*x,0*x];
 Parameters.ThermalFlux=@(x,y,t) 0*x;             % Thermal flux
-Parameters.HeatSource=@(x,y,z,t) 0*x;            % Heat source               
-% --------------------------------------------------------------------------------------------------
+Parameters.HeatSource=@(x,y,z,t) 0*x;            % Heat source
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Geometry=importGeometry(createpde,'Blade.stl');  % Geometry definition
 Mesh.MinElementSize=0.01/2;                      % Minimum element size
 Mesh.MaxElementSize=0.01/2;                      % Maximum element size
 Mesh.MeshGradation=1.5;                          % Element size growth rate
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=[];                         % Dirichlet portion
 Boundaries.Neumann=[];                           % Neumann portion
 Boundaries.Robin=1:15;                           % Robin portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='yes';                      % Plot geometry
 Options.PlotMesh='yes';                          % Plot mesh
 Options.PlotMeshDistortion='yes';                % Plot mesh distortion
 Options.PlotSolution={'Temperature'};            % Plot solution
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 
@@ -82,12 +74,11 @@ clearvars -except Geometry TemperatureInterpolant;
 
 %% Input (structural problem)
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Structural';                 % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Elasticity_CG';          % Formulation
 Parameters.Problem='Structural';                 % Problem
 Parameters.Model='LinearElasticity';             % Model
@@ -107,33 +98,27 @@ Parameters.Force=@(x,y,z,t) [0*x,0*x,0*x];       % Force
 Parameters.Force=@(x,y,z,t) [0*x,0*x,0*x];       % Force
 Parameters.Temperature=...                       % Temperature
   @(x,y,z) TemperatureInterpolant(x,y,z);
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.MinElementSize=0.01/1; %0.01/2 for figure   % Minimum element size
 Mesh.MaxElementSize=0.01/1; %0.01/2 for figure   % Maximum element size
 Mesh.MeshGradation=1.5;                          % Element size growth rate
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=3;                          % Dirichlet portion
 Boundaries.Neumann=[10,11];                      % Neumann portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='yes';                          % Plot mesh
 Options.PlotMeshDistortion='yes';                % Plot mesh distortion
@@ -155,7 +140,6 @@ Options.ComputeQuantityError=...                 % Compute quantity of interest 
    '     6*(Results.Stress(:,2).^2+Results.Stress(:,3).^2+Results.Stress(:,6).^2)));'];
 Options.SaveResults='yes';                       % Save results
 Options.SaveResultsFolder='jet_engine_blade/';   % Save results folder
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Plasma1FluidElectromagnetic';% Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Plasma1FluidElectromagnetic_HDG';% Formulation
 Parameters.Problem='Plasma1FluidElectromagnetic';% Problem
 Parameters.Axisymmetric='yes';                   % Axisymmetric
@@ -43,32 +42,27 @@ Parameters.ForceMomentum=@(x,y,z,t) [0*x,0*x];   % Force in momentum equation
 Parameters.ForceEnergy=@(x,y,z,t) 0*x;           % Force in energy equation
 Parameters.CurrentDensity=@(x,y,z,t) [0*x,0*x];  % Current density
 Parameters.IncidentField=@(x,y,z,t) [0*x,0*x];   % Incident field for absorbing boundary conditions
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_axisymmetric_euler_1'};         % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-8;                           % Tolerance
 System.MaxIterations=20;                         % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='yes';                        % Time dependent problem
 Time.InitialTime=0;                              % Initial time
 Time.FinalTime=1;                                % Final time
 Time.TimeStepSize=1/2^3;                         % Time step size
 Time.BDFOrder=1;                                 % BDF order
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_r=[];                       % Dirichlet portion for density
 Boundaries.Dirichlet_w=[];                       % Dirichlet portion for momentum
 Boundaries.Dirichlet_g=[];                       % Dirichlet portion for energy
@@ -78,9 +72,8 @@ Boundaries.InviscidWall=[];                      % Inviscid wall portion
 Boundaries.Absorbing=[];                         % Absorbing portion
 Boundaries.PeriodicMaster=2;                     % Periodic portion (master)
 Boundaries.PeriodicSlave=3;                      % Periodic portion (slave)
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -103,7 +96,6 @@ Options.Test=...                                 % Test
    'abs(Results.ElectricFieldAuxErrorL2    -0.000000000000000e-00)<1e-12 && ',...
    'abs(Results.ElectricFieldErrorHcurl    -0.000000000000000e-00)<1e-12 && ',...
    'abs(Results.ElectricFieldPostErrorHcurl-0.000000000000000e-00)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Magnetohydrodynamic';        % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='MagnetohydrodynamicsCURLCURL_HDG';% Formulation
 Parameters.Problem='Magnetohydrodynamic';        % Problem
 Parameters.PostProcessingHDG='no';               % Perform HDG postprocessing
@@ -65,28 +64,23 @@ Parameters.NormalMagneticInduction=...           % Normal magnetic induction
   @(x,y,z,t) 0*x;
 Parameters.Source=@(x,y,z,t) [0*x,0*x];          % Source
 clear r0 p0 eps mu r1 r2 w1 w2 vx vy p
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_taylorcouette_1'};              % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-3;                           % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_v_x=1:16;                   % Dirichlet portion for x-velocity
 Boundaries.Dirichlet_v_y=1:16;                   % Dirichlet portion for y-velocity
 Boundaries.Dirichlet_p=1:16;                     % Dirichlet portion for pressure
@@ -94,9 +88,8 @@ Boundaries.Neumann_t_x=[];                       % Neumann portion for x-tractio
 Boundaries.Neumann_t_y=[];                       % Neumann portion for y-traction
 Boundaries.Dirichlet_m=1:16;                     % Dirichlet portion for magnetic field
 Boundaries.Natural_m=[];                         % Natural portion for magnetic field
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -113,7 +106,6 @@ Options.Test=...                                 % Test
    'abs(Results.ScaledMagneticCurlErrorL2-0.000000000000000e-00)<1e-12 && ',...
    'abs(Results.MagneticInductionErrorL2 -0.000000000000000e-00)<1e-12 && ',...
    'abs(Results.LagrangeMultiplierErrorL2-0.000000000000000e-00)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

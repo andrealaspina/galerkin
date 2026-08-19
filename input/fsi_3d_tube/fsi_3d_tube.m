@@ -2,12 +2,11 @@ close all; clear; clc;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='FluidStructureInteraction';  % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters(1).Formulation='WeaklyCompressibleFlowVP_HDG';% Formulation
 Parameters(1).Problem='Fluid';                   % Problem
 Parameters(1).PostProcessingHDG='no';            % Perform HDG postprocessing
@@ -65,33 +64,28 @@ Parameters(3).Displacement=...                   % Displacement
 Parameters(3).Traction=...                       % Traction
   @(x,y,z,t,b,nx,ny,nz) [0*x,0*x,0*x];
 Parameters(3).Force=@(x,y,z,t) [0*x,0*x,0*x];    % Force
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_fsi_3d_tube'};                  % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 Solver.Equilibrate='yes';                        % Equilibrate matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-3;                           % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='yes';                        % Time dependent problem
 Time.InitialTime=0;                              % Initial time
 Time.FinalTime=0.015;                            % Final time
 Time.TimeStepSize=0.015/40;                      % Time step size
 Time.BDFOrder=2;                                 % BDF order
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries(1).Dirichlet_v_x=3;                   % Dirichlet portion for x-velocity
 Boundaries(1).Dirichlet_v_y=3;                   % Dirichlet portion for y-velocity
 Boundaries(1).Dirichlet_v_z=3;                   % Dirichlet portion for z-velocity
@@ -107,9 +101,8 @@ Boundaries(3).Dirichlet=[];                      % Dirichlet portion
 Boundaries(3).Interface=[3,6,8,10];              % Interface portion
 Boundaries(3).Neumann=[1,5,7,9];                 % Neumann portion
 Boundaries(3).Fixed=[2,4];                       % Fixed portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='yes';                      % Plot geometry
 Options.PlotMesh='yes';                          % Plot mesh
 Options.PlotMeshDistortion='yes';                % Plot mesh distortion
@@ -121,7 +114,6 @@ Options.Export2ParaviewTimeSteps='Time.TimeStep';% Export to Paraview time steps
 Options.StoreTimeSteps='Time.TimeStep';          % Store time steps
 Options.SaveResults='yes';                       % Save results
 Options.SaveResultsFolder='fsi_3d_tube/';        % Save results folder
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

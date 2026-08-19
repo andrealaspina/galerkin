@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Thermal';                    % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Thermal_CG';             % Formulation
 Parameters.Problem='Thermal';                    % Problem
 Parameters.Degree=1;                             % Degree
@@ -20,9 +19,8 @@ Parameters.AmbientTemperature=@(x,y,z,b) 0;      % Ambient temperature
 Parameters.Temperature=@(x,y,z,t) x+y;           % Temperature
 Parameters.ThermalFlux=@(x,y,z,t) 0*x;           % Thermal flux
 Parameters.HeatSource=@(x,y,z,t) 0*x;            % Heat source
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Distmesh.DistanceFunction=...                    % Distance function
   @(X) -min(min(min(1+X(:,2), 1-X(:,2)),...
                     1+X(:,1)),1-X(:,1));
@@ -32,34 +30,28 @@ Distmesh.ElementSize=1;                          % Element size
 Distmesh.BoundingBox=[-1,-1;1,1];                % Bounding box
 Distmesh.FixedNodePositions=...                  % Fixed node positions
   [-1,-1;-1,+1;+1,-1;+1,+1];
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=[1,2,3,4];                  % Dirichlet portion
 Boundaries.Neumann=[];                           % Neumann portion
 Boundaries.Robin=[];                             % Robin portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError={'Temperature'};            % Compute error
 Options.Test=...                                 % Test
   'Results.TemperatureErrorL2<1e-12';
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

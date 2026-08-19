@@ -11,17 +11,14 @@
 #SBATCH --mail-type=ALL                          # Email type (ALL/BEGIN/END/FAIL/NONE)
 #SBATCH --mail-user=username@domain.com          # Email address
 
+# Root of the galerkin installation
+GALERKIN=/galerkin
+
 module load matlab
 
 matlab -nodisplay -nosplash -r                                                            \
-  "distcomp.feature('LocalUseMpiexec',false);                                             \
+  "cd('${GALERKIN}'); init;                                                               \
+   distcomp.feature('LocalUseMpiexec',false);                                             \
    delete(gcp);                                                                           \
    parpool(parcluster('local'),str2num(getenv('SLURM_CPUS_ON_NODE')),'IdleTimeout',6*60); \
-   addpath('/galerkin');                                                                  \
-   addpath('/galerkin/formulations');                                                     \
-   addpath('/galerkin/functions');                                                        \
-   addpath('/galerkin/geometry');                                                         \
-   addpath('/galerkin/input');                                                            \
-   addpath('/galerkin/output');                                                           \
-   addpath('/galerkin/tests');                                                            \
    run(sprintf('./%s.m',getenv('SLURM_JOB_NAME'))); quit"

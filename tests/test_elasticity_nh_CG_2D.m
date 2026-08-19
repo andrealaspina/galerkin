@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Structural';                 % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Elasticity_CG';          % Formulation
 Parameters.Problem='Structural';                 % Problem
 Parameters.Model='NeoHook';                      % Model
@@ -23,33 +22,27 @@ Parameters.Traction=...                          % Traction
   @(x,y,z,t,b,nx,ny,nz) [0*x,0*x];
 Parameters.Force=...                             % Force
   @(x,y,z,t) [0*x,-Parameters.Density*2*(x==x)];
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_turek_structure'};              % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-3;                           % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=2;                          % Dirichlet portion
 Boundaries.Neumann=[1,3,4];                      % Neumann portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeQuantity=...                      % Compute quantity of interest
@@ -58,7 +51,6 @@ Options.ComputeQuantity=...                      % Compute quantity of interest
    'Block.SolutionGlobal(Node,:);'];
 Options.Test=...                                 % Test
   'abs(Results.TipDisplacement(:,2)-(-6.560967263936134e-02))<1e-12';
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

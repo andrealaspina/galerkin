@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Fluid';                      % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='WeaklyCompressibleFlowVP_HDG';% Formulation
 Parameters.Problem='Fluid';                      % Problem
 Parameters.PostProcessingHDG='no';               % Perform HDG postprocessing
@@ -49,24 +48,20 @@ Parameters.Density=@(Pressure)...                % Equation of state
 Parameters.DDensityDPressure=@(Pressure)...      % dDensity/dPressure
   Parameters.CompressibilityCoeff;
 clear r0 p0 eps mu L R U vx vy p
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_poiseuille_1'};                   % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-10;                          % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='gmres';                             % Type
 Solver.Preconditioner='ilu';                     % Preconditioner
 Solver.PreconditionerAllTimeSteps='no';          % Compute preconditioner at all time steps
@@ -75,17 +70,15 @@ Solver.Restart=[];                               % Restart
 Solver.Tolerance=1e-3;                           % Tolerance
 Solver.MaxIterations=100;                        % Maximum number of iterations
 Solver.Equilibrate='no';                         % Equilibrate matrix
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_v_x=[1,3,4,4];              % Dirichlet portion for x-velocity
 Boundaries.Dirichlet_v_y=[1,2,3,4];              % Dirichlet portion for y-velocity
 Boundaries.Dirichlet_p=[1,2,3,4];                % Dirichlet portion for pressure
 Boundaries.Neumann_t_x=[];                       % Neumann portion for x-traction
 Boundaries.Neumann_t_y=[];                       % Neumann portion for y-traction
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -96,7 +89,6 @@ Options.Test=...                                 % Test
   ['Results.ScaledStrainRateErrorL2<1e-12 && ',...
    'Results.VelocityErrorL2        <1e-12 && ',...
    'Results.PressureErrorL2        <1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

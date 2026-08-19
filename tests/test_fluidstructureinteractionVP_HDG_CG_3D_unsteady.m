@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='FluidStructureInteraction';  % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters(1).Formulation='WeaklyCompressibleFlowVP_HDG';% Formulation
 Parameters(1).Problem='Fluid';                   % Problem
 Parameters(1).PostProcessingHDG='no';            % Perform HDG postprocessing
@@ -63,32 +62,27 @@ Parameters(3).Displacement=...                   % Displacement
 Parameters(3).Traction=...                       % Traction
   @(x,y,z,t,b,nx,ny,nz) [0*x,0*x,0*x];
 Parameters(3).Force=@(x,y,z,t) [0*x,0*x,0*x];    % Force
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_fsi_3d_channel'};               % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-6;                           % Tolerance
 System.MaxIterations=20;                         % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='yes';                        % Time dependent problem
 Time.InitialTime=0;                              % Initial time
 Time.FinalTime=0.3;                              % Final time
 Time.TimeStepSize=0.1;                           % Time step size
 Time.BDFOrder=2;                                 % BDF order
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries(1).Dirichlet_v_x=[2,3,4,5,7];         % Dirichlet portion for x-velocity
 Boundaries(1).Dirichlet_v_y=[2,3,4,5,7];         % Dirichlet portion for y-velocity
 Boundaries(1).Dirichlet_v_z=[2,3,4,5,7];         % Dirichlet portion for z-velocity
@@ -104,9 +98,8 @@ Boundaries(3).Dirichlet=[];                      % Dirichlet portion
 Boundaries(3).Interface=[1,2,3,4,6];             % Interface portion
 Boundaries(3).Neumann=[];                        % Neumann portion
 Boundaries(3).Fixed=5;                           % Fixed portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -121,7 +114,6 @@ Options.Test=...                                 % Test
    'abs(Results(1).DisplacementErrorL2    -8.908720254695782e-06)<1e-12 && ',...
    'abs(Results(2).DisplacementErrorL2    -8.908720254695782e-06)<1e-12 && ',...
    'abs(Results(3).DisplacementErrorL2    -2.434608304510903e-06)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

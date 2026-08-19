@@ -1,15 +1,17 @@
-function [N,Nx,Ny,Nz,w,Ng,pinvN]=mapShapeFunctions(...
-         Where,RefElementGeometry,RefElementApproxim,X,nsd)
-         % Map shape functions
+function [N,Nx,Ny,Nz,w,Ng,pinvN]=mapShapeFunctions(Where,RefElementGeom,RefElementApprox,X,nsd)
+% Map the reference shape functions onto an element (Where=1) or onto a face (Where=0)
+%
+% N, Nx, Ny, Nz are the approximation shape functions and their derivatives at the Gauss points
+% (the outward normal components on a face), w are the Gauss weights scaled by the Jacobian, Ng
+% are the geometry shape functions and pinvN is the pseudoinverse of N.
 
-% Inizialize
 N=[]; Nx=[]; Ny=[]; Nz=[]; w=[]; Ng=[]; pinvN=[];
 
 if Where==1
-  
-  % Element calculations
-  Ng=RefElementGeometry.ShapeFunctionsElem;
-  N=RefElementApproxim.ShapeFunctionsElem;
+
+  % Shape functions of the geometry, of the approximation and their derivatives
+  Ng=RefElementGeom.ShapeFunctionsElem;
+  N=RefElementApprox.ShapeFunctionsElem;
   if size(X,1)==nsd+1
     if nsd==2
       Ngxi= [-1,1,0];
@@ -20,19 +22,21 @@ if Where==1
       Ngzeta=[0,1,-1,0];
     end
   else
-    Ngxi=RefElementGeometry.ShapeFunctionDerivativesElemXi;
-    Ngeta=RefElementGeometry.ShapeFunctionDerivativesElemEta;
+    Ngxi=RefElementGeom.ShapeFunctionDerivativesElemXi;
+    Ngeta=RefElementGeom.ShapeFunctionDerivativesElemEta;
     if nsd==3
-      Ngzeta=RefElementGeometry.ShapeFunctionDerivativesElemZeta;
+      Ngzeta=RefElementGeom.ShapeFunctionDerivativesElemZeta;
     end
   end
-  Naxi=RefElementApproxim.ShapeFunctionDerivativesElemXi;
-  Naeta=RefElementApproxim.ShapeFunctionDerivativesElemEta;
+  Naxi=RefElementApprox.ShapeFunctionDerivativesElemXi;
+  Naeta=RefElementApprox.ShapeFunctionDerivativesElemEta;
   if nsd==3
-    Nazeta=RefElementApproxim.ShapeFunctionDerivativesElemZeta;
+    Nazeta=RefElementApprox.ShapeFunctionDerivativesElemZeta;
   end
-  g=RefElementApproxim.GaussWeigthsElem;
-  pinvN=RefElementApproxim.PseudoinverseShapeFunctionsElem;
+  g=RefElementApprox.GaussWeigthsElem;
+  pinvN=RefElementApprox.PseudoinverseShapeFunctionsElem;
+
+  % Derivatives in the physical space through the inverse of the Jacobian
   if nsd==2
     J11=Ngxi *X(:,1); J12=Ngxi *X(:,2);
     J21=Ngeta*X(:,1); J22=Ngeta*X(:,2);
@@ -63,12 +67,12 @@ if Where==1
     Nz=invJ31.*Naxi+invJ32.*Naeta+invJ33.*Nazeta;
   end
   w=g.*detJ;
-  
+
 elseif Where==0
-  
-  % Face calculations
-  Ng=RefElementGeometry.ShapeFunctionsFace;
-  N=RefElementApproxim.ShapeFunctionsFace;
+
+  % Shape functions of the geometry, of the approximation and their derivatives
+  Ng=RefElementGeom.ShapeFunctionsFace;
+  N=RefElementApprox.ShapeFunctionsFace;
   if size(X,1)==nsd
     if nsd==2
       Ngxi= [-1,1];
@@ -77,13 +81,15 @@ elseif Where==0
       Ngeta=[-1,0,1];
     end
   else
-    Ngxi=RefElementGeometry.ShapeFunctionDerivativesFaceXi;
+    Ngxi=RefElementGeom.ShapeFunctionDerivativesFaceXi;
     if nsd==3
-      Ngeta=RefElementGeometry.ShapeFunctionDerivativesFaceEta;
+      Ngeta=RefElementGeom.ShapeFunctionDerivativesFaceEta;
     end
   end
-  g=RefElementApproxim.GaussWeigthsFace;
-  pinvN=RefElementApproxim.PseudoinverseShapeFunctionsFace;
+  g=RefElementApprox.GaussWeigthsFace;
+  pinvN=RefElementApprox.PseudoinverseShapeFunctionsFace;
+
+  % Outward unit normal from the tangent vectors
   if nsd==2
     tx=Ngxi*X(:,1); ty=Ngxi*X(:,2);
     detJ=sqrt(tx.^2+ty.^2);
@@ -101,7 +107,7 @@ elseif Where==0
     Nz=tz./detJ;
   end
   w=g.*detJ;
-  
+
 end
 
 end

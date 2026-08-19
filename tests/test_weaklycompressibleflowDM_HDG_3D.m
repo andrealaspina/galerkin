@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Fluid';                      % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='WeaklyCompressibleFlowDM_HDG';% Formulation
 Parameters.Problem='Fluid';                      % Problem
 Parameters.PostProcessingHDG='no';               % Perform HDG postprocessing
@@ -61,28 +60,23 @@ Parameters.Pressure=@(Density)...                % Equation of state
 Parameters.DPressureDDensity=@(Density)...       % dPressure/dDensity
   1/Parameters.CompressibilityCoeff;
 clear r0 p0 eps mu H r1 r2 w1 w2 vx vy vz p
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_taylorcouette3d_test'};         % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-3;                           % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_r=1:18;                     % Dirichlet portion for density
 Boundaries.Dirichlet_w_x=1:18;                   % Dirichlet portion for x-momentum
 Boundaries.Dirichlet_w_y=1:18;                   % Dirichlet portion for y-momentum
@@ -90,9 +84,8 @@ Boundaries.Dirichlet_w_z=1:18;                   % Dirichlet portion for z-momen
 Boundaries.Neumann_t_x=[];                       % Neumann portion for x-traction
 Boundaries.Neumann_t_y=[];                       % Neumann portion for y-traction
 Boundaries.Neumann_t_z=[];                       % Neumann portion for z-traction
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -103,7 +96,6 @@ Options.Test=...                                 % Test
   ['abs(Results.ScaledStrainRateErrorL2-7.711068927404321e-01)<1e-12 && ',...
    'abs(Results.DensityErrorL2         -1.590378056745913e-02)<1e-12 && ',...
    'abs(Results.MomentumErrorL2        -1.279396228741930e-01)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

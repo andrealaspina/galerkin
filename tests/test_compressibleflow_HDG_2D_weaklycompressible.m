@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Fluid';                      % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='CompressibleFlow_HDG';   % Formulation
 Parameters.Problem='Fluid';                      % Problem
 Parameters.PostProcessingHDG='yes';              % Perform HDG postprocessing
@@ -66,36 +65,30 @@ Parameters.ComputeTemperatureLinearization=...   % Compute temperature lineariza
     zeros(size(Momentum)),...
     zeros(size(Energy))];
 clear r0 p0 eps mu vx vy p
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_square01_1'};                   % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-3;                           % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='yes';                        % Time dependent problem
 Time.InitialTime=0;                              % Initial time
 Time.FinalTime=0.5;                              % Final time
 Time.TimeStepSize=2^(-3);                        % Time step size
 Time.BDFOrder=4;                                 % BDF order
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=[1,2,3,4];                  % Dirichlet portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -114,7 +107,6 @@ Options.Test=...                                 % Test
    'abs(Results.EnergyErrorL2                   -0.000000000000000e-00)<1e-10 && ',...
    'abs(Results.VelocityPostErrorL2             -4.140188763306042e-01)<1e-10 && ',...
    'abs(Results.TemperaturePostErrorL2          -0.000000000000000e-00)<1e-10'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

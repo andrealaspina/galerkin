@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Magnetic';                   % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='MagneticCURLCURL_HDG';   % Formulation
 Parameters.Problem='Magnetic';                   % Problem
 Parameters.PostProcessingHDG='yes';              % Perform HDG postprocessing
@@ -42,31 +41,25 @@ Parameters.Velocity=...                          % Velocity
   @(x,y,z,t) [3/2*U*2*(1-cosh(y/R*Ha)/cosh(Ha))*(Ha*tanh(Ha))^(-1),...
               0*x];
 clear eta mu_m Ha mu L R U
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_hartmann_3'};                   % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=[1,2,3,4];                  % Dirichlet portion
 Boundaries.Natural=[];                           % Natural portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -81,7 +74,6 @@ Options.Test=...                                 % Test
    'abs(Results.LagrangeMultiplierErrorL2      -6.678000216524408e-03)<1e-12 && ',...
    'abs(Results.MagneticInductionErrorHcurl    -5.205065529430997e-01)<1e-12 && ',...
    'abs(Results.MagneticInductionPostErrorHcurl-3.784669013863075e-02)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

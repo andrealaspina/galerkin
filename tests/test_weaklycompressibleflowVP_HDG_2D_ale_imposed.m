@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Fluid';                      % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='WeaklyCompressibleFlowVP_HDG';% Formulation
 Parameters.Problem='Fluid';                      % Problem
 Parameters.PostProcessingHDG='no';               % Perform HDG postprocessing
@@ -54,40 +53,34 @@ Parameters.VelocityCenter=...                    % Velocity at the center
 Parameters.PressureCenter=...                    % Pressure at the center
   @(t) Parameters.Pressure(0.5,0.5,0,t);
 clear r0 p0 eps mu vx vy p
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_square01_2'};                   % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-3;                           % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='yes';                        % Time dependent problem
 Time.InitialTime=0;                              % Initial time
 Time.FinalTime=0.5;                              % Final time
 Time.TimeStepSize=2^(-3);                        % Time step size
 Time.BDFOrder=4;                                 % BDF order
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_v_x=[1,2,3,4];              % Dirichlet portion for x-velocity
 Boundaries.Dirichlet_v_y=[1,2,3,4];              % Dirichlet portion for y-velocity
 Boundaries.Dirichlet_p=[1,2,3,4];                % Dirichlet portion for pressure
 Boundaries.Neumann_t_x=[];                       % Neumann portion for x-traction
 Boundaries.Neumann_t_y=[];                       % Neumann portion for y-traction
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -103,7 +96,6 @@ Options.Test=...                                 % Test
   ['abs(Results.ScaledStrainRateCenterErrorNumber-9.480073946500687e-01)<1e-12 && ',...
    'abs(Results.VelocityCenterErrorNumber        -3.812910912112043e-02)<1e-12 && ',...
    'abs(Results.PressureCenterErrorNumber        -6.701061394925092e-02)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Fluid';                      % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='WeaklyCompressibleFlowVP_HDG';% Formulation
 Parameters.Problem='Fluid';                      % Problem
 Parameters.PostProcessingHDG='no';               % Perform HDG postprocessing
@@ -58,28 +57,23 @@ Parameters.Density=@(Pressure)...                % Equation of state
 Parameters.DDensityDPressure=@(Pressure)...      % dDensity/dPressure
   Parameters.CompressibilityCoeff;
 clear r0 p0 eps mu H r1 r2 w1 w2 vx vy vz p
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_taylorcouette3d_test'};         % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-3;                           % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_v_x=1:18;                   % Dirichlet portion for x-velocity
 Boundaries.Dirichlet_v_y=1:18;                   % Dirichlet portion for y-velocity
 Boundaries.Dirichlet_v_z=1:18;                   % Dirichlet portion for z-velocity
@@ -87,9 +81,8 @@ Boundaries.Dirichlet_p=1:18;                     % Dirichlet portion for pressur
 Boundaries.Neumann_t_x=[];                       % Neumann portion for x-traction
 Boundaries.Neumann_t_y=[];                       % Neumann portion for y-traction
 Boundaries.Neumann_t_z=[];                       % Neumann portion for z-traction
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -100,7 +93,6 @@ Options.Test=...                                 % Test
   ['abs(Results.ScaledStrainRateErrorL2-7.692528563901633e-01)<1e-12 && ',...
    'abs(Results.VelocityErrorL2        -1.300270970173296e-01)<1e-12 && ',...
    'abs(Results.PressureErrorL2        -1.590272246357040e-01)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

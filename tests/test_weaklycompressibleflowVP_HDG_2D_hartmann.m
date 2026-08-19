@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Fluid';                      % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='WeaklyCompressibleFlowVP_HDG';% Formulation
 Parameters.Problem='Fluid';                      % Problem
 Parameters.PostProcessingHDG='yes';              % Perform HDG postprocessing
@@ -50,34 +49,28 @@ Parameters.Density=@(Pressure)...                % Equation of state
 Parameters.DDensityDPressure=@(Pressure)...      % dDensity/dPressure
   Parameters.CompressibilityCoeff;
 clear r0 p0 eps mu L R U vx vy p
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_hartmann_3'};                   % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_v_x=[1,2,3,4];              % Dirichlet portion for x-velocity
 Boundaries.Dirichlet_v_y=[1,2,3,4];              % Dirichlet portion for y-velocity
 Boundaries.Dirichlet_p=[1,2,3,4];                % Dirichlet portion for pressure
 Boundaries.Neumann_t_x=[];                       % Neumann portion for x-traction
 Boundaries.Neumann_t_y=[];                       % Neumann portion for y-traction
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -90,7 +83,6 @@ Options.Test=...                                 % Test
    'abs(Results.VelocityErrorL2        -1.996947872130190e-02)<1e-12 && ',...
    'abs(Results.PressureErrorL2        -2.630098602304956e-02)<1e-12 && ',...
    'abs(Results.VelocityPostErrorL2    -3.111002104775944e-02)<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Magnetic';                   % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='MagneticCURLCURL_HDG';   % Formulation
 Parameters.Problem='Magnetic';                   % Problem
 Parameters.PostProcessingHDG='no';               % Perform HDG postprocessing
@@ -36,34 +35,28 @@ Parameters.TangentialElectricField=...           % Tangential electric field
 Parameters.NormalMagneticInduction=...           % Normal magnetic induction
   @(x,y,z,t) 0*x;
 clear eta
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Geometry=multicuboid(1,1,1);                     % Geometry definition
 Mesh.MinElementSize=1/1;                         % Minimum element size
 Mesh.MaxElementSize=1/1;                         % Maximum element size
 Mesh.MeshGradation=1.5;                          % Element size growth rate
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet=[1,2,3,4,5,6];              % Dirichlet portion
 Boundaries.Natural=[];                           % Natural portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -74,7 +67,6 @@ Options.Test=...                                 % Test
   ['Results.ScaledMagneticCurlErrorL2<1e-12 && ',...
    'Results.MagneticInductionErrorL2 <1e-12 && ',...
    'Results.LagrangeMultiplierErrorL2<1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

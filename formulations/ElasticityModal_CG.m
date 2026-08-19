@@ -1,7 +1,7 @@
-classdef ElasticityModal_CG < Formulation  
-  
+classdef ElasticityModal_CG < Formulation
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) NumSpaceDim;
 
@@ -10,14 +10,14 @@ classdef ElasticityModal_CG < Formulation
 
     % Time derivative order
     TimeDerOrder=NaN;
-    
+
     % Domain
     Domain='Mode';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,~,~,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes,Sizes(iD).NumGlobalComp,1);
@@ -31,7 +31,7 @@ classdef ElasticityModal_CG < Formulation
         Mesh(iD).Nodes(2,Block(iD,iD).DOFsFixed(1:end/Sizes(iD).NumGlobalComp))',...
         Mesh(iD).Nodes(3,Block(iD,iD).DOFsFixed(1:end/Sizes(iD).NumGlobalComp))',min(Time.Mode));
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD,Block,Elements,~,Parameters,~,~,~,RefElement,Sizes)
       NodesElem=Elements(iD).Nodes;
@@ -49,15 +49,15 @@ classdef ElasticityModal_CG < Formulation
       Block(iD,iD).RhsGlobal=sparse(Block(iD,iD).LhsRowIndices,...
                                     Block(iD,iD).LhsColIndices,RhsCoef(:));
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,~,Results,Block,~,~,~,Time,~,~)
       Results(iD).Mode=Time.Mode;
       Results(iD).Displacement=Block(iD,iD).SolutionGlobal;
     end
-    
+
   end
-  
+
 end
 
 %% Build block element

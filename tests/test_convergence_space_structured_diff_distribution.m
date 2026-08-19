@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='ConvergenceSpace';              % Simulation type
 Simulation.Problem='Thermal';                    % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters(1).Formulation='Thermal_HDG';         % Formulation
 Parameters(1).Problem='Thermal';                 % Problem
 Parameters(1).NodesDistribution='Uniform';       % Nodes distribution
@@ -39,28 +38,23 @@ Parameters(2).AmbientTemperature=@(x,y,z,b) 0;   % Ambient temperature
 Parameters(2).Temperature=@(x,y,z,t) x.^2+y.^2;  % Temperature
 Parameters(2).ThermalFlux=@(x,y,z,t) +2*x;       % Thermal flux
 Parameters(2).HeatSource=@(x,y,z,t) -4*(x==x);   % Heat source
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_square_coupled_2parts_1',...   % Mesh file
            'Mesh_square_coupled_2parts_2',...
            'Mesh_square_coupled_2parts_3'};
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries(1).Dirichlet=[4;4;4];                 % Dirichlet portion
 Boundaries(1).Interface=[1;2;2];                 % Interface portion
 Boundaries(1).Neumann=  [3;3;3];                 % Neumann portion
@@ -69,9 +63,8 @@ Boundaries(2).Dirichlet=[1;4;1];                 % Dirichlet portion
 Boundaries(2).Interface=[3;1;3];                 % Interface portion
 Boundaries(2).Neumann=  [2;3;2];                 % Neumann portion
 Boundaries(2).Robin=    [4;2;4];                 % Robin portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.PlotConvergence='no';                    % Plot convergence
@@ -85,7 +78,6 @@ Options.Test=...                                 % Test
    'max(Results(1).TemperatureErrorL2              )<1e-11 && ',...
    'max(Results(1).TemperaturePostErrorL2          )<1e-11 && ',...
    'max(Results(2).TemperatureErrorL2              )<1e-11'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

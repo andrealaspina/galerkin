@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Magnetic';                   % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='Magnetic_HDG';           % Formulation
 Parameters.Problem='Magnetic';                   % Problem
 Parameters.PostProcessingHDG='no';               % Perform HDG postprocessing
@@ -37,29 +36,24 @@ Parameters.Source=...                            % Source
               +eta/2-2*z.*x-2*z.*y-1*z.*z];
 Parameters.Velocity=@(x,y,z,t) [x,y,z];          % Velocity
 clear eta
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Geometry=multicuboid(1,1,1);                     % Geometry definition
 Mesh.MinElementSize=1/1;                         % Minimum element size
 Mesh.MaxElementSize=1/1;                         % Maximum element size
 Mesh.MeshGradation=1.5;                          % Element size growth rate
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_b_x=[1,2,4,6];              % Dirichlet portion for x-magnetic induction
 Boundaries.Dirichlet_b_y=[1,2,3,5];              % Dirichlet portion for y-magnetic induction
 Boundaries.Dirichlet_b_z=[3,4,5,6];              % Dirichlet portion for z-magnetic induction
@@ -67,9 +61,8 @@ Boundaries.Dirichlet_q=[1,2,3,4,5,6];            % Dirichlet portion for lagrang
 Boundaries.Neumann_s_x=[];                       % Neumann portion for x-pseudo-traction
 Boundaries.Neumann_s_y=[];                       % Neumann portion for y-pseudo-traction
 Boundaries.Neumann_s_z=[];                       % Neumann portion for z-pseudo-traction
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -80,7 +73,6 @@ Options.Test=...                                 % Test
   ['Results.ScaledMagneticGradientErrorL2<1e-12 && ',...
    'Results.MagneticInductionErrorL2     <1e-12 && ',...
    'Results.LagrangeMultiplierErrorL2    <1e-12'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Fluid';                      % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters.Formulation='WeaklyCompressibleFlowDM_HDG';% Formulation
 Parameters.Problem='Fluid';                      % Problem
 Parameters.PostProcessingHDG='yes';              % Perform HDG postprocessing
@@ -62,36 +61,30 @@ Parameters.Pressure=@(Density)...                % Equation of state
 Parameters.DPressureDDensity=@(Density)...       % dPressure/dDensity
   1/Parameters.CompressibilityCoeff;
 clear r0 p0 eps mu L R U vx vy p
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_poiseuille_1'};                 % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-10;                          % Tolerance
 System.MaxIterations=100;                        % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries.Dirichlet_r=[];                       % Dirichlet portion for density
 Boundaries.Dirichlet_w_x=[1,3,4];                % Dirichlet portion for x-momentum
 Boundaries.Dirichlet_w_y=[1,2,3,4];              % Dirichlet portion for y-momentum
 Boundaries.Neumann_t_x=2;                        % Neumann portion for x-traction
 Boundaries.Neumann_t_y=[];                       % Neumann portion for y-traction
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -104,7 +97,6 @@ Options.Test=...                                 % Test
    'Results.DensityErrorL2         <1e-12 && ',...
    'Results.MomentumErrorL2        <1e-10 && ',...
    'Results.VelocityPostErrorL2    <1e-10'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

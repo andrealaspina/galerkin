@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='Thermal';                    % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters(1).Formulation='Thermal_HDG';         % Formulation
 Parameters(1).Problem='Thermal';                 % Problem
 Parameters(1).PostProcessingHDG='yes';           % Perform HDG postprocessing
@@ -35,26 +34,21 @@ Parameters(2).AmbientTemperature=@(x,y,z,b) 0;   % Ambient temperature
 Parameters(2).Temperature=@(x,y,z,t) x.^2+y.^2;  % Temperature
 Parameters(2).ThermalFlux=@(x,y,z,t) +2*x;       % Thermal flux
 Parameters(2).HeatSource=@(x,y,z,t) -4*(x==x);   % Heat source
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_square_coupled_2parts_2'};      % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='yes';                   % Symmetrize matrix
 System.Nonlinear='no';                           % Nonlinear
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries(1).Dirichlet=[1,4];                   % Dirichlet portion
 Boundaries(1).Interface=2;                       % Interface portion
 Boundaries(1).Neumann=3;                         % Neumann portion
@@ -63,18 +57,16 @@ Boundaries(2).Dirichlet=[2,4];                   % Dirichlet portion
 Boundaries(2).Interface=1;                       % Interface portion
 Boundaries(2).Neumann=3;                         % Neumann portion
 Boundaries(2).Robin=[];                          % Robin portion
-% --------------------------------------------------------------------------------------------------
 
-% Regions of interest ------------------------------------------------------------------------------
+% Regions of interest
 Regions(1).Middle.Definition=...                 % Middle region (definition)
   @(x,y,z) (x>=-1/2).*(x<=+1/2).*(y==0);
 Regions(1).Middle.Condition=@(x,y,z) y<0;        % Middle region (condition)
 Regions(2).Middle.Definition=...                 % Middle region (definition)
   @(x,y,z) (x>=-1/2).*(x<=+1/2).*(y==0);
 Regions(2).Middle.Condition=@(x,y,z) y<0;        % Middle region (condition)
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -84,7 +76,6 @@ Options.ComputeError=...                         % Compute error
 Options.Test=...                                 % Test
   ['min(min(Faces(1,1).Middle==[8,3])) && ',...
    'min(min(Faces(2,2).Middle==[4,2]))'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 

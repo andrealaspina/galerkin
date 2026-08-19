@@ -1,12 +1,11 @@
-%% galerkin test
+% Run the whole test suite and report the outcome of each test
 
-% Setup
+% Reset the environment and hide the figures while the tests run
 init;
 set(0,'DefaultFigureVisible','off');
 
-% Run tests
-TestName=dbstack().name;
-Files={dir(sprintf('tests/%s*.m',TestName)).name}';
+% Run every test whose name starts with the name of this script
+Files={dir(sprintf('tests/%s*.m',dbstack().name)).name}';
 Passed=zeros(size(Files));
 CPUTime=zeros(size(Files));
 for Test=1:length(Files)
@@ -16,26 +15,25 @@ for Test=1:length(Files)
   CPUTime(Test)=cputime-CPUTime(Test);
 end
 
-% Print results
+% Print the results
 clc;
-Exitus='passed';
 for Test=1:length(Files)
   fprintf('\n%s%s',Files{Test},repmat('.',1,66-length(Files{Test})));
   if Passed(Test)
     fprintf('PASSED in %.1f sec',CPUTime(Test));
   else
     fprintf('FAILED!!!');
-    Exitus='failed';
   end
 end
-fprintf('\n\nTest completed (%s) in %.0f sec (CPU time)\n',Exitus,sum(CPUTime));
+Outcome={'failed','passed'};
+fprintf('\n\nTest completed (%s) in %.0f sec (CPU time)\n',Outcome{all(Passed)+1},sum(CPUTime));
 
-% Show and then close figures
+% Show and then close the figures
 set(0,'DefaultFigureVisible','on');
-set(findobj('type','figure'),'Visible','on');
-for iFig=1:length(findobj('type','figure'))
+Figures=findobj('type','figure');
+set(Figures,'Visible','on');
+for iFig=1:length(Figures)
   pause(0.2); close;
 end
 
-% Delete useless variables
 clearvars -except Files Passed CPUTime;

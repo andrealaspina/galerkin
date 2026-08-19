@@ -2,12 +2,11 @@ clearvars -except Files Passed CPUTime Test;
 
 %% Input
 
-% Simulation ---------------------------------------------------------------------------------------
+% Simulation
 Simulation.Type='SingleSimulation';              % Simulation type
 Simulation.Problem='FluidStructureInteraction';  % Problem
-% --------------------------------------------------------------------------------------------------
 
-% Parameters ---------------------------------------------------------------------------------------
+% Parameters
 Parameters(1).Formulation='WeaklyCompressibleFlowDM_HDG';% Formulation
 Parameters(1).Problem='Fluid';                   % Problem
 Parameters(1).PostProcessingHDG='no';            % Perform HDG postprocessing
@@ -63,28 +62,23 @@ Parameters(3).Displacement=@(x,y,z,t) [0*x,0*x]; % Displacement
 Parameters(3).Traction=...                       % Traction
   @(x,y,z,t,b,nx,ny,nz) [0*x,0*x];
 Parameters(3).Force=@(x,y,z,t) [0*x,0*x];        % Force
-% --------------------------------------------------------------------------------------------------
 
-% Geometry and mesh --------------------------------------------------------------------------------
+% Geometry and mesh
 Mesh.File={'Mesh_turek_fsi_test'};               % Mesh file
-% --------------------------------------------------------------------------------------------------
 
-% System -------------------------------------------------------------------------------------------
+% System
 System.SymmetrizeMatrix='no';                    % Symmetrize matrix
 System.Nonlinear='yes';                          % Nonlinear
 System.Tolerance=1e-4;                           % Tolerance
 System.MaxIterations=4;                          % Maximum number of iterations
-% --------------------------------------------------------------------------------------------------
 
-% Time parameters ----------------------------------------------------------------------------------
+% Time parameters
 Time.TimeDependent='no';                         % Time dependent problem
-% --------------------------------------------------------------------------------------------------
 
-% Solver -------------------------------------------------------------------------------------------
+% Solver
 Solver.Type='backslash';                         % Type
-% --------------------------------------------------------------------------------------------------
 
-% Boundary splitting -------------------------------------------------------------------------------
+% Boundary splitting
 Boundaries(1).Dirichlet_r=15;                    % Dirichlet portion for density
 Boundaries(1).Dirichlet_w_x=[1:9,11,14];         % Dirichlet portion for x-momentum
 Boundaries(1).Dirichlet_w_y=[1:9,11,14];         % Dirichlet portion for y-momentum
@@ -98,9 +92,8 @@ Boundaries(3).Dirichlet=[];                      % Dirichlet portion
 Boundaries(3).Interface=[2,3,4];                 % Interface portion
 Boundaries(3).Neumann=[];                        % Neumann portion
 Boundaries(3).Fixed=1;                           % Fixed portion
-% --------------------------------------------------------------------------------------------------
 
-% Output options -----------------------------------------------------------------------------------
+% Output options
 Options.PlotGeometry='no';                       % Plot geometry
 Options.PlotMesh='no';                           % Plot mesh
 Options.ComputeError=...                         % Compute error
@@ -119,7 +112,6 @@ Options.Test=...                                 % Test
    'abs(Results(2).DisplacementErrorL2    -1.082397013381004e-04)<1e-09 && ',...
    'abs(Results(3).DisplacementErrorL2    -2.924802482496271e-05)<1e-09 && ',...
    'abs(Results(3).DisplacementTip        -6.710736922334208e-04)<1e-08'];
-% --------------------------------------------------------------------------------------------------
 
 %% Main
 
