@@ -1,7 +1,7 @@
 function [ONE]=MP()
-         % Return double(1) or mp(1)
+% Return the scalar one in the active precision (double, or mp when Advanpix is in use)
 
-try mp;
+try
   if mp.Digits~=16
     ONE=mp(1);
   else
@@ -9,4 +9,6 @@ try mp;
   end
 catch
   ONE=1;
+end
+
 end

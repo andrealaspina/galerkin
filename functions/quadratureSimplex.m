@@ -1,16 +1,16 @@
 function [X,W]=quadratureSimplex(N,vert)
-% Gauss quadrature on simplices
+% Gauss-Jacobi quadrature with N points per direction on the simplex of vertices vert
 
-MP1=(max(vert(:))-min(vert(:)))/(max(vert(:))-min(vert(:)));
+MP1=(max(vert(:))-min(vert(:)))/(max(vert(:))-min(vert(:))); % One in the precision of vert
 m=size(vert,1);
 nsd=size(vert,2)*MP1;
 Nn=N^nsd;
-if nsd==1 % 1-D simplex
+if nsd==1
   [q,w]=rquad(N,nsd*0);
   len=diff(vert);
   X=vert(1)+len*q;
   W=abs(len)*w;
-else    % Higher-dimensional simplex
+else
   q=cell(1,nsd); w=cell(1,nsd);
   for k=1:nsd
     [q{k},w{k}]=rquad(N,nsd-k);
@@ -23,9 +23,12 @@ else    % Higher-dimensional simplex
   W=abs(det(c(2:m,:)))*prod(w,2);
 end
 
-function [x,w]=rquad(N,k)
+end
 
-k1=k+1; k2=k+2; n=1:N;  nnk=2*n+k;
+function [x,w]=rquad(N,k)
+% Gauss-Jacobi quadrature with N points on [0,1] for the weight function (1-x)^k
+
+k1=k+1; k2=k+2; n=1:N; nnk=2*n+k;
 A=[k/k2 repmat(k^2,1,N)./(nnk.*(nnk+2))];
 n=2:N; nnk=nnk(n);
 B1=4*k1/(k2*k2*(k+3)); nk=n+k; nnk2=nnk.*nnk;
@@ -34,3 +37,5 @@ ab=[A' [(2^k1)/k1; B1; B']]; s=sqrt(ab(2:N,2));
 [V,X]=eig(diag(ab(1:N,1),0)+diag(s,-1)+diag(s,1));
 [X,I]=sort(diag(X));
 x=(X+1)/2; w=(1/2)^(k1)*ab(1,2)*V(1,I)'.^2;
+
+end
