@@ -1,4 +1,5 @@
 classdef Plasma1FluidElectromagnetic_HDG < Formulation
+% Solves the Euler-Maxwell plasma equations with the HDG method
 
   properties
 

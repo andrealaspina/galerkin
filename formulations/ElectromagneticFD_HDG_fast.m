@@ -1,4 +1,5 @@
 classdef ElectromagneticFD_HDG_fast < Formulation
+% Solves the Maxwell equations in the frequency domain with the HDG method
 
   properties
 

@@ -1,4 +1,6 @@
 classdef WeaklyCompressibleFlowDM_HDG < Formulation
+% Solves the Navier-Stokes equations for weakly compressible flows with the HDG method using a
+% density-momentum formulation
 
   properties
 

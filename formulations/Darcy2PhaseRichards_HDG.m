@@ -1,4 +1,7 @@
 classdef Darcy2PhaseRichards_HDG < Formulation
+% Solves the Richards' equation with the HDG method for the macroscopic problem, informed by
+% effective properties from a unit cell problem solving the Cahn-Hilliard-Navier-Stokes equations
+% with Comsol's LiveLink
 
   properties
 

@@ -1,4 +1,6 @@
 classdef PlasmaTransportElectromagnetic_HDG < Formulation
+% Solves the Maxwell equations coupled with a transport equation for the plasma density with the
+% HDG method
 
   properties
 

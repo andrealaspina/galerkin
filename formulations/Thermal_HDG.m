@@ -1,4 +1,5 @@
 classdef Thermal_HDG < Formulation
+% Solves the heat equation with the HDG method
 
   properties
 

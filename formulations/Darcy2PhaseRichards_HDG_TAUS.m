@@ -1,4 +1,6 @@
 classdef Darcy2PhaseRichards_HDG_TAUS < Formulation
+% Same as Darcy2PhaseRichards_HDG, with a stabilization parameter for the saturation that depends on
+% the derivative of the capillary pressure
 
   properties
 

@@ -1,4 +1,5 @@
 classdef MagnetohydrodynamicsCURLCURL_HDG < Formulation
+% Solves the equations of magnetohydrodynamics with the HDG method using a curl-curl formulation
 
   properties
 

@@ -1,4 +1,5 @@
 classdef CompressibleFlow_HDG_IBP < Formulation
+% Solves the compressible Euler equations with the HDG method, integrating the fluxes by parts
 
   properties
 

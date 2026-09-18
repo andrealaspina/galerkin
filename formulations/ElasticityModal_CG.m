@@ -1,4 +1,5 @@
 classdef ElasticityModal_CG < Formulation
+% Solves the eigenvalue problem of linear elasticity for modal analysis with the CG method
 
   properties
 

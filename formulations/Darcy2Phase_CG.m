@@ -1,4 +1,7 @@
 classdef Darcy2Phase_CG < Formulation
+% Solves the two-phase Darcy law with the CG method for the macroscopic problem, informed by
+% effective properties from a unit cell problem solving the Cahn-Hilliard-Navier-Stokes equations
+% with Comsol's LiveLink
 
   properties
 
@@ -41,7 +44,7 @@ classdef Darcy2Phase_CG < Formulation
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder-1
             Time.TimeOld=Time.Time-iBDF*Time.TimeStepSize;
-              Block(iD,iD).SolutionOld(:,:,1+iBDF)=[...
+            Block(iD,iD).SolutionOld(:,:,1+iBDF)=[...
               Parameters(iD).Pressure(...
               Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',Time.TimeOld),...
               Parameters(iD).Saturation(...

@@ -1,4 +1,6 @@
 classdef Plasma1FluidElectromagneticAdvanced_HDG < Formulation
+% Solves the Euler-Maxwell plasma equations with the HDG method including an electrostatic
+% initialization and a projection-based divergence correction method to enforce the Gauss laws
 
   properties
 

@@ -1,4 +1,5 @@
 classdef MagneticCURLCURL_HDG < Formulation
+% Solves the magnetic induction equation with the HDG method using a curl-curl formulation
 
   properties
 

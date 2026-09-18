@@ -1,4 +1,5 @@
 classdef CompressibleFlow_HDG < Formulation
+% Solves the compressible Euler equations with the HDG method
 
   properties
 

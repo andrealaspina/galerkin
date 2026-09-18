@@ -1,4 +1,6 @@
 classdef PlasmaElectromagnetic_HDG < Formulation
+% Solves the Maxwell equations with the HDG method including the current of a plasma with prescribed
+% density and velocity
 
   properties
 

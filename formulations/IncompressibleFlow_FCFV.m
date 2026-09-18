@@ -1,4 +1,5 @@
 classdef IncompressibleFlow_FCFV < Formulation
+% Solves the Navier-Stokes equations for incompressible flows with the FCFV method
 
   properties
 

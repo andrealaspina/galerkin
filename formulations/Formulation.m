@@ -1,4 +1,5 @@
 classdef Formulation
+% Base class of the formulations: default properties and no-op methods called by main.m
 
   properties (Access=private)
 

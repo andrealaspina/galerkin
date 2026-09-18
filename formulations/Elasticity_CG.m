@@ -1,4 +1,6 @@
 classdef Elasticity_CG < Formulation
+% Solves the equations of elastodynamics with the CG method for linear and nonlinear
+% (St. Venant-Kirchhoff and Neo-Hookean) elasticity models
 
   properties
 

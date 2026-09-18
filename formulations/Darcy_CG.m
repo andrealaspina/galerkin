@@ -1,4 +1,6 @@
 classdef Darcy_CG < Formulation
+% Solves the Darcy law with the CG method for the macroscopic problem, informed by effective
+% properties from a unit cell problem solving the Navier-Stokes equations with Comsol's LiveLink
 
   properties
 

@@ -1,4 +1,5 @@
 classdef Thermal_CG < Formulation
+% Solves the heat equation with the CG method
 
   properties
 
@@ -38,7 +39,7 @@ classdef Thermal_CG < Formulation
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder-1
             Time.TimeOld=Time.Time-iBDF*Time.TimeStepSize;
-              Block(iD,iD).SolutionOld(:,:,1+iBDF)=Parameters(iD).Temperature(...
+            Block(iD,iD).SolutionOld(:,:,1+iBDF)=Parameters(iD).Temperature(...
                 Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',Time.TimeOld);
           end
         end

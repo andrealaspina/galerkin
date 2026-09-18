@@ -1,4 +1,5 @@
 classdef ElasticityLinear_HDG < Formulation
+% Solves the equations of linear elastodynamics with the HDG method
 
   properties
 

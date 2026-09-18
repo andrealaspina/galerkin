@@ -1,4 +1,6 @@
 classdef ElectromagneticPML_FD_HDG_fast < Formulation
+% Solves the Maxwell equations in the frequency domain with the HDG method including perfectly
+% matched layers
 
   properties
 

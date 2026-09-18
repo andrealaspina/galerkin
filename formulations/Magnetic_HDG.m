@@ -1,4 +1,5 @@
 classdef Magnetic_HDG < Formulation
+% Solves the magnetic induction equation with the HDG method
 
   properties
 
