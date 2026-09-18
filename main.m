@@ -1,3 +1,10 @@
+%% galerkin main script
+%
+% Runs the simulation(s) described by the variables defined in the calling input file (Simulation,
+% Parameters, Mesh/Geometry/Distmesh, System, Time, Solver, Boundaries, Regions, Options): the
+% pre-processing builds the mesh and the data structures, the processing solves the (non)linear
+% (time-dependent) problem, and the post-processing computes errors and plots/exports the results.
+
 %% Pre-processing
 
 % Store input
@@ -33,7 +40,7 @@ else
 end
 [Parameters(:).MP]=deal(MP);
 
-% Get number of discretizatios
+% Get number of discretizations
 Simulation.NumDiscretizations=numel(Parameters);
 
 % Create formulation object
@@ -159,7 +166,10 @@ for iS=1:Simulation.NumSimulations
   end
 
   % Start parpool if needed
-  PoolAux=gcp; if isempty(PoolAux); PoolAux=[]; PoolAux.NumWorkers=1; end
+  PoolAux=gcp;
+  if isempty(PoolAux)
+    PoolAux.NumWorkers=1;
+  end
   if matchField(Simulation,'NumProcessors') && Simulation.NumProcessors~=PoolAux.NumWorkers
     if PoolAux.NumWorkers>1
       fprintf('\n'); delete(PoolAux);
@@ -373,9 +383,9 @@ for iS=1:Simulation.NumSimulations
     for iD=1:Simulation.NumDiscretizations
       if strcmp(Parameters(iD).DiscretizationType,'HDG')
         Mesh(iD).Nodes=Mesh(iD).Nodes(:,Mesh(iD).Elements(1:end));
-          Mesh(iD).Elements=reshape(...
-                  1:max(Sizes(iD).NumSpaceDim+1,Sizes(iD).NumElementNodes)*Sizes(iD).NumElements,...
-                   [max(Sizes(iD).NumSpaceDim+1,Sizes(iD).NumElementNodes),Sizes(iD).NumElements]);
+        Mesh(iD).Elements=reshape(...
+          1:max(Sizes(iD).NumSpaceDim+1,Sizes(iD).NumElementNodes)*Sizes(iD).NumElements,...
+          [max(Sizes(iD).NumSpaceDim+1,Sizes(iD).NumElementNodes),Sizes(iD).NumElements]);
         if strcmp(Parameters(iD).PostProcessingHDG,'yes')
           Mesh(iD).Post.Nodes=Mesh(iD).Post.Nodes(:,Mesh(iD).Post.Elements(1:end));
           Mesh(iD).Post.Elements=reshape(1:Sizes(iD).NumElementNodesPost*Sizes(iD).NumElements,...
@@ -766,37 +776,7 @@ for iS=1:Simulation.NumSimulations
       TimerEvaluationAux=tic;
 
       % Store element data for effective use of parfor
-      for iD=1:Simulation.NumDiscretizations
-        if strcmp(Parameters(iD).DiscretizationType,'CG')
-          Elements(iD).SolutionGlobal=mat2cell(Block(iD,iD).SolutionGlobal(...
-            Mesh(iD).Elements(:),:,:),ones(Sizes(iD).NumElements,1)*...
-            Sizes(iD).NumElementNodes,Sizes(iD).NumGlobalComp,size(Block(iD,iD).SolutionGlobal,3));
-          if strcmp(Time.TimeDependent,'yes')
-            Elements(iD).SolutionOld=mat2cell(Block(iD,iD).SolutionOld(...
-              Mesh(iD).Elements(:),:,:),ones(Sizes(iD).NumElements,1)*...
-              Sizes(iD).NumElementNodes,Sizes(iD).NumGlobalComp,size(Block(iD,iD).SolutionOld,3));
-          else
-            Elements(iD).SolutionOld=cell(Sizes(iD).NumElements,1);
-          end
-        elseif strcmp(Parameters(iD).DiscretizationType,'HDG')
-          Elements(iD).SolutionGlobal=mat2cell(Block(iD,iD).SolutionGlobal(...
-            cell2mat(Faces(iD,iD).GlobalLocal),:,:),ones(Sizes(iD).NumElements,1)*...
-            Sizes(iD).NumElementFaces*Sizes(iD).NumFaceNodes*Sizes(iD).NumGlobalComp,...
-            size(Block(iD,iD).SolutionGlobal,3));
-          Elements(iD).SolutionLocal=mat2cell(Block(iD,iD).SolutionLocal(...
-            Mesh(iD).Elements(1:Sizes(iD).NumElements*Sizes(iD).NumElementNodes),:,:),...
-            ones(Sizes(iD).NumElements,1)*Sizes(iD).NumElementNodes,Sizes(iD).NumLocalComp,...
-            size(Block(iD,iD).SolutionLocal,3));
-          if strcmp(Time.TimeDependent,'yes')
-            Elements(iD).SolutionOld=mat2cell(Block(iD,iD).SolutionOld(...
-              Mesh(iD).Elements(1:Sizes(iD).NumElements*Sizes(iD).NumElementNodes),:,:),...
-              ones(Sizes(iD).NumElements,1)*Sizes(iD).NumElementNodes,Sizes(iD).NumLocalComp,...
-              size(Block(iD,iD).SolutionOld,3));
-          else
-            Elements(iD).SolutionOld=cell(Sizes(iD).NumElements,1);
-          end
-        end
-      end
+      Elements=getElementSolutions(Elements,Block,Simulation,Parameters,Mesh,Faces,Time,Sizes);
 
       % Compute quantity of interest at the current iteration
       if matchField(Options,'ComputeQuantityIteration')
@@ -824,7 +804,7 @@ for iS=1:Simulation.NumSimulations
       for iD=1:Simulation.NumDiscretizations
         System.Lhs(iD).LhsGlobal=horzcat(Block(iD,:).LhsGlobal);
       end
-      System.Lhs=vertcat(System.Lhs.LhsGlobal); %Block=rmfield(Block,'LhsGlobal');
+      System.Lhs=vertcat(System.Lhs.LhsGlobal);
       System.Rhs=vertcat(Block.RhsGlobal);
 
       % Strongly impose fixed BCs
@@ -1103,37 +1083,7 @@ for iS=1:Simulation.NumSimulations
   end
 
   % Store element data for effective use of parfor
-  for iD=1:Simulation.NumDiscretizations
-    if strcmp(Parameters(iD).DiscretizationType,'CG')
-      Elements(iD).SolutionGlobal=mat2cell(Block(iD,iD).SolutionGlobal(...
-        Mesh(iD).Elements(:),:,:),ones(Sizes(iD).NumElements,1)*...
-        Sizes(iD).NumElementNodes,Sizes(iD).NumGlobalComp,size(Block(iD,iD).SolutionGlobal,3));
-      if strcmp(Time.TimeDependent,'yes')
-        Elements(iD).SolutionOld=mat2cell(Block(iD,iD).SolutionOld(...
-          Mesh(iD).Elements(:),:,:),ones(Sizes(iD).NumElements,1)*...
-          Sizes(iD).NumElementNodes,Sizes(iD).NumGlobalComp,size(Block(iD,iD).SolutionOld,3));
-      else
-        Elements(iD).SolutionOld=cell(Sizes(iD).NumElements,1);
-      end
-    elseif strcmp(Parameters(iD).DiscretizationType,'HDG')
-      Elements(iD).SolutionGlobal=mat2cell(Block(iD,iD).SolutionGlobal(...
-        cell2mat(Faces(iD,iD).GlobalLocal),:,:),ones(Sizes(iD).NumElements,1)*...
-        Sizes(iD).NumElementFaces*Sizes(iD).NumFaceNodes*Sizes(iD).NumGlobalComp,...
-        size(Block(iD,iD).SolutionGlobal,3));
-      Elements(iD).SolutionLocal=mat2cell(Block(iD,iD).SolutionLocal(...
-        Mesh(iD).Elements(1:Sizes(iD).NumElements*Sizes(iD).NumElementNodes),:,:),...
-        ones(Sizes(iD).NumElements,1)*Sizes(iD).NumElementNodes,Sizes(iD).NumLocalComp,...
-        size(Block(iD,iD).SolutionLocal,3));
-      if strcmp(Time.TimeDependent,'yes')
-        Elements(iD).SolutionOld=mat2cell(Block(iD,iD).SolutionOld(...
-          Mesh(iD).Elements(1:Sizes(iD).NumElements*Sizes(iD).NumElementNodes),:,:),...
-          ones(Sizes(iD).NumElements,1)*Sizes(iD).NumElementNodes,Sizes(iD).NumLocalComp,...
-          size(Block(iD,iD).SolutionOld,3));
-      else
-        Elements(iD).SolutionOld=cell(Sizes(iD).NumElements,1);
-      end
-    end
-  end
+  Elements=getElementSolutions(Elements,Block,Simulation,Parameters,Mesh,Faces,Time,Sizes);
 
   % HDG POST-PROCESSING ----------------------------------------------------------------------------
   for iD=1:Simulation.NumDiscretizations
@@ -1246,35 +1196,55 @@ for iS=1:Simulation.NumSimulations
     eval(Options.ComputeQuantityPostError);
   end
 
-  % Compute convergence rate for space convergence
-  if strcmp(Simulation.Type,'ConvergenceSpace')
+  % Compute convergence rates
+  if strcmp(Simulation.Type,'ConvergenceSpace') || strcmp(Simulation.Type,'ConvergenceTime')
+    if strcmp(Simulation.Type,'ConvergenceSpace')
+      ConvVariableAux='ElementSize';
+      ConvLabelAux='Element size';
+      for iD=1:Simulation.NumDiscretizations
+        Results(iD).Degree(iS1,1)=Parameters(iD).Degree;
+        if isa(Options.CharacteristicElementSize,'char')
+          Results(iD).ElementSize(iS1,iS2)=...
+            Mesh(iD).([Options.CharacteristicElementSize,'ElementSize']);
+        elseif isa(Options.CharacteristicElementSize,'numeric')
+          Results(iD).ElementSize(iS1,iS2)=Options.CharacteristicElementSize(iS1,iS2);
+        end
+        if strcmp(Time.TimeDependent,'yes')
+          Results(iD).TimeStepSize(iS1,1)=Time.TimeStepSize;
+        end
+      end
+    else
+      ConvVariableAux='TimeStepSize';
+      ConvLabelAux='Time step size';
+      for iD=1:Simulation.NumDiscretizations
+        Results(iD).BDFOrder(iS1,1)=Time.BDFOrder;
+        Results(iD).TimeStepSize(iS1,iS2)=Time.TimeStepSize;
+        if isa(Options.CharacteristicElementSize,'char')
+          Results(iD).ElementSize(iS1,1)=...
+            Mesh(iD).([Options.CharacteristicElementSize,'ElementSize']);
+        elseif isa(Options.CharacteristicElementSize,'numeric')
+          Results(iD).ElementSize(iS1,1)=Options.CharacteristicElementSize(iS1);
+        end
+      end
+    end
     for iD=1:Simulation.NumDiscretizations
-      Results(iD).Degree(iS1,1)=Parameters.Degree;
-      if isa(Options.CharacteristicElementSize,'char')
-        Results(iD).ElementSize(iS1,iS2)=...
-                                       Mesh(iD).([Options.CharacteristicElementSize,'ElementSize']);
-      elseif isa(Options.CharacteristicElementSize,'numeric')
-        Results(iD).ElementSize(iS1,iS2)=Options.CharacteristicElementSize(iS1,iS2);
-      end
-      if strcmp(Time.TimeDependent,'yes')
-        Results(iD).TimeStepSize(iS1,1)=Time.TimeStepSize;
-      end
       for iE=1:size(Options.ComputeError,1)
         if not(isempty(Results(iD).([Options.ComputeError{iE,1}])))
+          ErrorNameAux=sprintf('%sError%s',Options.ComputeError{iE,1:2});
           if iS2==1
-            Results(iD).(sprintf('%sError%sRate',Options.ComputeError{iE,1:2}))(iS1,iS2)=NaN;
+            Results(iD).([ErrorNameAux,'Rate'])(iS1,iS2)=NaN;
           else
-            Results(iD).(sprintf('%sError%sRate',Options.ComputeError{iE,1:2}))(iS1,iS2)=...
-              log(Results(iD).(sprintf('%sError%s',Options.ComputeError{iE,1:2}))(iS1,iS2)/...
-                  Results(iD).(sprintf('%sError%s',Options.ComputeError{iE,1:2}))(iS1,iS2-1))/...
-              log(Results(iD).ElementSize(iS1,iS2)/...
-                  Results(iD).ElementSize(iS1,iS2-1));
+            Results(iD).([ErrorNameAux,'Rate'])(iS1,iS2)=...
+              log(Results(iD).(ErrorNameAux)(iS1,iS2)/...
+                  Results(iD).(ErrorNameAux)(iS1,iS2-1))/...
+              log(Results(iD).(ConvVariableAux)(iS1,iS2)/...
+                  Results(iD).(ConvVariableAux)(iS1,iS2-1));
           end
         end
       end
     end
 
-    % Plot space convergence
+    % Plot convergence
     if strcmp(Options.PlotConvergence,'yes')
       if iS==1
         figure('Color','w')
@@ -1289,87 +1259,20 @@ for iS=1:Simulation.NumSimulations
           for iD=1:Simulation.NumDiscretizations
             subplot(ceil(NumPlotsAux/ceil(NumPlotsAux/4)),ceil(NumPlotsAux/4),iE)
             if not(isempty(Results(iD).([Options.ComputeError{iE,1}])))
-              plot(log2(Results(iD).ElementSize(iS1,iS2-1:iS2)),...
-                  log10(Results(iD).(sprintf('%sError%s',...
-                        Options.ComputeError{iE,1:2}))(iS1,iS2-1:iS2)),...
-                  sprintf('%s',Colors{iS1},Styles{iD},Markers{iS1}));
-              text(log2(Results(iD).ElementSize(iS1,iS2)),...
-                  log10(Results(iD).(sprintf('%sError%s',...
-                        Options.ComputeError{iE,1:2}))(iS1,iS2)),...
-                  sprintf('%.1f',Results(iD).(sprintf('%sError%sRate',...
-                        Options.ComputeError{iE,1:2}))(iS1,iS2)),...
-                 'HorizontalAlignment','Center','VerticalAlignment','Top',...
-                 'Color',sprintf('%s',Colors{iS1}))
+              ErrorNameAux=sprintf('%sError%s',Options.ComputeError{iE,1:2});
+              plot(log2(Results(iD).(ConvVariableAux)(iS1,iS2-1:iS2)),...
+                   log10(Results(iD).(ErrorNameAux)(iS1,iS2-1:iS2)),...
+                   [Colors{iS1},Styles{iD},Markers{iS1}]);
+              text(log2(Results(iD).(ConvVariableAux)(iS1,iS2)),...
+                   log10(Results(iD).(ErrorNameAux)(iS1,iS2)),...
+                   sprintf('%.1f',Results(iD).([ErrorNameAux,'Rate'])(iS1,iS2)),...
+                   'HorizontalAlignment','Center','VerticalAlignment','Top','Color',Colors{iS1})
             end
             hold on
           end
           grid on; box on;
           title(Options.ComputeError{iE,1});
-          xlabel('log_{2}(Element size)');
-          ylabel(['log_{10}(Error-',Options.ComputeError{iE,2},')']);
-          pause(eps);
-        end
-      end
-    end
-  end
-
-  % Compute convergence rate for time convergence
-  if strcmp(Simulation.Type,'ConvergenceTime')
-    for iD=1:Simulation.NumDiscretizations
-      Results(iD).BDFOrder(iS1,1)=Time.BDFOrder;
-      Results(iD).TimeStepSize(iS1,iS2)=Time.TimeStepSize;
-      if isa(Options.CharacteristicElementSize,'char')
-        Results(iD).ElementSize(iS1,1)=Mesh(iD).([Options.CharacteristicElementSize,'ElementSize']);
-      elseif isa(Options.CharacteristicElementSize,'numeric')
-        Results(iD).ElementSize(iS1,1)=Options.CharacteristicElementSize(iS1);
-      end
-      for iE=1:size(Options.ComputeError,1)
-        if not(isempty(Results(iD).([Options.ComputeError{iE,1}])))
-          if iS2==1
-            Results(iD).(sprintf('%sError%sRate',Options.ComputeError{iE,1:2}))(iS1,iS2)=NaN;
-          else
-            Results(iD).(sprintf('%sError%sRate',Options.ComputeError{iE,1:2}))(iS1,iS2)=...
-              log(Results(iD).(sprintf('%sError%s',Options.ComputeError{iE,1:2}))(iS1,iS2)/...
-                  Results(iD).(sprintf('%sError%s',Options.ComputeError{iE,1:2}))(iS1,iS2-1))/...
-              log(Results(iD).TimeStepSize(iS1,iS2)/...
-                  Results(iD).TimeStepSize(iS1,iS2-1));
-          end
-        end
-      end
-    end
-
-    % Plot time convergence
-    if strcmp(Options.PlotConvergence,'yes')
-      if iS==1
-        figure('Color','w')
-        NumPlotsAux=size(Options.ComputeError,1);
-        if size(Options.ComputeError,1)>1
-          SizeAux=get(0,'ScreenSize');
-          set(gcf,'Position',[(3-ceil(NumPlotsAux/4))/3*SizeAux(3),0,...
-                                                       ceil(NumPlotsAux/4)/3*SizeAux(3),SizeAux(4)])
-        end
-      elseif iS2>1
-        for iE=1:size(Options.ComputeError,1)
-          for iD=1:Simulation.NumDiscretizations
-            subplot(ceil(NumPlotsAux/ceil(NumPlotsAux/4)),ceil(NumPlotsAux/4),iE)
-            if not(isempty(Results(iD).([Options.ComputeError{iE,1}])))
-              plot(log2(Results(iD).TimeStepSize(iS1,iS2-1:iS2)),...
-                  log10(Results(iD).(sprintf('%sError%s',...
-                        Options.ComputeError{iE,1:2}))(iS1,iS2-1:iS2)),...
-                  sprintf('%s',Colors{iS1},Styles{iD},Markers{iS1}));
-              text(log2(Results(iD).TimeStepSize(iS1,iS2)),...
-                  log10(Results(iD).(sprintf('%sError%s',...
-                        Options.ComputeError{iE,1:2}))(iS1,iS2)),...
-                  sprintf('%.1f',Results(iD).(sprintf('%sError%sRate',...
-                        Options.ComputeError{iE,1:2}))(iS1,iS2)),...
-                 'HorizontalAlignment','Center','VerticalAlignment','Top',...
-                 'Color',sprintf('%s',Colors{iS1}))
-            end
-            hold on
-          end
-          grid on; box on;
-          title(Options.ComputeError{iE,1});
-          xlabel('log_{2}(Time step size)');
+          xlabel(['log_{2}(',ConvLabelAux,')']);
           ylabel(['log_{10}(Error-',Options.ComputeError{iE,2},')']);
           pause(eps);
         end
@@ -1526,8 +1429,11 @@ end % End of the single simulation
 % Perform test
 if matchField(Options,'Test')
   Simulation.TestPassed=eval(Options.Test);
-  if Simulation.TestPassed; fprintf('\nTEST PASSED\n');
-  else;                     fprintf('\nTEST FAILED\n'); end
+  if Simulation.TestPassed
+    fprintf('\nTEST PASSED\n');
+  else
+    fprintf('\nTEST FAILED\n');
+  end
 end
 
 % Hold off potential figures
