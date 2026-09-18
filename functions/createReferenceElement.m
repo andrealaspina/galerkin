@@ -1,13 +1,13 @@
-function [RefElement]=createReferenceElement(...
-         nsd,kNodes,kGauss,Distribution,Digits)
-         % Create reference element
+function [RefElement]=createReferenceElement(nsd,kNodes,kGauss,Distribution,Digits)
+% Create the reference element (nodes, faces, shape functions and quadrature) of degree kNodes in
+% nsd dimensions, with the quadrature suited to a polynomial degree kGauss
 
 % Set digits
 if nargin<5
   Digits=16;
 end
 
-% Maximum polynomial degree implemented
+% Limit the polynomial degree to the maximum implemented
 kMax=8;
 if kNodes>kMax || kGauss>kMax
   warning('Using maximum polynomial degree implemented = %d',kMax);

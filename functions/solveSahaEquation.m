@@ -1,6 +1,10 @@
-function [Ionization]=solveSahaEquation(...
-         Parameters,IndependentVariable,DensityOrPressure,PressureOrTemperature)
-         % Solve Saha equation
+function [Ionization]=solveSahaEquation(Parameters,IndependentVariable,DensityOrPressure,...
+  PressureOrTemperature)
+% Solve the Saha equation for a mixture of species given two independent thermodynamic variables
+%
+% IndependentVariable selects the pair: 'DensityTemperature', 'PressureTemperature' or
+% 'DensityPressure'. A linear (ideal) step is always performed; a non-linear step accounting for
+% the lowering of the ionization energy and for the pressure correction follows if requested.
 
 % Physical constants
 me=Parameters.ElectronMass;
@@ -91,7 +95,7 @@ for r=1:max(Z)
   DI{r}=@(Zav) DI_fun(nE(Zav),r);
 end
 
-% Compute species partion functions
+% Compute species partition functions
 if strcmp(Parameters.PartitionFunctionsExcitedStates,'yes')
   U=cell(J,1);
   for j=1:J
@@ -120,7 +124,7 @@ end
 % Compute scaling factor to avoid overflow when multiplying the species Saha function
 s=max(1,f0max^(max(Z)/2));
 
-% Compute average charge state by solving a trascendental equation
+% Compute average charge state by solving a transcendental equation
 Ze=cell(J,1);
 fun=@(Zav) 0;
 for j=1:J
@@ -232,7 +236,7 @@ if strcmp(Parameters.SahaNonIdeal,'yes') && ...
       T=(P+DP)/((1+Zav)*nH*kb);
     end
 
-    % Compute species partion functions
+    % Compute species partition functions
     if strcmp(Parameters.PartitionFunctionsExcitedStates,'yes')
       U=cell(J,1);
       for j=1:J
@@ -257,7 +261,8 @@ if strcmp(Parameters.SahaNonIdeal,'yes') && ...
     % Compute scaling factor to avoid overflow when multiplying the species modified Saha function
     s=max(1,etamax^(max(Z)/2));
 
-    % Compute ratio of ideal total electron pressure to total pressure by solving a trascendental equation
+    % Compute ratio of ideal total electron pressure to total pressure by solving a transcendental
+    % equation
     pe=cell(J,1);
     fun=@(Pe) 0;
     for j=1:J

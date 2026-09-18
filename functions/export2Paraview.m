@@ -1,6 +1,5 @@
-function []=export2Paraview(...
-         Mesh,Results,Parameters,Time,Sizes,Options,FileName)
-         % Export solution to Paraview
+function []=export2Paraview(Mesh,Results,Parameters,Time,Sizes,Options,FileName)
+% Export the mesh and the requested variables to a legacy VTK file readable by Paraview
 
 % Get general parameters
 nsd=Sizes.NumSpaceDim;
@@ -14,8 +13,6 @@ elseif matchField(Time,'Time')
 elseif matchField(Time,'Mode')
   t_or_f_or_n=Time.Mode(end);
 end
-
-% Extrapolate mesh info
 NumElements=size(C,1);
 NumElementNodes=size(C,2);
 NumNodes=size(X,1);
@@ -33,14 +30,8 @@ end
 % Nodes re-ordering
 if nsd==2
   switch k
-    case 0
-      order=[1,2,3];
-    case 1
-      order=[1,2,3];
-    case 2
-      order=[1,2,3,4,5,6];
-    case 3
-      order=[1,2,3,4,5,6,7,8,9,10];
+    case {0,1,2,3}
+      order=1:NumElementNodes;
     case 4
       order=[1,2,3,4,5,6,7,8,9,10,11,12,15,13,14];
     case 5
@@ -48,38 +39,48 @@ if nsd==2
     case 6
       order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,25,19,22,26,27,20,21,23,24,28];
     case 7
-      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,30,22,26,31,32,33,23,24,25,27,28,29,36,34,35];
+      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,30,22,26,31,32,33,23,24,25,...
+             27,28,29,36,34,35];
     case 8
-      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,35,25,30,36,37,38,39,26,27,28,29,31,32,33,34,44,40,42,45,41,43];
+      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,35,25,30,36,37,38,...
+             39,26,27,28,29,31,32,33,34,44,40,42,45,41,43];
     otherwise
       error('Element not yet implemented');
   end
 elseif nsd==3
   switch k
-    case 0
-      order=[1,2,3,4];
-    case 1
-      order=[1,2,3,4];
-    case 2
-      order=[1,2,3,4,5,6,7,8,9,10];
+    case {0,1,2}
+      order=1:NumElementNodes;
     case 3
       order=[1,2,3,4,5,6,7,8,10,9,11,12,13,14,15,16,19,18,20,17];
     case 4
-      order=[1,2,3,4,5,6,7,8,9,10,13,12,11,14,15,16,17,18,19,20,21,22,29,30,31,28,26,27,32,33,34,25,23,24,35];
+      order=[1,2,3,4,5,6,7,8,9,10,13,12,11,14,15,16,17,18,19,20,21,22,29,30,31,28,26,27,32,33,...
+             34,25,23,24,35];
     case 5
-      order=[1,2,3,4,5,6,7,8,9,10,11,12,16,15,14,13,17,18,19,20,21,22,23,24,25,26,27,28,41,43,45,42,44,46,39,35,37,40,36,38,47,49,51,48,50,52,33,29,31,34,30,32,53,54,55,56];
+      order=[1,2,3,4,5,6,7,8,9,10,11,12,16,15,14,13,17,18,19,20,21,22,23,24,25,26,27,28,41,43,...
+             45,42,44,46,39,35,37,40,36,38,47,49,51,48,50,52,33,29,31,34,30,32,53,54,55,56];
     case 6
-      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,19,18,17,16,15,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,55,58,61,56,57,59,60,62,63,64,51,45,48,52,53,46,47,49,50,54,65,68,71,66,67,69,70,72,73,74,41,35,38,42,43,36,37,39,40,44,75,76,77,78,79,80,81,82,83,84];
+      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,19,18,17,16,15,20,21,22,23,24,25,26,27,28,29,30,...
+             31,32,33,34,55,58,61,56,57,59,60,62,63,64,51,45,48,52,53,46,47,49,50,54,65,68,71,...
+             66,67,69,70,72,73,74,41,35,38,42,43,36,37,39,40,44,75,76,77,78,79,80,81,82,83,84];
     case 7
-      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,22,21,20,19,18,17,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,71,75,79,72,73,74,76,77,78,80,81,82,83,84,85,64,56,60,65,66,67,57,58,59,61,62,63,70,68,69,86,90,94,87,88,89,91,92,93,95,96,97,98,99,100,49,41,45,50,51,52,42,43,44,46,47,48,55,53,54,101,102,103,104,105,106,107,108,110,109,111,112,113,114,115,116,119,118,120,117];
+      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,22,21,20,19,18,17,23,24,25,26,27,28,29,30,...
+             31,32,33,34,35,36,37,38,39,40,71,75,79,72,73,74,76,77,78,80,81,82,83,84,85,64,56,...
+             60,65,66,67,57,58,59,61,62,63,70,68,69,86,90,94,87,88,89,91,92,93,95,96,97,98,99,...
+             100,49,41,45,50,51,52,42,43,44,46,47,48,55,53,54,101,102,103,104,105,106,107,108,...
+             110,109,111,112,113,114,115,116,119,118,120,117];
     case 8
-      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,25,24,23,22,21,20,19,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,89,94,99,90,91,92,93,95,96,97,98,100,101,102,103,104,106,108,105,107,109,78,68,73,79,80,81,82,69,70,71,72,74,75,76,77,87,83,85,88,84,86,110,115,120,111,112,113,114,116,117,118,119,121,122,123,124,125,127,129,126,128,130,57,47,52,58,59,60,61,48,49,50,51,53,54,55,56,66,62,64,67,63,65,131,132,133,134,135,136,137,138,139,140,143,142,141,144,145,146,147,148,149,150,151,152,159,160,161,158,156,157,162,163,164,155,153,154,165];
+      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,25,24,23,22,21,20,19,26,27,28,29,30,...
+             31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,89,94,99,90,91,92,93,95,96,97,98,...
+             100,101,102,103,104,106,108,105,107,109,78,68,73,79,80,81,82,69,70,71,72,74,75,76,...
+             77,87,83,85,88,84,86,110,115,120,111,112,113,114,116,117,118,119,121,122,123,124,...
+             125,127,129,126,128,130,57,47,52,58,59,60,61,48,49,50,51,53,54,55,56,66,62,64,67,...
+             63,65,131,132,133,134,135,136,137,138,139,140,143,142,141,144,145,146,147,148,149,...
+             150,151,152,159,160,161,158,156,157,162,163,164,155,153,154,165];
     otherwise
       error('Element not yet implemented');
   end
 end
-
-% Connectivity for paraview
 ConnecVTK=[NumElementNodes*ones(NumElements,1),C(:,order)-1];
 
 % Open file
@@ -90,8 +91,6 @@ vtkId=fopen(vtkFile,'w');
 fprintf(vtkId,'# vtk DataFile Version 3.0\n');
 fprintf(vtkId,'%s\n',FileName);
 fprintf(vtkId,'\nASCII\n');
-
-% Unstructured grid
 fprintf(vtkId,'\nDATASET UNSTRUCTURED_GRID\n');
 
 % Write coordinates
@@ -133,40 +132,28 @@ for iP=1:length(Options.Export2Paraview)
     continue;
   end
 
-  % Format data in vtk format
+  % Write real and (if any) imaginary part as scalar, vector or tensor
   isComplex=not(isreal(Variable));
   for iRI=1:(1+isComplex)
-    RealImag='';
-    if isComplex && iRI==1
+    if not(isComplex)
+      RealImag='';
+      Data=Variable';
+    elseif iRI==1
       RealImag='_real';
-    elseif isComplex && iRI==2
+      Data=real(Variable)';
+    else
       RealImag='_imag';
+      Data=imag(Variable)';
     end
     if size(Variable,2)==1
       fprintf(vtkId,'\nSCALARS %s%s float\nLOOKUP_TABLE default\n',VariableName,RealImag);
-      if iRI==1
-        fprintf(vtkId,'% .12e\n',real(Variable)');
-      elseif iRI==2
-        fprintf(vtkId,'% .12e\n',imag(Variable)');
-      end
+      fprintf(vtkId,'% .12e\n',Data);
     elseif size(Variable,2)==nsd
       fprintf(vtkId,'\nVECTORS %s%s float\n',VariableName,RealImag);
-      if iRI==1
-        fprintf(vtkId,'% .12e % .12e % .12e\n',...
-          [real(Variable)';zeros(3-size(Variable,2),NumNodes)]);
-      elseif iRI==2
-        fprintf(vtkId,'% .12e % .12e % .12e\n',...
-          [imag(Variable)';zeros(3-size(Variable,2),NumNodes)]);
-      end
+      fprintf(vtkId,'% .12e % .12e % .12e\n',[Data;zeros(3-size(Variable,2),NumNodes)]);
     else
       fprintf(vtkId,'\nTENSORS %s%s float\n',VariableName,RealImag);
-      if iRI==1
-        fprintf(vtkId,'% .12e % .12e % .12e % .12e % .12e % .12e % .12e % .12e % .12e\n',...
-          [real(Variable)';zeros(9-size(Variable,2),NumNodes)]);
-      elseif iRI==2
-        fprintf(vtkId,'% .12e % .12e % .12e % .12e % .12e % .12e % .12e % .12e % .12e\n',...
-          [imag(Variable)';zeros(9-size(Variable,2),NumNodes)]);
-      end
+      fprintf(vtkId,[repmat('% .12e ',1,8),'% .12e\n'],[Data;zeros(9-size(Variable,2),NumNodes)]);
     end
   end
 end

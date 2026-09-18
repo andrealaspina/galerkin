@@ -1,6 +1,7 @@
-function [Anp,Anm,lambda]=computeSpectralDecompositionEulerEquations(...
-         gamma,r,wxyz,g,n)
-         % Compute spectral decomposition for Euler equations
+function [Anp,Anm,lambda]=computeSpectralDecompositionEulerEquations(gamma,r,wxyz,g,n)
+% Compute the positive and negative parts (Anp, Anm) and the eigenvalues (lambda) of the flux
+% Jacobian of the Euler equations along the normal n, given the specific heat ratio gamma, the
+% density r, the momentum wxyz and the total energy g at the Gauss points
 
 % Compute parameters as in Rohde2001
 ngp=size(wxyz,1);
