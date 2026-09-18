@@ -1,15 +1,10 @@
-function [Mesh]=importGmshMesh(...
-         FileName)
-         % Import Gmsh mesh
+function [Mesh]=importGmshMesh(FileName)
+% Import a Gmsh mesh from a .geo script and plot it together with the resulting geometry
 
-% Run .geo script
+% Run .geo script, run and remove the exported .m script
 system(['/Applications/Gmsh.app/Contents/MacOS/gmsh ',FileName,'.geo -3']);
-
-% Run exported .m script
 run([FileName,'.m']);
 fprintf('\n');
-
-% Remove exported .m script
 delete([FileName,'.m']);
 
 % Number of spatial dimensions
@@ -22,99 +17,38 @@ end
 % Import nodes coordinates
 X=msh.POS(:,1:nsd);
 
-% Polynomial degree
+% Gmsh element types by polynomial degree, and re-ordering of their nodes into the galerkin one
 if nsd==2
-  if     matchField(msh,'TRIANGLES')
-    k=1;
-  elseif matchField(msh,'TRIANGLES6')
-    k=2;
-  elseif matchField(msh,'TRIANGLES10')
-    k=3;
-  elseif matchField(msh,'TRIANGLES15')
-    k=4;
-  elseif matchField(msh,'TRIANGLES21')
-    k=5;
-  elseif matchField(msh,'TRIANGLES28')
-    k=6;
-  elseif matchField(msh,'TRIANGLES36')
-    k=7;
-  elseif matchField(msh,'TRIANGLES45')
-    k=8;
-  end
+  ElementType={'TRIANGLES','TRIANGLES6','TRIANGLES10','TRIANGLES15','TRIANGLES21','TRIANGLES28',...
+               'TRIANGLES36','TRIANGLES45'};
+  order={1:3,1:6,1:10,...
+         [1,2,3,4,5,6,7,8,9,10,11,12,14,15,13],...
+         [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,20,18,21,16,19],...
+         [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,20,24,25,21,26,27,19,22,23,28],...
+         [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,23,28,29,30,24,31,32,33,22,25,...
+          26,27,35,36,34],...
+         [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,32,33,34,35,27,36,...
+          37,38,39,25,28,29,30,31,41,44,42,45,40,43]};
 elseif nsd==3
-  if     matchField(msh,'TETS')
-    k=1;
-  elseif matchField(msh,'TETS10')
-    k=2;
-  elseif matchField(msh,'TETS20')
-    k=3;
-  elseif matchField(msh,'TETS35')
-    k=4;
-  elseif matchField(msh,'TETS56')
-    k=5;
-  elseif matchField(msh,'TETS84')
-    k=6;
-  end
+  ElementType={'TETS','TETS10','TETS20','TETS35','TETS56','TETS84'};
+  order={[2,3,1,4],...
+         [2,3,1,4,6,7,5,10,9,8],...
+         [2,3,1,4,7,8,9,10,6,5,16,15,14,13,12,11,17,19,20,18],...
+         [2,3,1,4,8,9,10,11,12,13,7,6,5,22,21,20,19,18,17,16,15,14,23,24,25,30,31,29,33,34,32,...
+          27,28,26,35],...
+         [2,3,1,4,9,10,11,12,13,14,15,16,8,7,6,5,28,27,26,25,24,23,22,21,20,19,18,17,29,32,30,...
+          33,31,34,42,45,43,46,41,44,48,51,49,52,47,50,36,39,37,40,35,38,54,55,53,56],...
+         [2,3,1,4,10,11,12,13,14,15,16,17,18,19,9,8,7,6,5,34,33,32,31,30,29,28,27,26,25,24,23,...
+          22,21,20,35,38,39,36,40,41,37,42,43,44,56,60,61,57,62,63,55,58,59,64,66,70,71,67,72,...
+          73,65,68,69,74,46,50,51,47,52,53,45,48,49,54,76,77,75,78,80,81,79,84,83,82]};
 end
 
 % Import elements nodes with re-ordering
-if nsd==2
-  switch k
-    case 1
-      order=[1,2,3];
-      C=msh.TRIANGLES(:,order);
-    case 2
-      order=[1,2,3,4,5,6];
-      C=msh.TRIANGLES6(:,order);
-    case 3
-      order=[1,2,3,4,5,6,7,8,9,10];
-      C=msh.TRIANGLES10(:,order);
-    case 4
-      order=[1,2,3,4,5,6,7,8,9,10,11,12,14,15,13];
-      C=msh.TRIANGLES15(:,order);
-    case 5
-      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,20,18,21,16,19];
-      C=msh.TRIANGLES21(:,order);
-    case 6
-      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,20,24,25,21,26,27,19,22,23,28];
-      C=msh.TRIANGLES28(:,order);
-    case 7
-      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,23,28,29,30,24,31,32,33,22,25,26,27,35,36,34];
-      C=msh.TRIANGLES36(:,order);
-    case 8
-      order=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,32,33,34,35,27,36,37,38,39,25,28,29,30,31,41,44,42,45,40,43];
-      C=msh.TRIANGLES45(:,order);
-    otherwise
-      error('Element not yet implemented');
-  end
-elseif nsd==3
-  switch k
-    case 1
-      order=[2,3,1,4];
-      C=msh.TETS(:,order);
-    case 2
-      order=[2,3,1,4,6,7,5,10,9,8];
-      C=msh.TETS10(:,order);
-    case 3
-      order=[2,3,1,4,7,8,9,10,6,5,16,15,14,13,12,11,17,19,20,18];
-      C=msh.TETS20(:,order);
-    case 4
-      order=[2,3,1,4,8,9,10,11,12,13,7,6,5,22,21,20,19,18,17,16,15,14,23,24,25,30,31,29,33,34,32,27,28,26,35];
-      C=msh.TETS35(:,order);
-    case 5
-      order=[2,3,1,4,9,10,11,12,13,14,15,16,8,7,6,5,28,27,26,25,24,23,22,21,20,19,18,17,29,32,30,33,31,34,42,45,43,46,41,44,48,51,49,52,47,50,36,39,37,40,35,38,54,55,53,56];
-      C=msh.TETS56(:,order);
-    case 6
-      order=[2,3,1,4,10,11,12,13,14,15,16,17,18,19,9,8,7,6,5,34,33,32,31,30,29,28,27,26,25,24,23,22,21,20,35,38,39,36,40,41,37,42,43,44,56,60,61,57,62,63,55,58,59,64,66,70,71,67,72,73,65,68,69,74,46,50,51,47,52,53,45,48,49,54,76,77,75,78,80,81,79,84,83,82];
-      C=msh.TETS84(:,order);
-    case 7
-      error('Element not supported in Gmsh');
-    case 8
-      error('Element not supported in Gmsh');
-    otherwise
-      error('Element not yet implemented');
-  end
+k=find(isfield(msh,ElementType),1);
+if isempty(k)
+  error('Element not yet implemented');
 end
+C=msh.(ElementType{k})(:,order{k});
 
 % Remove unconnected nodes
 UnconnectedNodes=sort(setdiff(1:size(X,1),unique(C(:))),'descend');
@@ -124,7 +58,7 @@ for iN=1:numel(UnconnectedNodes)
   C(C>NodeRemove)=C(C>NodeRemove)-1;
 end
 
-% Re-number nodes
+% Re-number nodes so that the vertices come first
 C1=C(:,1:(nsd+1));
 Ck=C(:,(nsd+2):end);
 Nmax1=numel(unique(C1));
@@ -151,10 +85,8 @@ else
   ZMinMaxAux=[-1,+1];
 end
 
-% Plot
-figure('Color','w');
-
 % Plot mesh
+figure('Color','w');
 subplot(1,2,1);
 if nsd==2
   pdeplot(Mesh.Nodes(1:nsd,:),Mesh.Elements(1:nsd+1,:),'EdgeColor','b');

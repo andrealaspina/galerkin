@@ -1,6 +1,5 @@
-function []=plotSolution(...
-         Simulation,Mesh,Faces,Results,Parameters,RefElement,Sizes,Options,Index)
-         % Plot solution
+function []=plotSolution(Simulation,Mesh,Faces,Results,Parameters,RefElement,Sizes,Options,Index)
+% Plot the real (and imaginary) part of each component of the requested variables at a given index
 
 % Get axis limits
 MinMax=minmax(double([Mesh.Nodes]));
@@ -10,8 +9,9 @@ if Sizes(1).NumSpaceDim==3
   ZMinMax=MinMax(3,:)+[-1,+1]*(MinMax(3,1)==MinMax(3,2));
 end
 
-% Plot real (and imaginary) part of each component of each variable of each discretization
 for iP=1:length(Options.PlotSolution)
+
+  % Get the domain of the variable
   if     matchField(Results,'Time') && not(matchField(Results,'Frequency'))
     Domain='Time';
   elseif matchField(Results,'Frequency') && not(matchField(Results,'Time'))
@@ -31,6 +31,8 @@ for iP=1:length(Options.PlotSolution)
   elseif matchField(Results,'Mode')
     Domain='Mode';
   end
+
+  % Plot each component of the variable of each discretization
   for iC=1:size(vertcat(Results.([Options.PlotSolution{iP}])),2)
     figure('Color','w');
     isComplex=not(isreal(Results(1).([Options.PlotSolution{iP}])));
@@ -127,7 +129,7 @@ for iP=1:length(Options.PlotSolution)
              repmat('imag(',isComplex&(iRI==2)),...
              Options.PlotSolution{iP},...
              repmat(sprintf(' (%d)',iC),size(vertcat(Results.([Options.PlotSolution{iP}])),2)>1),...
-             repmat(')',isComplex)...              
+             repmat(')',isComplex)...
              sprintf(' at %s %.2e',lower(Domain),Results(1).(Domain)(Index))]);
       xlim(XMinMax); xlabel('x'); ylim(YMinMax); ylabel('y');
       if Sizes(iD).NumSpaceDim==3

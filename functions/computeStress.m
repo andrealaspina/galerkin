@@ -1,6 +1,7 @@
-function [s,dsdF,D]=computeStress(...
-  EvaluateStress,EvaluateLinearization,Transform,Parameters,X,F,Sizes)
-% Compute stress
+function [s,dsdF,D]=computeStress(EvaluateStress,EvaluateLinearization,Transform,Parameters,X,F,...
+  Sizes)
+% Compute the stress s, its linearization dsdF with respect to the deformation gradient F and the
+% elasticity matrix D at the Gauss points X for the selected material model
 
 % Get general parameters
 E=Parameters.YoungsModulus;
@@ -9,7 +10,7 @@ nsd=Sizes.NumSpaceDim;
 msd=nsd*(nsd+1)/2;
 ng=size(F,1);
 
-% Evaluate elastic costants
+% Evaluate elastic constants
 if isa(E,'function_handle')
   E=E(X(:,1),X(:,2),X(:,3));
 end
@@ -29,7 +30,7 @@ if strcmp(Parameters.DiscretizationType,'CG')
   s=zeros(ng,nsd^2);
   dsdF=zeros(ng,nsd^4);
   D=NaN;
-  
+
   % Extract deformation gradient
   if nsd==2
     Fxx=F(:,1); Fxy=F(:,2);

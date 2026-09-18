@@ -1,16 +1,17 @@
-classdef CompressibleFlow_HDG < Formulation  
-  
+classdef CompressibleFlow_HDG < Formulation
+% Solves the compressible Euler equations with the HDG method
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) 1+NumSpaceDim+1;
-    
+
     % Number of Voigt components
     NumVoigtComp=@(NumSpaceDim) NumSpaceDim*(NumSpaceDim+1)/2;
-    
+
     % Number of local components
     NumLocalComp=@(NumSpaceDim) NumSpaceDim*(NumSpaceDim+1)/2+NumSpaceDim+1+NumSpaceDim+1;
-    
+
     % Number of post-processed components
     NumPostComp=@(NumSpaceDim) NumSpaceDim+1;
 
@@ -19,14 +20,14 @@ classdef CompressibleFlow_HDG < Formulation
 
     % Time derivative order
     TimeDerOrder=1;
-    
+
     % Domain
     Domain='Time';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,Parameters,Time,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes*Sizes(iD).NumGlobalComp,1);
@@ -35,7 +36,7 @@ classdef CompressibleFlow_HDG < Formulation
         Block(iD,iD).SolutionOld=zeros(Sizes(iD).NumLocalNodes,Sizes(iD).NumLocalComp,...
           Parameters(iD).TimeDerOrder);
       end
-      
+
       % Consider one for the density instead of zero
       for iFace=1:Sizes(iD).NumFaces
         Block(iD,iD).SolutionGlobal((iFace-1)*Sizes(iD).NumGlobalComp.*Sizes(iD).NumFaceNodes+...
@@ -43,7 +44,7 @@ classdef CompressibleFlow_HDG < Formulation
       end
       Block(iD,iD).SolutionLocal(:,Sizes(iD).NumVoigtComp+Sizes(iD).NumSpaceDim+1)=1;
     end
-    
+
     %% Compute initial conditions
     function [Block]=computeInitialConditions(~,iD,Block,Parameters,Mesh,~,Time,~,Sizes)
       if strcmp(Time.TimeDependent,'yes')
@@ -57,7 +58,7 @@ classdef CompressibleFlow_HDG < Formulation
           Parameters(iD).Energy(...
           Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',Time.InitialTime)];
         Block(iD,iD).SolutionOld(:,:,1)=Block(iD,iD).SolutionLocal;
-        
+
         % Get ghost solutions for BDF order > 2
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder-1
@@ -75,7 +76,7 @@ classdef CompressibleFlow_HDG < Formulation
         end
       end
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD,Block,Elements,~,Parameters,~,~,Time,RefElement,Sizes)
       NodesElem=Elements(iD).Nodes;
@@ -103,7 +104,7 @@ classdef CompressibleFlow_HDG < Formulation
       Elements(iD).MatLocal=MatLocal;
       Elements(iD).VecLocal=VecLocal;
     end
-    
+
     %% Do post-process
     function [Elements]=doPostProcess(~,Elements,~,Parameters,~,~,RefElement,Sizes)
       NodesElem=Elements.Nodes;
@@ -123,7 +124,7 @@ classdef CompressibleFlow_HDG < Formulation
       Elements.LhsPost=LhsPost;
       Elements.RhsPost=RhsPost;
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,iST,Results,Block,~,Parameters,~,Time,~,Sizes)
       if iST==1
@@ -150,9 +151,9 @@ classdef CompressibleFlow_HDG < Formulation
         Results(iD).TemperaturePost=Block(iD,iD).SolutionPost(:,Sizes(iD).NumSpaceDim+1);
       end
     end
-    
+
   end
-  
+
 end
 
 %% Build block element
@@ -660,7 +661,7 @@ if isConvectiveFlow
                  +NweyT*((wzeg.*wyeg./reg.^2).*Ne)...
                  +NwezT*((wzeg.*wzeg./reg.^2).*Ne);
   end
-  
+
   if nsd==2
     Kww(ne1,ne1)=Kww(ne1,ne1)-NwexT*((2*wxeg./reg).*Ne)...
                              -NweyT*((  wyeg./reg).*Ne);
@@ -1047,20 +1048,20 @@ end
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=true;
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
     [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf,nsd);
-    
+
     % Check boundary
     isDirichlet=Faces.Dirichlet(iFace);
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
     nf2=nf1+NumElementNodes;
@@ -1078,7 +1079,7 @@ for iFace=1:NumElementFaces
     nefW2=nefW1+NumFaceNodes;
     nefW3=nefW2+NumFaceNodes;
     nefE1=(iFace-1)*NumFaceNodes+(1:NumFaceNodes);
-    
+
     % Flip face
     Node2Match1stNode1=Faces.Interior(2,iFace);
     FlipFace=max(Node2Match1stNode1);
@@ -1095,7 +1096,7 @@ for iFace=1:NumElementFaces
       nefW3=nefW3(order);
       nefE1=nefE1(order);
     end
-    
+
     % Compute variables at nodes
     Lxxf=Lxxe(nf1);
     Lyyf=Lyye(nf1);
@@ -1128,7 +1129,7 @@ for iFace=1:NumElementFaces
     elseif nsd==3
       Ef=Ue(nefU5);
     end
-    
+
     % Compute variables at Gauss points
     Xfg=Nf*Xf;
     Lxxfg=Nf*Lxxf;
@@ -1199,7 +1200,7 @@ for iFace=1:NumElementFaces
       end
       eDfg=eD(Xfg(:,1),Xfg(:,2),Xfg(:,3),t);
     end
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
     Mf=NwfT*Nf;
@@ -1209,7 +1210,7 @@ for iFace=1:NumElementFaces
     if nsd==3
       Mfnz=NwfT*(nz.*Nf);
     end
-    
+
     % Compute lhs
     if nsd==2
       KLR(nf1,nefR1)=KLR(nf1,nefR1)+NwfT*((+Voigt1*(Wxfg./Rfg.^2.*nx)...
@@ -1235,7 +1236,7 @@ for iFace=1:NumElementFaces
       KLR(nf6,nefR1)=KLR(nf6,nefR1)+NwfT*((+Voigt3*(Wyfg./Rfg.^2.*nz)...
                                            +Voigt3*(Wzfg./Rfg.^2.*ny)).*Nf);
     end
-      
+
     if nsd==2
       KLW(nf1,nefW1)=KLW(nf1,nefW1)-Voigt1*NwfT*((1./Rfg.*nx).*Nf);
       KLW(nf2,nefW1)=KLW(nf2,nefW1)-Voigt2*NwfT*((1./Rfg.*nx).*Nf);
@@ -1260,13 +1261,13 @@ for iFace=1:NumElementFaces
       KLW(nf5,nefW3)=KLW(nf5,nefW3)-Voigt3*NwfT*((1./Rfg.*nx).*Nf);
       KLW(nf6,nefW3)=KLW(nf6,nefW3)-Voigt3*NwfT*((1./Rfg.*ny).*Nf);
     end
-    
+
     KQR(nf1,nefR1)=KQR(nf1,nefR1)-sqrt(kappa)*NwfT*((dTdRfg.*nx).*Nf);
     KQR(nf2,nefR1)=KQR(nf2,nefR1)-sqrt(kappa)*NwfT*((dTdRfg.*ny).*Nf);
     if nsd==3
       KQR(nf3,nefR1)=KQR(nf3,nefR1)-sqrt(kappa)*NwfT*((dTdRfg.*nz).*Nf);
     end
-    
+
     KQW(nf1,nefW1)=KQW(nf1,nefW1)-sqrt(kappa)*NwfT*((dTdWxfg.*nx).*Nf);
     KQW(nf2,nefW1)=KQW(nf2,nefW1)-sqrt(kappa)*NwfT*((dTdWxfg.*ny).*Nf);
     KQW(nf1,nefW2)=KQW(nf1,nefW2)-sqrt(kappa)*NwfT*((dTdWyfg.*nx).*Nf);
@@ -1278,29 +1279,29 @@ for iFace=1:NumElementFaces
       KQW(nf2,nefW3)=KQW(nf2,nefW3)-sqrt(kappa)*NwfT*((dTdWzfg.*ny).*Nf);
       KQW(nf3,nefW3)=KQW(nf3,nefW3)-sqrt(kappa)*NwfT*((dTdWzfg.*nz).*Nf);
     end
-    
+
     KQE(nf1,nefE1)=KQE(nf1,nefE1)-sqrt(kappa)*NwfT*((dTdEfg.*nx).*Nf);
     KQE(nf2,nefE1)=KQE(nf2,nefE1)-sqrt(kappa)*NwfT*((dTdEfg.*ny).*Nf);
     if nsd==3
       KQE(nf3,nefE1)=KQE(nf3,nefE1)-sqrt(kappa)*NwfT*((dTdEfg.*nz).*Nf);
     end
-    
+
     Krr(nf1,nf1)=Krr(nf1,nf1)+tauR*Mf;
-    
+
     KrW(nf1,nefW1)=KrW(nf1,nefW1)+Mfnx;
     KrW(nf1,nefW2)=KrW(nf1,nefW2)+Mfny;
     if nsd==3
       KrW(nf1,nefW3)=KrW(nf1,nefW3)+Mfnz;
     end
-    
+
     KrR(nf1,nefR1)=KrR(nf1,nefR1)-tauR*Mf;
-    
+
     Kww(nf1,nf1)=Kww(nf1,nf1)+tauW*Mf;
     Kww(nf2,nf2)=Kww(nf2,nf2)+tauW*Mf;
     if nsd==3
       Kww(nf3,nf3)=Kww(nf3,nf3)+tauW*Mf;
     end
-    
+
     if isConvectiveFlow
       if nsd==2
         KwR(nf1,nefR1)=KwR(nf1,nefR1)-NwfT*(((Wxfg.*nx+Wyfg.*ny)./Rfg.^2.*Wxfg).*Nf);
@@ -1328,35 +1329,35 @@ for iFace=1:NumElementFaces
         KwW(nf3,nefW3)=KwW(nf3,nefW3)+NwfT*((Wxfg./Rfg.*nx+Wyfg./Rfg.*ny+2*Wzfg./Rfg.*nz).*Nf);
       end
     end
-    
+
     KwW(nf1,nefW1)=KwW(nf1,nefW1)-tauW*Mf;
     KwW(nf2,nefW2)=KwW(nf2,nefW2)-tauW*Mf;
     if nsd==3
       KwW(nf3,nefW3)=KwW(nf3,nefW3)-tauW*Mf;
     end
-    
+
     Kee(nf1,nf1)=Kee(nf1,nf1)+tauE*Mf;
-    
+
     if nsd==2
       KeR(nf1,nefR1)=KeR(nf1,nefR1)-NwfT*(((Wxfg.*nx+Wyfg.*ny)./Rfg.^2.*Efg).*Nf);
     elseif nsd==3
       KeR(nf1,nefR1)=KeR(nf1,nefR1)-NwfT*(((Wxfg.*nx+Wyfg.*ny+Wzfg.*nz)./Rfg.^2.*Efg).*Nf);
     end
-    
+
     KeW(nf1,nefW1)=KeW(nf1,nefW1)+NwfT*((Efg./Rfg.*nx).*Nf);
     KeW(nf1,nefW2)=KeW(nf1,nefW2)+NwfT*((Efg./Rfg.*ny).*Nf);
     if nsd==3
       KeW(nf1,nefW3)=KeW(nf1,nefW3)+NwfT*((Efg./Rfg.*nz).*Nf);
     end
-    
+
     if nsd==2
       KeE(nf1,nefE1)=KeE(nf1,nefE1)+NwfT*(((Wxfg.*nx+Wyfg.*ny)./Rfg).*Nf);
     elseif nsd==3
       KeE(nf1,nefE1)=KeE(nf1,nefE1)+NwfT*(((Wxfg.*nx+Wyfg.*ny+Wzfg.*nz)./Rfg).*Nf);
     end
-    
+
     KeE(nf1,nefE1)=KeE(nf1,nefE1)-tauE*Mf;
-    
+
     if not(isDirichlet)
       KRW(nefR1,nefW1)=KRW(nefR1,nefW1)-Mfnx;
       KRW(nefR1,nefW2)=KRW(nefR1,nefW2)-Mfny;
@@ -1364,13 +1365,13 @@ for iFace=1:NumElementFaces
         KRW(nefR1,nefW3)=KRW(nefR1,nefW3)-Mfnz;
       end
     end
-    
+
     if not(isDirichlet)
       KRr(nefR1,nf1)=KRr(nefR1,nf1)-tauR*Mf;
     end
-    
+
     KRR(nefR1,nefR1)=KRR(nefR1,nefR1)+tauR*Mf;
-    
+
     if not(isDirichlet) && isConvectiveFlow
       if nsd==2
         KWR(nefW1,nefR1)=KWR(nefW1,nefR1)+NwfT*(((Wxfg.*nx+Wyfg.*ny)./Rfg.^2.*Wxfg).*Nf);
@@ -1381,7 +1382,7 @@ for iFace=1:NumElementFaces
         KWR(nefW3,nefR1)=KWR(nefW3,nefR1)+NwfT*(((Wxfg.*nx+Wyfg.*ny+Wzfg.*nz)./Rfg.^2.*Wzfg).*Nf);
       end
     end
-    
+
     if not(isDirichlet) && isConvectiveFlow
       if nsd==2
         KWW(nefW1,nefW1)=KWW(nefW1,nefW1)-NwfT*((2*Wxfg./Rfg.*nx+Wyfg./Rfg.*ny).*Nf);
@@ -1400,7 +1401,7 @@ for iFace=1:NumElementFaces
         KWW(nefW3,nefW3)=KWW(nefW3,nefW3)-NwfT*((Wxfg./Rfg.*nx+Wyfg./Rfg.*ny+2*Wzfg./Rfg.*nz).*Nf);
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         KWL(nefW1,nf1)=KWL(nefW1,nf1)-Voigt1*Mfnx;
@@ -1427,7 +1428,7 @@ for iFace=1:NumElementFaces
         KWL(nefW3,nf6)=KWL(nefW3,nf6)-Voigt3*Mfny;
       end
     end
-    
+
     if not(isDirichlet)
       KWR(nefW1,nefR1)=KWR(nefW1,nefR1)-NwfT*((dpdRfg.*nx).*Nf);
       KWR(nefW2,nefR1)=KWR(nefW2,nefR1)-NwfT*((dpdRfg.*ny).*Nf);
@@ -1435,7 +1436,7 @@ for iFace=1:NumElementFaces
         KWR(nefW3,nefR1)=KWR(nefW3,nefR1)-NwfT*((dpdRfg.*nz).*Nf);
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         KWW(nefW1,nefW1)=KWW(nefW1,nefW1)-NwfT*((dpdWxfg.*nx).*Nf);
@@ -1454,7 +1455,7 @@ for iFace=1:NumElementFaces
         KWW(nefW3,nefW3)=KWW(nefW3,nefW3)-NwfT*((dpdWzfg.*nz).*Nf);
       end
     end
-    
+
     if not(isDirichlet)
       KWE(nefW1,nefE1)=KWE(nefW1,nefE1)-NwfT*((dpdEfg.*nx).*Nf);
       KWE(nefW2,nefE1)=KWE(nefW2,nefE1)-NwfT*((dpdEfg.*ny).*Nf);
@@ -1462,7 +1463,7 @@ for iFace=1:NumElementFaces
         KWE(nefW3,nefE1)=KWE(nefW3,nefE1)-NwfT*((dpdEfg.*nz).*Nf);
       end
     end
-    
+
     if not(isDirichlet)
       KWw(nefW1,nf1)=KWw(nefW1,nf1)-tauW*Mf;
       KWw(nefW2,nf2)=KWw(nefW2,nf2)-tauW*Mf;
@@ -1470,13 +1471,13 @@ for iFace=1:NumElementFaces
         KWw(nefW3,nf3)=KWw(nefW3,nf3)-tauW*Mf;
       end
     end
-    
+
     KWW(nefW1,nefW1)=KWW(nefW1,nefW1)+tauW*Mf;
     KWW(nefW2,nefW2)=KWW(nefW2,nefW2)+tauW*Mf;
     if nsd==3
       KWW(nefW3,nefW3)=KWW(nefW3,nefW3)+tauW*Mf;
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         KER(nefE1,nefR1)=KER(nefE1,nefR1)+NwfT*(((Wxfg.*nx+Wyfg.*ny)./Rfg.^2.*Efg).*Nf);
@@ -1484,7 +1485,7 @@ for iFace=1:NumElementFaces
         KER(nefE1,nefR1)=KER(nefE1,nefR1)+NwfT*(((Wxfg.*nx+Wyfg.*ny+Wzfg.*nz)./Rfg.^2.*Efg).*Nf);
       end
     end
-    
+
     if not(isDirichlet)
       KEW(nefE1,nefW1)=KEW(nefE1,nefW1)-NwfT*((Efg./Rfg.*nx).*Nf);
       KEW(nefE1,nefW2)=KEW(nefE1,nefW2)-NwfT*((Efg./Rfg.*ny).*Nf);
@@ -1492,7 +1493,7 @@ for iFace=1:NumElementFaces
         KEW(nefE1,nefW3)=KEW(nefE1,nefW3)-NwfT*((Efg./Rfg.*nz).*Nf);
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         KEE(nefE1,nefE1)=KEE(nefE1,nefE1)-NwfT*(((Wxfg.*nx+Wyfg.*ny)./Rfg).*Nf);
@@ -1500,7 +1501,7 @@ for iFace=1:NumElementFaces
         KEE(nefE1,nefE1)=KEE(nefE1,nefE1)-NwfT*(((Wxfg.*nx+Wyfg.*ny+Wzfg.*nz)./Rfg).*Nf);
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         KEL(nefE1,nf1)=KEL(nefE1,nf1)-NwfT*(((Voigt1*Wxfg.*nx...
@@ -1527,7 +1528,7 @@ for iFace=1:NumElementFaces
                                              +Voigt3*Wyfg.*nz)./Rfg).*Nf);
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         KER(nefE1,nefR1)=KER(nefE1,nefR1)+NwfT*((...
@@ -1573,7 +1574,7 @@ for iFace=1:NumElementFaces
           +pfg./Rfg.*nz).*Nf);
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         KEE(nefE1,nefE1)=KEE(nefE1,nefE1)-NwfT*((dpdEfg./Rfg.*(Wxfg.*nx+Wyfg.*ny)).*Nf);
@@ -1581,7 +1582,7 @@ for iFace=1:NumElementFaces
         KEE(nefE1,nefE1)=KEE(nefE1,nefE1)-NwfT*((dpdEfg./Rfg.*(Wxfg.*nx+Wyfg.*ny+Wzfg.*nz)).*Nf);
       end
     end
-    
+
     if not(isDirichlet)
       KEQ(nefE1,nf1)=KEQ(nefE1,nf1)-sqrt(kappa)*Mfnx;
       KEQ(nefE1,nf2)=KEQ(nefE1,nf2)-sqrt(kappa)*Mfny;
@@ -1589,13 +1590,13 @@ for iFace=1:NumElementFaces
         KEQ(nefE1,nf3)=KEQ(nefE1,nf3)-sqrt(kappa)*Mfnz;
       end
     end
-    
+
     if not(isDirichlet)
       KEe(nefE1,nf1)=KEe(nefE1,nf1)-tauE*Mf;
     end
-    
+
     KEE(nefE1,nefE1)=KEE(nefE1,nefE1)+tauE*Mf;
-    
+
     % Compute rhs
     if nsd==2
       fL(nf1,1)=fL(nf1,1)+NwfT*((+Voigt1*nx.*Wxfg./Rfg...
@@ -1621,26 +1622,26 @@ for iFace=1:NumElementFaces
       fL(nf6,1)=fL(nf6,1)+NwfT*((+Voigt3*ny.*Wzfg./Rfg...
                                  +Voigt3*nz.*Wyfg./Rfg));
     end
-    
+
     fQ(nf1,1)=fQ(nf1,1)+NwfT*(sqrt(kappa)*nx.*Tfg);
     fQ(nf2,1)=fQ(nf2,1)+NwfT*(sqrt(kappa)*ny.*Tfg);
     if nsd==3
       fQ(nf3,1)=fQ(nf3,1)+NwfT*(sqrt(kappa)*nz.*Tfg);
     end
-    
+
     fr(nf1,1)=fr(nf1,1)-NwfT*((+tauR*rfg...
                                +Wxfg.*nx+Wyfg.*ny...
                                -tauR*Rfg));
     if nsd==3
       fr(nf1,1)=fr(nf1,1)-NwfT*(Wzfg.*nz);
     end
-    
+
     fw(nf1,1)=fw(nf1,1)-NwfT*(tauW*(wxfg-Wxfg));
     fw(nf2,1)=fw(nf2,1)-NwfT*(tauW*(wyfg-Wyfg));
     if nsd==3
       fw(nf3,1)=fw(nf3,1)-NwfT*(tauW*(wzfg-Wzfg));
     end
-    
+
     if isConvectiveFlow
       if nsd==2
         fw(nf1,1)=fw(nf1,1)-NwfT*((Wxfg./Rfg.*nx+Wyfg./Rfg.*ny).*Wxfg);
@@ -1651,13 +1652,13 @@ for iFace=1:NumElementFaces
         fw(nf3,1)=fw(nf3,1)-NwfT*((Wxfg./Rfg.*nx+Wyfg./Rfg.*ny+Wzfg./Rfg.*nz).*Wzfg);
       end
     end
-    
+
     fe(nf1,1)=fe(nf1,1)-NwfT*((+tauE*(efg-Efg)...
                                +Efg./Rfg.*(Wxfg.*nx+Wyfg.*ny)));
     if nsd==3
       fe(nf1,1)=fe(nf1,1)-NwfT*(Efg./Rfg.*(Wzfg.*nz));
     end
-    
+
     if not(isDirichlet)
       fR(nefR1,1)=fR(nefR1,1)+NwfT*((+Wxfg.*nx+Wyfg.*ny...
                                      +tauR*rfg));
@@ -1665,13 +1666,13 @@ for iFace=1:NumElementFaces
         fR(nefR1,1)=fR(nefR1,1)+NwfT*(Wzfg.*nz);
       end
     end
-    
+
     fR(nefR1,1)=fR(nefR1,1)-NwfT*(tauR*Rfg);
-    
+
     if isDirichlet
       fR(nefR1,1)=fR(nefR1,1)+NwfT*(tauR*rDfg);
     end
-    
+
     if not(isDirichlet) && isConvectiveFlow
       if nsd==2
         fW(nefW1,1)=fW(nefW1,1)+NwfT*((Wxfg./Rfg.*nx+Wyfg./Rfg.*ny).*Wxfg);
@@ -1682,7 +1683,7 @@ for iFace=1:NumElementFaces
         fW(nefW3,1)=fW(nefW3,1)+NwfT*((Wxfg./Rfg.*nx+Wyfg./Rfg.*ny+Wzfg./Rfg.*nz).*Wzfg);
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         fW(nefW1,1)=fW(nefW1,1)+NwfT*((+Voigt1*nx.*Lxxfg+Voigt2*nx.*Lyyfg...
@@ -1708,13 +1709,13 @@ for iFace=1:NumElementFaces
                                        +tauW*wzfg));
       end
     end
-    
+
     fW(nefW1,1)=fW(nefW1,1)-NwfT*(tauW*Wxfg);
     fW(nefW2,1)=fW(nefW2,1)-NwfT*(tauW*Wyfg);
     if nsd==3
       fW(nefW3,1)=fW(nefW3,1)-NwfT*(tauW*Wzfg);
     end
-    
+
     if isDirichlet
       fW(nefW1,1)=fW(nefW1,1)+NwfT*(tauW*wDxfg);
       fW(nefW2,1)=fW(nefW2,1)+NwfT*(tauW*wDyfg);
@@ -1722,7 +1723,7 @@ for iFace=1:NumElementFaces
         fW(nefW3,1)=fW(nefW3,1)+NwfT*(tauW*wDzfg);
       end
     end
-    
+
     if not(isDirichlet)
       fE(nefE1,1)=fE(nefE1,1)+NwfT*((+Efg./Rfg.*(Wxfg.*nx+Wyfg.*ny)...
                                      +(Wxfg./Rfg.*(Voigt1*Lxxfg+Voigt2*Lyyfg)...
@@ -1745,9 +1746,9 @@ for iFace=1:NumElementFaces
                                        +tauE*efg));
       end
     end
-    
+
     fE(nefE1,1)=fE(nefE1,1)-NwfT*(tauE*Efg);
-    
+
     if isDirichlet
       fE(nefE1,1)=fE(nefE1,1)+NwfT*(tauE*eDfg);
     end
@@ -2132,13 +2133,13 @@ for iFace=1:NumElementFaces
   Xf=Xe(FaceNodes(iFace,:),:);
   [~,nx,ny,nz,wfg,Nlf]=mapShapeFunctions(0,RefElement.PostLow,RefElement.Post,Xf,nsd);
   N1f=ones(length(wfg),1);
-  
+
   % Indices
   nlefU1=(iFace-1)*(1+nsd+1)*NumFaceNodes+(1:NumFaceNodes);
   nlefU2=nlefU1+NumFaceNodes;
   nlefU3=nlefU2+NumFaceNodes;
   nlefU4=nlefU3+NumFaceNodes;
-  
+
   % Flip face
   Node2Match1stNode1=Faces.Interior(2,iFace);
   FlipFace=max(Node2Match1stNode1);
@@ -2149,7 +2150,7 @@ for iFace=1:NumElementFaces
     nlefU3=nlefU3(order);
     nlefU4=nlefU4(order);
   end
-  
+
   % Compute variables at nodes
   Rf=Ue(nlefU1);
   Wxf=Ue(nlefU2);
@@ -2157,7 +2158,7 @@ for iFace=1:NumElementFaces
   if nsd==3
     Wzf=Ue(nlefU4);
   end
-  
+
   % Compute variables at Gauss points
   Rfg=Nlf*Rf;
   Wxfg=Nlf*Wxf;
@@ -2165,10 +2166,10 @@ for iFace=1:NumElementFaces
   if nsd==3
     Wzfg=Nlf*Wzf;
   end
-  
+
   % Compute basic matrices
   Nw1fT=(wfg.*N1f)';
-  
+
   % Compute rhs
   if nsd==2
     fVr(1)=fVr(1)+Nw1fT*(-Wxfg./Rfg.*ny+Wyfg./Rfg.*nx);

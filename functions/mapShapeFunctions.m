@@ -1,12 +1,14 @@
-function [N,Nx,Ny,Nz,w,Ng,pinvN]=mapShapeFunctions(...
-         Where,RefElementGeometry,RefElementApproxim,X,nsd)
-         % Map shape functions
+function [N,Nx,Ny,Nz,w,Ng,pinvN]=mapShapeFunctions(Where,RefElementGeometry,RefElementApproxim,X,nsd)
+% Map the reference shape functions to the physical element (Where=1) or face (Where=0)
+%
+% For elements, Nx, Ny and Nz are the physical derivatives of the shape functions. For faces, they
+% are the components of the unit normal. In both cases w are the Gauss weights times the Jacobian.
 
-% Inizialize
+% Initialize
 N=[]; Nx=[]; Ny=[]; Nz=[]; w=[]; Ng=[]; pinvN=[];
 
 if Where==1
-  
+
   % Element calculations
   Ng=RefElementGeometry.ShapeFunctionsElem;
   N=RefElementApproxim.ShapeFunctionsElem;
@@ -63,9 +65,9 @@ if Where==1
     Nz=invJ31.*Naxi+invJ32.*Naeta+invJ33.*Nazeta;
   end
   w=g.*detJ;
-  
+
 elseif Where==0
-  
+
   % Face calculations
   Ng=RefElementGeometry.ShapeFunctionsFace;
   N=RefElementApproxim.ShapeFunctionsFace;
@@ -101,7 +103,7 @@ elseif Where==0
     Nz=tz./detJ;
   end
   w=g.*detJ;
-  
+
 end
 
 end

@@ -1,7 +1,9 @@
-classdef Darcy_CG < Formulation  
-  
+classdef Darcy_CG < Formulation
+% Solves the Darcy law with the CG method for the macroscopic problem, informed by effective
+% properties from a unit cell problem solving the Navier-Stokes equations with Comsol's LiveLink
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) 1;
 
@@ -10,19 +12,19 @@ classdef Darcy_CG < Formulation
 
     % Time derivative order
     TimeDerOrder=1;
-    
+
     % Domain
     Domain='Time';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,~,~,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes,Sizes(iD).NumGlobalComp,1);
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD1,Block,Elements,~,Parameters,~,~,Time,RefElement,...
         Sizes)
@@ -43,7 +45,7 @@ classdef Darcy_CG < Formulation
                                       Block(iD1,iD1).LhsColIndices,LhsCoef(:));
       Block(iD1,iD1).RhsGlobal=sparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,iST,Results,Block,~,~,~,Time,~,~)
       if iST==1
@@ -53,9 +55,9 @@ classdef Darcy_CG < Formulation
       Results(iD).Time(iST)=Time.Time;
       Results(iD).Pressure(:,:,iST)=Block(iD,iD).SolutionGlobal;
     end
-    
+
   end
-  
+
 end
 
 %% Build block element
@@ -131,7 +133,7 @@ if isNavierStokes && not(Dpxeg==0 && Dpyeg==0)
 
   % Retrieve unit cell
   UnitCell=Parameters.UnitCell.Value;
-  
+
   % Compute permeability
   [Kappaxx,Kappayy]=Kappa(Dpxeg,Dpyeg,Parameters,UnitCell);
 
@@ -176,33 +178,33 @@ fp(ne1,1)=-Kappaxx*NwexT*(Dpxeg)...
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=Faces.Exterior(iFace);
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
     [Nf,nx,ny,~,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf,nsd);
-    
+
     % Reduce to only 1 Gauss point
     Nf=mean(Nf);
     nx=mean(nx);
     ny=mean(ny);
     wfg=sum(wfg);
-    
+
     % Compute characteristic element size
     h=sum(wfg);
-    
+
     % Check boundary
     isDirichlet=Faces.Dirichlet(iFace);
     isNeumann=Faces.Neumann(iFace);
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
-    
+
     % Compute derivatives of shape functions
     if isDirichlet
       Nxe=Ne\Nex;
@@ -210,12 +212,12 @@ for iFace=1:NumElementFaces
       Nxf=Nf*Nxe(nf1,:);
       Nyf=Nf*Nye(nf1,:);
     end
-    
+
     % Compute variables at nodes
     pf=pe(nf1);
     Dpxf=Dpxe(nf1);
     Dpyf=Dpye(nf1);
-    
+
     % Compute variables at Gauss points
     Xfg=Nf*Xf;
     pfg=Nf*pf;
@@ -228,7 +230,7 @@ for iFace=1:NumElementFaces
     elseif isNeumann
       fNfg=fN(Xfg(:,1),Xfg(:,2),Xfg(:,3),t);
     end
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
     Mf=NwfT*Nf;
@@ -239,27 +241,27 @@ for iFace=1:NumElementFaces
       Cxnxf=NwxfT*(nx.*Nf);
       Cynyf=NwyfT*(ny.*Nf);
     end
-    
+
     % Compute lhs
     if isDirichlet
       Kpp(nf1,ne1)=Kpp(nf1,ne1)-Kappaxx*Cxnxf'...
                                -Kappayy*Cynyf';
-      
+
       Kpp(nf1,nf1)=Kpp(nf1,nf1)+gamma/h*Mf;
-      
+
       Kpp(ne1,nf1)=Kpp(ne1,nf1)-Kappaxx*Cxnxf...
                                -Kappayy*Cynyf;
     end
-    
+
     % Compute rhs
     if isDirichlet
       fp(nf1,1)=fp(nf1,1)+NwfT*(+(Kappaxx.*Dpxfg.*nx+Kappayy.*Dpyfg.*ny)...
                                 -gamma/h*(pfg-pDfg));
-      
+
       fp(ne1,1)=fp(ne1,1)+Kappaxx*NwxfT*(nx.*(pfg-pDfg))...
                          +Kappayy*NwyfT*(ny.*(pfg-pDfg));
     end
-    
+
     if isNeumann
       fp(nf1,1)=fp(nf1,1)+NwfT*(fNfg);
     end

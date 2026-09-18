@@ -1,16 +1,18 @@
-classdef Darcy2PhaseRichards_HDG_TAUS < Formulation  
-  
+classdef Darcy2PhaseRichards_HDG_TAUS < Formulation
+% Same as Darcy2PhaseRichards_HDG, with a stabilization parameter for the saturation that depends on
+% the derivative of the capillary pressure
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) 1+1;
-    
+
     % Number of Voigt components
     NumVoigtComp=@(NumSpaceDim) 0;
-    
+
     % Number of local components
     NumLocalComp=@(NumSpaceDim) NumSpaceDim+NumSpaceDim+1+1;
-    
+
     % Number of post-processed components
     NumPostComp=@(NumSpaceDim) 1+1;
 
@@ -19,14 +21,14 @@ classdef Darcy2PhaseRichards_HDG_TAUS < Formulation
 
     % Time derivative order
     TimeDerOrder=1;
-    
+
     % Domain
     Domain='Time';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,Parameters,Time,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes*Sizes(iD).NumGlobalComp,1);
@@ -36,7 +38,7 @@ classdef Darcy2PhaseRichards_HDG_TAUS < Formulation
           Parameters(iD).TimeDerOrder);
       end
     end
-    
+
     %% Compute initial conditions
     function [Block]=computeInitialConditions(~,iD,Block,Parameters,Mesh,Faces,Time,RefElement,...
         Sizes)
@@ -63,7 +65,7 @@ classdef Darcy2PhaseRichards_HDG_TAUS < Formulation
             [zeros(Sizes(iD).NumFaceNodes,1),...
              Parameters(iD).Saturation(Xf(:,1),Xf(:,2),Xf(:,3),Time.InitialTime)],[],1);
         end
-        
+
         % Get ghost solutions for BDF order > 2
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder-1
@@ -78,7 +80,7 @@ classdef Darcy2PhaseRichards_HDG_TAUS < Formulation
         end
       end
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD1,Block,Elements,~,Parameters,~,~,Time,RefElement,Sizes)
       NodesElem=Elements(iD1).Nodes;
@@ -111,7 +113,7 @@ classdef Darcy2PhaseRichards_HDG_TAUS < Formulation
       Elements(iD1).MatLocal=MatLocal;
       Elements(iD1).VecLocal=VecLocal;
     end
-    
+
     %% Do post-process
     function [Elements]=doPostProcess(~,Elements,~,Parameters,~,~,RefElement,Sizes)
       NodesElem=Elements.Nodes;
@@ -129,7 +131,7 @@ classdef Darcy2PhaseRichards_HDG_TAUS < Formulation
       Elements.LhsPost=LhsPost;
       Elements.RhsPost=RhsPost;
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,iST,Results,Block,~,Parameters,~,Time,~,Sizes)
       if iST==1
@@ -154,9 +156,9 @@ classdef Darcy2PhaseRichards_HDG_TAUS < Formulation
       end
       Results(iD).FillFactor(iST)=Block(iD,iD).FillFactor;
     end
-    
+
   end
-  
+
 end
 
 %% Build block element
@@ -534,10 +536,10 @@ fs=fs+NweT*(q2eg/r2);
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=true;
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
@@ -550,7 +552,7 @@ for iFace=1:NumElementFaces
       Nf=mean(Nf,1);
       wfg=sum(wfg,1);
     end
-    
+
     % Check boundary
     isInterior=Faces.Interior(1,iFace);
     isDirichlet_p=Faces.Dirichlet_p(iFace);
@@ -559,7 +561,7 @@ for iFace=1:NumElementFaces
     isNeumann_s=Faces.Neumann_s(iFace);
     isDoNothing_p=Faces.DoNothing_p(iFace);
     isDoNothing_s=Faces.DoNothing_s(iFace);
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
     nf2=nf1+NumElementNodes;
@@ -568,7 +570,7 @@ for iFace=1:NumElementFaces
     nefU2=nefU1+NumFaceNodes;
     nefP1=(iFace-1)*NumFaceNodes+(1:NumFaceNodes);
     nefS1=(iFace-1)*NumFaceNodes+(1:NumFaceNodes);
-    
+
     % Flip face
     Node2Match1stNode1=Faces.Interior(2,iFace);
     FlipFace=max(Node2Match1stNode1);
@@ -579,7 +581,7 @@ for iFace=1:NumElementFaces
       nefP1=nefP1(order);
       nefS1=nefS1(order);
     end
-    
+
     % Flip face (periodic (slave))
     if not(isInterior) && matchField(Faces,'Periodic') && Faces.Periodic(1,iFace)
       isInterior=true;
@@ -593,7 +595,7 @@ for iFace=1:NumElementFaces
         nefS1=nefS1(order);
       end
     end
-    
+
     % Compute variables at nodes
     Qxf=Qxe(nf1);
     Qyf=Qye(nf1);
@@ -609,7 +611,7 @@ for iFace=1:NumElementFaces
     sf=se(nf1);
     Pf=Ue(nefU1);
     Sf=Ue(nefU2);
-    
+
     % Compute variables at Gauss points
     Xfg=Nf*Xf;
     Qxfg=Nf*Qxf;
@@ -636,7 +638,7 @@ for iFace=1:NumElementFaces
       f1Nfg=f1N(Xfg(:,1),Xfg(:,2),Xfg(:,3),t);
       f2Nfg=f2N(Xfg(:,1),Xfg(:,2),Xfg(:,3),t);
     end
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
     Mf=NwfT*Nf;
@@ -646,7 +648,7 @@ for iFace=1:NumElementFaces
     if nsd==3
       Mfnz=NwfT*(nz.*Nf);
     end
-    
+
     % Compute effective parameters
     if nsd==2
       [Gfg,K11xxfg,K11yyfg,K12xxfg,K12yyfg,...
@@ -657,7 +659,7 @@ for iFace=1:NumElementFaces
            K21xxfg,K21yyfg,K21zzfg,K22xxfg,K22yyfg,K22zzfg]=...
         solveUnitCell(Sfg,iElem,Parameters,UnitCell);
     end
-    
+
     % Compute derivatives of effective parameters wrt saturation
     if nsd==2
       [GdSfg,K11xxdSfg,K11yydSfg,K12xxdSfg,K12yydSfg,...
@@ -690,7 +692,7 @@ for iFace=1:NumElementFaces
       dK22yydSfg=(K22yydSfg-K22yyfg)./(Sfg*ds+(Sfg==0)*ds);
       dK22zzdSfg=(K22zzdSfg-K22zzfg)./(Sfg*ds+(Sfg==0)*ds);
     end
-    
+
     % Compute terms for speedup
     Vxfg=(K11xxfg+K21xxfg).*(-Qxfg+Hxfg+r1*gx)+(K12xxfg+K22xxfg).*(-Qxfg-Hxfg+r2*gx);
     Vyfg=(K11yyfg+K21yyfg).*(-Qyfg+Hyfg+r1*gy)+(K12yyfg+K22yyfg).*(-Qyfg-Hyfg+r2*gy);
@@ -743,7 +745,7 @@ for iFace=1:NumElementFaces
       dVndSfg=dVxdSfg.*nx+dVydSfg.*ny+dVzdSfg.*nz;
       dV2ndSfg=dV2xdSfg.*nx+dV2ydSfg.*ny+dV2zdSfg.*nz;
     end
-    
+
     % Compute lhs
     KQP(nf1,nefP1)=KQP(nf1,nefP1)-Mfnx;
     KQP(nf2,nefP1)=KQP(nf2,nefP1)-Mfny;
@@ -756,7 +758,7 @@ for iFace=1:NumElementFaces
     if nsd==3
       KHS(nf3,nefS1)=KHS(nf3,nefS1)-NwfT*((nz.*dGdSfg).*Nf);
     end
-    
+
     KpS(nf1,nefS1)=KpS(nf1,nefS1)+NwfT*((dVndSfg).*Nf);
 
     KpQ(nf1,nf1)=KpQ(nf1,nf1)+NwfT*((dVxdQxfg.*nx).*Nf);
@@ -844,7 +846,7 @@ for iFace=1:NumElementFaces
 
       KSS(nefS1,nefS1)=KSS(nefS1,nefS1)+NwfT*((max(tauSref*dGdSfg,tauSref)).*Nf);
     end
-    
+
     % Compute rhs
     fQ(nf1,1)=fQ(nf1,1)+NwfT*(nx.*Pfg);
     fQ(nf2,1)=fQ(nf2,1)+NwfT*(ny.*Pfg);

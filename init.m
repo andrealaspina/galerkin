@@ -1,12 +1,8 @@
-%% initialization
+%% galerkin initialization
+%
+% Clears the workspace and adds the framework folders to the path.
 
-clear; clc; path(pathdef);
-close('all');
-addpath('./');
-addpath('./formulations');
-addpath('./functions');
-addpath('./geometry');
-addpath('./input');
-addpath('./output');
-addpath('./tests');
+clear; clc; close('all');
+path(pathdef);
+addpath('./','./formulations','./functions','./geometry','./input','./output','./tests');
 set(0,'DefaultFigureVisible','on');

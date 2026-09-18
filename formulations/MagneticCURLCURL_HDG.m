@@ -1,16 +1,17 @@
-classdef MagneticCURLCURL_HDG < Formulation  
-  
+classdef MagneticCURLCURL_HDG < Formulation
+% Solves the magnetic induction equation with the HDG method using a curl-curl formulation
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) NumSpaceDim-1+1;
-    
+
     % Number of Voigt components
     NumVoigtComp=@(NumSpaceDim) 0;
-    
+
     % Number of local components
     NumLocalComp=@(NumSpaceDim) NumSpaceDim*(NumSpaceDim-1)/2+NumSpaceDim+1;
-    
+
     % Number of post-processed components
     NumPostComp=@(NumSpaceDim) NumSpaceDim;
 
@@ -19,14 +20,14 @@ classdef MagneticCURLCURL_HDG < Formulation
 
     % Time derivative order
     TimeDerOrder=1;
-    
+
     % Domain
     Domain='Time';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,Parameters,Time,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes*Sizes(iD).NumGlobalComp,1);
@@ -36,7 +37,7 @@ classdef MagneticCURLCURL_HDG < Formulation
           Parameters(iD).TimeDerOrder);
       end
     end
-    
+
     %% Compute initial conditions
     function [Block]=computeInitialConditions(~,iD,Block,Parameters,Mesh,~,Time,~,Sizes)
       if strcmp(Time.TimeDependent,'yes')
@@ -46,7 +47,7 @@ classdef MagneticCURLCURL_HDG < Formulation
           Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',Time.InitialTime),...
           zeros(Sizes(iD).NumLocalNodes,1)];
         Block(iD,iD).SolutionOld(:,:,1)=Block(iD,iD).SolutionLocal;
-        
+
         % Get ghost solutions for BDF order > 2
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder-1
@@ -60,7 +61,7 @@ classdef MagneticCURLCURL_HDG < Formulation
         end
       end
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD,Block,Elements,~,Parameters,~,~,Time,RefElement,Sizes)
       NodesElem=Elements(iD).Nodes;
@@ -88,7 +89,7 @@ classdef MagneticCURLCURL_HDG < Formulation
       Elements(iD).MatLocal=MatLocal;
       Elements(iD).VecLocal=VecLocal;
     end
-    
+
     %% Do post-process
     function [Elements]=doPostProcess(~,Elements,~,Parameters,~,~,RefElement,Sizes)
       RefElement.PostLowHigh=createReferenceElement(Sizes.NumSpaceDim,...
@@ -112,7 +113,7 @@ classdef MagneticCURLCURL_HDG < Formulation
       Elements.LhsPost=LhsPost;
       Elements.RhsPost=RhsPost;
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,iST,Results,Block,~,Parameters,~,Time,~,Sizes)
       if iST==1
@@ -133,9 +134,9 @@ classdef MagneticCURLCURL_HDG < Formulation
         Results(iD).MagneticInductionPost=Block(iD,iD).SolutionPost;
       end
     end
-    
+
   end
-  
+
 end
 
 %% Build block element
@@ -438,21 +439,21 @@ end
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=true;
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
     [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf,nsd);
-    
+
     % Check boundary
     isDirichlet=Faces.Dirichlet(iFace);
     isNatural=Faces.Natural(iFace);
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
     nf2=nf1+NumElementNodes;
@@ -464,13 +465,13 @@ for iFace=1:NumElementFaces
     nefB2=nefB1+NumFaceNodes;
     nefQ1=(iFace-1)*NumFaceNodes+(1:NumFaceNodes);
     nefR=1:nsd;
-    
+
     % Rotation operator in 2D (curved faces)
     if nsd==2
       Rxt1=-ny;
       Ryt1=+nx;
     end
-    
+
     % Flip face
     Node2Match1stNode1=Faces.Interior(2,iFace);
     FlipFace=max(Node2Match1stNode1);
@@ -489,7 +490,7 @@ for iFace=1:NumElementFaces
         nefR=circshift(flip(nefR(1:nsd)),Node2Match1stNode1);
       end
     end
-    
+
     % Gram-Schmidt orthonormalization in 3D (straight faces)
     if nsd==3
       V=Xf(nefR,1:nsd)';
@@ -497,14 +498,14 @@ for iFace=1:NumElementFaces
       R(:,1)=W(:,1);
       R(:,2)=(W(:,2)-(R(:,1)'*W(:,2))*R(:,1))/norm(W(:,2)-(R(:,1)'*W(:,2))*R(:,1));
     end
-    
+
     % Get rotation operator
     if nsd==3
       Rxt1=R(1,1); Rxt2=R(1,2);
       Ryt1=R(2,1); Ryt2=R(2,2);
       Rzt1=R(3,1); Rzt2=R(3,2);
     end
-    
+
     % Compute variables at nodes
     if nsd==2
       Jzf=Jze(nf1);
@@ -528,7 +529,7 @@ for iFace=1:NumElementFaces
     elseif nsd==3
       Qf=Ue(nefU3);
     end
-    
+
     % Compute variables at Gauss points
     Xfg=Nf*Xf;
     if nsd==2
@@ -591,7 +592,7 @@ for iFace=1:NumElementFaces
         vzfg=vfg(:,3);
       end
     end
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
     Mf=NwfT*Nf;
@@ -663,7 +664,7 @@ for iFace=1:NumElementFaces
       MfnzRyt2=NwfT*(nz.*Ryt2.*Nf);
       MfnzRzt2=NwfT*(nz.*Rzt2.*Nf);
     end
-    
+
     % Compute lhs
     if nsd==2
       KJB(nf1,nefB1)=KJB(nf1,nefB1)-sqrt(eta)*MfnyRxt1...
@@ -682,7 +683,7 @@ for iFace=1:NumElementFaces
       KJB(nf3,nefB2)=KJB(nf3,nefB2)+sqrt(eta)*MfnxRyt2...
                                    -sqrt(eta)*MfnyRxt2;
     end
-    
+
     if nsd==2
       KbJ(nf1,nf1)=KbJ(nf1,nf1)+sqrt(eta)*Mfny;
       KbJ(nf2,nf1)=KbJ(nf2,nf1)-sqrt(eta)*Mfnx;
@@ -694,7 +695,7 @@ for iFace=1:NumElementFaces
       KbJ(nf1,nf3)=KbJ(nf1,nf3)+sqrt(eta)*Mfny;
       KbJ(nf2,nf3)=KbJ(nf2,nf3)-sqrt(eta)*Mfnx;
     end
-    
+
     if isConvectiveTerm
       if nsd==2
         Kbb(nf1,nf1)=Kbb(nf1,nf1)+NwfT*((+vyfg.*ny).*Nf);
@@ -713,7 +714,7 @@ for iFace=1:NumElementFaces
         Kbb(nf3,nf3)=Kbb(nf3,nf3)+NwfT*((+vxfg.*nx+vyfg.*ny).*Nf);
       end
     end
-    
+
     if nsd==2
       Kbb(nf1,nf1)=Kbb(nf1,nf1)+tauB*Mfnyny;
       Kbb(nf2,nf1)=Kbb(nf2,nf1)-tauB*Mfnxny;
@@ -730,7 +731,7 @@ for iFace=1:NumElementFaces
       Kbb(nf2,nf3)=Kbb(nf2,nf3)-tauB*Mfnynz;
       Kbb(nf3,nf3)=Kbb(nf3,nf3)+tauB*Mfnxnx+tauB*Mfnyny;
     end
-    
+
     if nsd==2
       KbB(nf1,nefB1)=KbB(nf1,nefB1)-tauB*MfRxt1;
       KbB(nf2,nefB1)=KbB(nf2,nefB1)-tauB*MfRyt1;
@@ -742,23 +743,23 @@ for iFace=1:NumElementFaces
       KbB(nf2,nefB2)=KbB(nf2,nefB2)-tauB*MfRyt2;
       KbB(nf3,nefB2)=KbB(nf3,nefB2)-tauB*MfRzt2;
     end
-    
+
     KbQ(nf1,nefQ1)=KbQ(nf1,nefQ1)+Mfnx;
     KbQ(nf2,nefQ1)=KbQ(nf2,nefQ1)+Mfny;
     if nsd==3
       KbQ(nf3,nefQ1)=KbQ(nf3,nefQ1)+Mfnz;
     end
-    
+
     Kqb(nf1,nf1)=Kqb(nf1,nf1)-Mfnx;
     Kqb(nf1,nf2)=Kqb(nf1,nf2)-Mfny;
     if nsd==3
       Kqb(nf1,nf3)=Kqb(nf1,nf3)-Mfnz;
     end
-    
+
     Kqq(nf1,nf1)=Kqq(nf1,nf1)-tauQ*Mf;
-    
+
     KqQ(nf1,nefQ1)=KqQ(nf1,nefQ1)+tauQ*Mf;
-    
+
     if isConvectiveTerm && not(isDirichlet)
       if nsd==2
         KBb(nefB1,nf1)=KBb(nefB1,nf1)-NwfT*((+Rxt1.*vyfg.*ny...
@@ -786,7 +787,7 @@ for iFace=1:NumElementFaces
                                              +Rzt2.*(vxfg.*nx+vyfg.*ny)).*Nf);
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         KBb(nefB1,nf1)=KBb(nefB1,nf1)-tauB*MfRxt1;
@@ -800,7 +801,7 @@ for iFace=1:NumElementFaces
         KBb(nefB2,nf3)=KBb(nefB2,nf3)-tauB*MfRzt2;
       end
     end
-    
+
     if nsd==2
       KBB(nefB1,nefB1)=KBB(nefB1,nefB1)+tauB*MfRxt1Rxt1...
                                        +tauB*MfRyt1Ryt1;
@@ -818,7 +819,7 @@ for iFace=1:NumElementFaces
                                        +tauB*MfRyt2Ryt2...
                                        +tauB*MfRzt2Rzt2;
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         KBQ(nefB1,nefQ1)=KBQ(nefB1,nefQ1)-MfnxRxt1...
@@ -832,7 +833,7 @@ for iFace=1:NumElementFaces
                                          -MfnzRzt2;
       end
     end
-    
+
     if not(isDirichlet)
       KQb(nefQ1,nf1)=KQb(nefQ1,nf1)+Mfnx;
       KQb(nefQ1,nf2)=KQb(nefQ1,nf2)+Mfny;
@@ -840,9 +841,9 @@ for iFace=1:NumElementFaces
         KQb(nefQ1,nf3)=KQb(nefQ1,nf3)+Mfnz;
       end
     end
-    
+
     KQQ(nefQ1,nefQ1)=KQQ(nefQ1,nefQ1)-tauQ*Mf;
-    
+
     % Compute rhs
     if nsd==2
       fJ(nf1,1)=fJ(nf1,1)-NwfT*(sqrt(eta)*(nx.*Btyfg-ny.*Btxfg));
@@ -851,7 +852,7 @@ for iFace=1:NumElementFaces
       fJ(nf2,1)=fJ(nf2,1)-NwfT*(sqrt(eta)*(nz.*Btxfg-nx.*Btzfg));
       fJ(nf3,1)=fJ(nf3,1)-NwfT*(sqrt(eta)*(nx.*Btyfg-ny.*Btxfg));
     end
-    
+
     if isConvectiveTerm
       if nsd==2
         fb(nf1,1)=fb(nf1,1)-NwfT*((bxfg.*vyfg-vxfg.*byfg).*ny);
@@ -865,7 +866,7 @@ for iFace=1:NumElementFaces
                                  +(bzfg.*vyfg-vzfg.*byfg).*ny);
       end
     end
-    
+
     if nsd==2
       fb(nf1,1)=fb(nf1,1)+NwfT*(sqrt(eta)*(-ny.*Jzfg));
       fb(nf2,1)=fb(nf2,1)+NwfT*(sqrt(eta)*(+nx.*Jzfg));
@@ -874,7 +875,7 @@ for iFace=1:NumElementFaces
       fb(nf2,1)=fb(nf2,1)+NwfT*(sqrt(eta)*(+nx.*Jzfg-nz.*Jxfg));
       fb(nf3,1)=fb(nf3,1)+NwfT*(sqrt(eta)*(+ny.*Jxfg-nx.*Jyfg));
     end
-    
+
     if nsd==2
       fb(nf1,1)=fb(nf1,1)+NwfT*(tauB*(+ny.*(nx.*byfg-ny.*bxfg)));
       fb(nf2,1)=fb(nf2,1)+NwfT*(tauB*(-nx.*(nx.*byfg-ny.*bxfg)));
@@ -886,29 +887,29 @@ for iFace=1:NumElementFaces
       fb(nf3,1)=fb(nf3,1)+NwfT*(tauB*(+nx.*(nz.*bxfg-nx.*bzfg)...
                                       -ny.*(ny.*bzfg-nz.*byfg)));
     end
-    
+
     fb(nf1,1)=fb(nf1,1)+NwfT*(tauB*Btxfg);
     fb(nf2,1)=fb(nf2,1)+NwfT*(tauB*Btyfg);
     if nsd==3
       fb(nf3,1)=fb(nf3,1)+NwfT*(tauB*Btzfg);
     end
-    
+
     fb(nf1,1)=fb(nf1,1)-NwfT*(Qfg.*nx);
     fb(nf2,1)=fb(nf2,1)-NwfT*(Qfg.*ny);
     if nsd==3
       fb(nf3,1)=fb(nf3,1)-NwfT*(Qfg.*nz);
     end
-    
+
     if nsd==2
       fq(nf1,1)=fq(nf1,1)+NwfT*(bxfg.*nx+byfg.*ny);
     elseif nsd==3
       fq(nf1,1)=fq(nf1,1)+NwfT*(bxfg.*nx+byfg.*ny+bzfg.*nz);
     end
-    
+
     fq(nf1,1)=fq(nf1,1)+NwfT*(tauQ*qfg);
-    
+
     fq(nf1,1)=fq(nf1,1)-NwfT*(tauQ*Qfg);
-    
+
     if isConvectiveTerm && not(isDirichlet)
       if nsd==2
         fB(nefB1,1)=fB(nefB1,1)+NwfT*(Rxt1.*(bxfg.*vyfg-vxfg.*byfg).*ny...
@@ -928,7 +929,7 @@ for iFace=1:NumElementFaces
                                              (bzfg.*vyfg-vzfg.*byfg).*ny));
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         fB(nefB1,1)=fB(nefB1,1)-NwfT*(Rxt1.*(sqrt(eta)*(-ny.*Jzfg))+...
@@ -942,7 +943,7 @@ for iFace=1:NumElementFaces
                                       Rzt2.*(sqrt(eta)*(ny.*Jxfg-nx.*Jyfg)));
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         fB(nefB1,1)=fB(nefB1,1)+NwfT*(Rxt1.*(Qfg.*nx)+...
@@ -956,7 +957,7 @@ for iFace=1:NumElementFaces
                                       Rzt2.*(Qfg.*nz));
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         fB(nefB1,1)=fB(nefB1,1)+NwfT*(Rxt1.*(tauB*bxfg)+...
@@ -970,7 +971,7 @@ for iFace=1:NumElementFaces
                                       Rzt2.*(tauB*bzfg));
       end
     end
-    
+
     if nsd==2
       fB(nefB1,1)=fB(nefB1,1)-NwfT*(Rxt1.*(tauB*Btxfg)+...
                                     Ryt1.*(tauB*Btyfg));
@@ -982,7 +983,7 @@ for iFace=1:NumElementFaces
                                     Ryt2.*(tauB*Btyfg)+...
                                     Rzt2.*(tauB*Btzfg));
     end
-    
+
     if isDirichlet
       if nsd==2
         fB(nefB1,1)=fB(nefB1,1)+NwfT*(Rxt1.*(tauB*bDtxfg)+...
@@ -996,7 +997,7 @@ for iFace=1:NumElementFaces
                                       Rzt2.*(tauB*bDtzfg));
       end
     end
-    
+
     if isNatural
       if nsd==2
         fB(nefB1,1)=fB(nefB1,1)+NwfT*(Rxt1.*eNtxfg+...
@@ -1010,7 +1011,7 @@ for iFace=1:NumElementFaces
                                       Rzt2.*eNtzfg);
       end
     end
-    
+
     if not(isDirichlet)
       if nsd==2
         fQ(nefQ1,1)=fQ(nefQ1,1)-NwfT*(bxfg.*nx+byfg.*ny);
@@ -1018,21 +1019,21 @@ for iFace=1:NumElementFaces
         fQ(nefQ1,1)=fQ(nefQ1,1)-NwfT*(bxfg.*nx+byfg.*ny+bzfg.*nz);
       end
     end
-    
+
     if not(isDirichlet)
       fQ(nefQ1,1)=fQ(nefQ1,1)-NwfT*(tauQ*qfg);
     end
-    
+
     fQ(nefQ1,1)=fQ(nefQ1,1)+NwfT*(tauQ*Qfg);
-    
+
     if isDirichlet
       fQ(nefQ1,1)=fQ(nefQ1,1)-NwfT*(tauQ*qDfg);
     end
-    
+
     if isNatural
       fQ(nefQ1,1)=fQ(nefQ1,1)+NwfT*(bNnfg);
     end
-    
+
     % Clear blocks
     if nsd==2
       KBJ(nefB1,nf1)=KJB(nf1,nefB1)'*not(isDirichlet);
@@ -1044,7 +1045,7 @@ for iFace=1:NumElementFaces
       KBJ(nefB2,nf2)=KJB(nf2,nefB2)'*not(isDirichlet);
       KBJ(nefB2,nf3)=KJB(nf3,nefB2)'*not(isDirichlet);
     end
-    
+
     KQq(nefQ1,nf1)=KqQ(nf1,nefQ1)'*not(isDirichlet);
   end
 end

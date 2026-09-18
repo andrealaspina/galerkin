@@ -1,16 +1,17 @@
-classdef Magnetic_HDG < Formulation  
-  
+classdef Magnetic_HDG < Formulation
+% Solves the magnetic induction equation with the HDG method
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) NumSpaceDim+1;
-    
+
     % Number of Voigt components
     NumVoigtComp=@(NumSpaceDim) NumSpaceDim*(NumSpaceDim+1)/2;
-    
+
     % Number of local components
     NumLocalComp=@(NumSpaceDim) NumSpaceDim*(NumSpaceDim+1)/2+NumSpaceDim+1;
-    
+
     % Number of post-processed components
     NumPostComp=@(NumSpaceDim) NumSpaceDim;
 
@@ -19,14 +20,14 @@ classdef Magnetic_HDG < Formulation
 
     % Time derivative order
     TimeDerOrder=1;
-    
+
     % Domain
     Domain='Time';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,Parameters,Time,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes*Sizes(iD).NumGlobalComp,1);
@@ -36,7 +37,7 @@ classdef Magnetic_HDG < Formulation
           Parameters(iD).TimeDerOrder);
       end
     end
-    
+
     %% Compute initial conditions
     function [Block]=computeInitialConditions(~,iD,Block,Parameters,Mesh,~,Time,~,Sizes)
       if strcmp(Time.TimeDependent,'yes')
@@ -46,7 +47,7 @@ classdef Magnetic_HDG < Formulation
           Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',Time.InitialTime),...
           zeros(Sizes(iD).NumLocalNodes,1)];
         Block(iD,iD).SolutionOld(:,:,1)=Block(iD,iD).SolutionLocal;
-        
+
         % Get ghost solutions for BDF order > 2
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder-1
@@ -60,7 +61,7 @@ classdef Magnetic_HDG < Formulation
         end
       end
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD,Block,Elements,~,Parameters,~,~,Time,RefElement,Sizes)
       NodesElem=Elements(iD).Nodes;
@@ -88,7 +89,7 @@ classdef Magnetic_HDG < Formulation
       Elements(iD).MatLocal=MatLocal;
       Elements(iD).VecLocal=VecLocal;
     end
-    
+
     %% Do post-process
     function [Elements]=doPostProcess(~,Elements,~,Parameters,~,Time,RefElement,Sizes)
       NodesElem=Elements.Nodes;
@@ -108,7 +109,7 @@ classdef Magnetic_HDG < Formulation
       Elements.LhsPost=LhsPost;
       Elements.RhsPost=RhsPost;
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,iST,Results,Block,~,Parameters,~,Time,~,Sizes)
       if iST==1
@@ -129,9 +130,9 @@ classdef Magnetic_HDG < Formulation
         Results(iD).MagneticInductionPost=Block(iD,iD).SolutionPost;
       end
     end
-    
+
   end
-  
+
 end
 
 %% Build block element
@@ -349,7 +350,7 @@ if isTimeDependent
   end
 end
 
-if isConvectiveTerm  
+if isConvectiveTerm
   if nsd==2
     Kbb(ne1,ne1)=Kbb(ne1,ne1)-NweyT*((+vyeg).*Ne);
     Kbb(ne2,ne1)=Kbb(ne2,ne1)-NwexT*((-vyeg).*Ne);
@@ -470,17 +471,17 @@ end
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=true;
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
     [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf,nsd);
-    
+
     % Check boundary
     isExterior=Faces.Exterior(iFace);
     isDirichlet_b_x=Faces.Dirichlet_b_x(iFace);
@@ -492,7 +493,7 @@ for iFace=1:NumElementFaces
     if nsd==3; isNeumann_s_z=Faces.Neumann_s_z(iFace); end
     isDirichlet_b=isDirichlet_b_x || isDirichlet_b_y || (nsd==3 && isDirichlet_b_z);
     isNeumann_s=isNeumann_s_x || isNeumann_s_y || (nsd==3 && isNeumann_s_z);
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
     nf2=nf1+NumElementNodes;
@@ -508,7 +509,7 @@ for iFace=1:NumElementFaces
     nefB2=nefB1+NumFaceNodes;
     nefB3=nefB2+NumFaceNodes;
     nefQ1=(iFace-1)*NumFaceNodes+(1:NumFaceNodes);
-    
+
     % Flip face
     Node2Match1stNode1=Faces.Interior(2,iFace);
     FlipFace=max(Node2Match1stNode1);
@@ -523,7 +524,7 @@ for iFace=1:NumElementFaces
       nefB3=nefB3(order);
       nefQ1=nefQ1(order);
     end
-    
+
     % Compute variables at nodes
     if nsd==2
       Gxxf=Gxxe(nf1);
@@ -553,7 +554,7 @@ for iFace=1:NumElementFaces
     elseif nsd==3
       Qf=Ue(nefU4);
     end
-    
+
     % Compute variables at Gauss points
     Xfg=Nf*Xf;
     if nsd==2
@@ -607,7 +608,7 @@ for iFace=1:NumElementFaces
         vzfg=vfg(:,3);
       end
     end
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
     Mf=NwfT*Nf;
@@ -617,7 +618,7 @@ for iFace=1:NumElementFaces
     if nsd==3
       Mfnz=NwfT*(nz.*Nf);
     end
-    
+
     % Compute common terms
     if isDirichlet_b_x
       Bxfg=bDxfg;
@@ -631,16 +632,16 @@ for iFace=1:NumElementFaces
     if isDirichlet_q
       Qfg=qDfg;
     end
-    
+
     % Compute lhs
     Kbb(nf1,nf1)=Kbb(nf1,nf1)+tauB*Mf;
     Kbb(nf2,nf2)=Kbb(nf2,nf2)+tauB*Mf;
     if nsd==3
       Kbb(nf3,nf3)=Kbb(nf3,nf3)+tauB*Mf;
     end
-    
+
     Kqq(nf1,nf1)=Kqq(nf1,nf1)-tauQ*Mf;
-    
+
     if not(isDirichlet_b_x)
       if nsd==2
         KGB(nf1,nefB1)=KGB(nf1,nefB1)-Voigt1*Mfnx;
@@ -654,7 +655,7 @@ for iFace=1:NumElementFaces
         KGB(nf5,nefB1)=KGB(nf5,nefB1)-Voigt3*Mfnz;
       end
     end
-    
+
     if not(isDirichlet_b_y)
       if nsd==2
         KGB(nf1,nefB2)=KGB(nf1,nefB2)-Voigt2*Mfny;
@@ -668,7 +669,7 @@ for iFace=1:NumElementFaces
         KGB(nf6,nefB2)=KGB(nf6,nefB2)-Voigt3*Mfnz;
       end
     end
-    
+
     if nsd==3 && not(isDirichlet_b_z)
       KGB(nf1,nefB3)=KGB(nf1,nefB3)-Voigt2*Mfnz;
       KGB(nf2,nefB3)=KGB(nf2,nefB3)-Voigt2*Mfnz;
@@ -676,7 +677,7 @@ for iFace=1:NumElementFaces
       KGB(nf5,nefB3)=KGB(nf5,nefB3)-Voigt3*Mfnx;
       KGB(nf6,nefB3)=KGB(nf6,nefB3)-Voigt3*Mfny;
     end
-    
+
     if not(isDirichlet_b_x) && isConvectiveTerm
       if nsd==2
         KbB(nf1,nefB1)=KbB(nf1,nefB1)+NwfT*((+vyfg.*ny).*Nf);
@@ -687,7 +688,7 @@ for iFace=1:NumElementFaces
         KbB(nf3,nefB1)=KbB(nf3,nefB1)+NwfT*((-vzfg.*nx).*Nf);
       end
     end
-    
+
     if not(isDirichlet_b_y) && isConvectiveTerm
       if nsd==2
         KbB(nf1,nefB2)=KbB(nf1,nefB2)+NwfT*((-vxfg.*ny).*Nf);
@@ -698,78 +699,78 @@ for iFace=1:NumElementFaces
         KbB(nf3,nefB2)=KbB(nf3,nefB2)+NwfT*((-vzfg.*ny).*Nf);
       end
     end
-    
+
     if nsd==3 && not(isDirichlet_b_z) && isConvectiveTerm
       KbB(nf1,nefB3)=KbB(nf1,nefB3)+NwfT*((-vxfg.*nz).*Nf);
       KbB(nf2,nefB3)=KbB(nf2,nefB3)+NwfT*((-vyfg.*nz).*Nf);
       KbB(nf3,nefB3)=KbB(nf3,nefB3)+NwfT*((+vxfg.*nx+vyfg.*ny).*Nf);
     end
-    
+
     if not(isDirichlet_b_x)
       KbB(nf1,nefB1)=KbB(nf1,nefB1)-tauB*Mf;
     end
-    
+
     if not(isDirichlet_b_y)
       KbB(nf2,nefB2)=KbB(nf2,nefB2)-tauB*Mf;
     end
-    
+
     if nsd==3 && not(isDirichlet_b_z)
       KbB(nf3,nefB3)=KbB(nf3,nefB3)-tauB*Mf;
     end
-    
+
     if not(isDirichlet_b_x)
       KqB(nf1,nefB1)=KqB(nf1,nefB1)-Mfnx;
     end
-    
+
     if not(isDirichlet_b_y)
       KqB(nf1,nefB2)=KqB(nf1,nefB2)-Mfny;
     end
-    
+
     if nsd==3 && not(isDirichlet_b_z)
       KqB(nf1,nefB3)=KqB(nf1,nefB3)-Mfnz;
     end
-    
+
     if not(isDirichlet_q)
       KqQ(nf1,nefQ1)=KqQ(nf1,nefQ1)+tauQ*Mf;
     end
-    
+
     if not(isDirichlet_b_x)
       KBb(nefB1,nf1)=KBb(nefB1,nf1)-tauB*Mf;
     end
-    
+
     if not(isDirichlet_b_y)
       KBb(nefB2,nf2)=KBb(nefB2,nf2)-tauB*Mf;
     end
-    
+
     if nsd==3 && not(isDirichlet_b_z)
       KBb(nefB3,nf3)=KBb(nefB3,nf3)-tauB*Mf;
     end
-    
+
     if not(isDirichlet_b_x)
       KBB(nefB1,nefB1)=KBB(nefB1,nefB1)+tauB*Mf;
     end
-    
+
     if not(isDirichlet_b_y)
       KBB(nefB2,nefB2)=KBB(nefB2,nefB2)+tauB*Mf;
     end
-    
+
     if nsd==3 && not(isDirichlet_b_z)
       KBB(nefB3,nefB3)=KBB(nefB3,nefB3)+tauB*Mf;
     end
-    
+
     if not(isDirichlet_q)
       KQQ(nefQ1,nefQ1)=KQQ(nefQ1,nefQ1)-tauQ*Mf;
     end
-    
+
     % Compute rhs
     fb(nf1,1)=fb(nf1,1)-NwfT*(tauB*bxfg);
     fb(nf2,1)=fb(nf2,1)-NwfT*(tauB*byfg);
     if nsd==3
       fb(nf3,1)=fb(nf3,1)-NwfT*(tauB*bzfg);
     end
-    
+
     fq(nf1,1)=fq(nf1,1)+NwfT*(tauQ*qfg);
-    
+
     if nsd==2
       fG(nf1,1)=fG(nf1,1)+NwfT*(+Voigt1*nx.*Bxfg...
                                 +Voigt2*ny.*Byfg);
@@ -794,7 +795,7 @@ for iFace=1:NumElementFaces
       fG(nf6,1)=fG(nf6,1)+NwfT*(+Voigt3*ny.*Bzfg...
                                 +Voigt3*nz.*Byfg);
     end
-    
+
     if isConvectiveTerm
       if nsd==2
         fb(nf1,1)=fb(nf1,1)-NwfT*((Bxfg.*vyfg-vxfg.*Byfg).*ny);
@@ -808,13 +809,13 @@ for iFace=1:NumElementFaces
                                  +(Bzfg.*vyfg-vzfg.*Byfg).*ny);
       end
     end
-    
+
     fb(nf1,1)=fb(nf1,1)+NwfT*(tauB*Bxfg);
     fb(nf2,1)=fb(nf2,1)+NwfT*(tauB*Byfg);
     if nsd==3
       fb(nf3,1)=fb(nf3,1)+NwfT*(tauB*Bzfg);
     end
-    
+
     fq(nf1,1)=fq(nf1,1)+NwfT*(Bxfg.*nx+Byfg.*ny-tauQ*Qfg);
     if nsd==3
       fq(nf1,1)=fq(nf1,1)+NwfT*(Bzfg.*nz);
@@ -831,7 +832,7 @@ for iFace=1:NumElementFaces
                                       +qfg.*nx);
       end
     end
-    
+
     if not(isExterior) || isNeumann_s_y
       if nsd==2
         fB(nefB2,1)=fB(nefB2,1)+NwfT*(+Voigt2*ny.*Gxxfg+Voigt1*ny.*Gyyfg...
@@ -843,41 +844,41 @@ for iFace=1:NumElementFaces
                                       +qfg.*ny);
       end
     end
-    
+
     if nsd==3 && (not(isExterior) || isNeumann_s_z)
       fB(nefB3,1)=fB(nefB3,1)+NwfT*(+Voigt2*nz.*Gxxfg+Voigt2*nz.*Gyyfg+Voigt1*nz.*Gzzfg...
                                     +Voigt3*nx.*Gxzfg+Voigt3*ny.*Gyzfg...
                                     +qfg.*nz);
     end
-    
+
     if not(isDirichlet_b_x)
       fB(nefB1,1)=fB(nefB1,1)+NwfT*(+tauB*(bxfg-Bxfg));
     end
-    
+
     if not(isDirichlet_b_y)
       fB(nefB2,1)=fB(nefB2,1)+NwfT*(+tauB*(byfg-Byfg));
     end
-    
+
     if nsd==3 && not(isDirichlet_b_z)
       fB(nefB3,1)=fB(nefB3,1)+NwfT*(+tauB*(bzfg-Bzfg));
     end
-      
+
     if not(isDirichlet_q)
       fQ(nefQ1,1)=fQ(nefQ1,1)-NwfT*(tauQ*(qfg-Qfg));
     end
-    
+
     if isNeumann_s_x
       fB(nefB1,1)=fB(nefB1,1)+NwfT*(sNxfg);
     end
-    
+
     if isNeumann_s_y
       fB(nefB2,1)=fB(nefB2,1)+NwfT*(sNyfg);
     end
-    
+
     if nsd==3 && isNeumann_s_z
       fB(nefB3,1)=fB(nefB3,1)+NwfT*(sNzfg);
     end
-    
+
     % Clear blocks
     if nsd==2
       KBG(nefB1,nf1)=KGB(nf1,nefB1)'*(not(isExterior) || isNeumann_s_x);
@@ -895,13 +896,13 @@ for iFace=1:NumElementFaces
       KBG(nefB3,nf5)=KGB(nf5,nefB3)'*(not(isExterior) || isNeumann_s_z);
       KBG(nefB3,nf6)=KGB(nf6,nefB3)'*(not(isExterior) || isNeumann_s_z);
     end
-    
+
     KBq(nefB1,nf1)=KqB(nf1,nefB1)'*(not(isExterior) || isNeumann_s_x);
     KBq(nefB2,nf1)=KqB(nf1,nefB2)'*(not(isExterior) || isNeumann_s_y);
     if nsd==3
       KBq(nefB3,nf1)=KqB(nf1,nefB3)'*(not(isExterior) || isNeumann_s_z);
     end
-    
+
     % Remove undetermination
     if isDirichlet_b_x
       KBB(nefB1,nefB1)=eye(NumFaceNodes);
@@ -1163,18 +1164,18 @@ for iFace=1:NumElementFaces
   [~,nx,ny,nz,wfg,Nlf]=mapShapeFunctions(0,RefElement.PostLow,RefElement.Post,Xf,nsd);
   N1f=ones(length(wfg),1);
   Xfg=Nlf*Xf;
-  
+
   % Check boundary
   isDirichlet_b_x=Faces.Dirichlet_b_x(iFace);
   isDirichlet_b_y=Faces.Dirichlet_b_y(iFace);
   if nsd==3; isDirichlet_b_z=Faces.Dirichlet_b_z(iFace); end
   isDirichlet_b=isDirichlet_b_x || isDirichlet_b_y || (nsd==3 && isDirichlet_b_z);
-  
+
   % Indices
   nlefU1=(iFace-1)*(nsd+1)*NumFaceNodes+(1:NumFaceNodes);
   nlefU2=nlefU1+NumFaceNodes;
   nlefU3=nlefU2+NumFaceNodes;
-  
+
   % Flip face
   Node2Match1stNode1=Faces.Interior(2,iFace);
   FlipFace=max(Node2Match1stNode1);
@@ -1184,14 +1185,14 @@ for iFace=1:NumElementFaces
     nlefU2=nlefU2(order);
     nlefU3=nlefU3(order);
   end
-  
+
   % Compute variables at nodes
   Bxf=Ue(nlefU1);
   Byf=Ue(nlefU2);
   if nsd==3
     Bzf=Ue(nlefU3);
   end
-  
+
   % Compute variables at Gauss points
   Bxfg=Nlf*Bxf;
   Byfg=Nlf*Byf;
@@ -1206,7 +1207,7 @@ for iFace=1:NumElementFaces
       bDzfg=bDfg(:,3);
     end
   end
-  
+
   % Compute common terms
   if isDirichlet_b_x
     Bxfg=bDxfg;
@@ -1217,10 +1218,10 @@ for iFace=1:NumElementFaces
   if nsd==3 && isDirichlet_b_z
     Bzfg=bDzfg;
   end
-  
+
   % Compute basic matrices
   Nw1fT=(wfg.*N1f)';
-  
+
   % Compute rhs
   if nsd==2
     fr(1)=fr(1)+Nw1fT*(-Bxfg.*ny+Byfg.*nx);

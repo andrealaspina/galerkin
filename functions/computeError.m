@@ -1,49 +1,36 @@
-function [Error]=computeError(...
-         Time,Mesh,Parameters,RefElement,Sizes,Solution,AnalyticSolution,Norm,Condition,Domain)
-         % Compute error
+function [Error]=computeError(Time,Mesh,Parameters,RefElement,Sizes,Solution,AnalyticSolution,...
+  Norm,Condition,Domain)
+% Compute the error of a solution with respect to an analytic one in the given norm
 
-% Loop in the elements
 if strcmp(Norm,'Number')
   Error=computeNumberError(Time,Solution,AnalyticSolution,Domain);
 else
   Error=0;
   parfor iElem=1:Sizes.NumElements
-    ErrorElem=computeElementError(iElem,Mesh,Time,Parameters,RefElement,Sizes,...
+    Error=Error+computeElementError(iElem,Mesh,Time,Parameters,RefElement,Sizes,...
       Solution,AnalyticSolution,Norm,Condition,Domain);
-    Error=Error+ErrorElem;
   end
-  Error=sqrt(Error); % Remove this to obtain area/volume of the geometry
+  Error=sqrt(Error); % Remove this to obtain the area/volume of the geometry
 end
 
 end
 
-function [Error]=computeNumberError(...
-  Time,Solution,AnalyticSolution,Domain)
+function [Error]=computeNumberError(Time,Solution,AnalyticSolution,Domain)
+% Error of a scalar quantity (relative if no analytic component is zero, absolute otherwise)
 
-% Get general parameters
-if strcmp(Domain,'Time')
-  t_or_w_or_n=Time.Time;
-elseif strcmp(Domain,'Frequency')
-  t_or_w_or_n=2*pi*Time.Frequency;
-elseif strcmp(Domain,'Mode')
-  t_or_w_or_n=Time.Mode(end);
-end
-
-% Get solution
 uh=Solution;
-uA=AnalyticSolution(t_or_w_or_n);
-
-% Compute (relative) error if all components of the analytical solution are not zero
-if not(any(uA<1e-12)) % Relative error if all components of the analytical solution are not zero
+uA=AnalyticSolution(getIndependentVariable(Time,Domain));
+if not(any(uA<1e-12))
   Error=abs((uh-uA)./uA);
-else                  % Aboslute error if some components of the analytical solution are zero
+else
   Error=abs(uh-uA);
 end
 
 end
 
-function [ErrorElem]=computeElementError(...
-  iElem,Mesh,Time,Parameters,RefElement,Sizes,Solution,AnalyticSolution,Norm,Condition,Domain)
+function [ErrorElem]=computeElementError(iElem,Mesh,Time,Parameters,RefElement,Sizes,...
+  Solution,AnalyticSolution,Norm,Condition,Domain)
+% Elemental contribution to the squared error
 
 % Get general parameters
 nsd=Sizes.NumSpaceDim;
@@ -51,13 +38,7 @@ k=Parameters.Degree;
 Ce=Mesh.Elements(:,iElem)';
 Xe=Mesh.Nodes(:,Ce)';
 uA=AnalyticSolution;
-if strcmp(Domain,'Time')
-  t_or_w_or_n=Time.Time;
-elseif strcmp(Domain,'Frequency')
-  t_or_w_or_n=2*pi*Time.Frequency;
-elseif strcmp(Domain,'Mode')
-  t_or_w_or_n=Time.Mode(end);
-end
+t_or_w_or_n=getIndependentVariable(Time,Domain);
 
 % Get solution
 if k==0
@@ -86,14 +67,13 @@ switch Norm
   case 'L2'
     ErrorElem=ErrorElemL2;
   case 'Hdiv'
-    % Check variable size
     if size(uhe,2)~=nsd
       error('Impossible to compute error in the Hdiv norm for this variable');
     end
-    
-    % Get analytic solution at nodes (potential discontinous solution across elements)
+
+    % Get analytic solution at nodes (potentially discontinuous across elements)
     uAe=Ne\uAeg;
-    
+
     % Compute Hdiv contribution
     if nsd==2
       ErrorElemHdiv=sum((((Nex*uhe(:,1)+Ney*uhe(:,2))-...
@@ -104,14 +84,13 @@ switch Norm
     end
     ErrorElem=[ErrorElemL2,ErrorElemHdiv];
   case 'Hcurl'
-    % Check variable size
     if size(uhe,2)~=nsd
       error('Impossible to compute error in the Hcurl norm for this variable');
     end
-    
-    % Get analytic solution at nodes (potential discontinous solution across elements)
+
+    % Get analytic solution at nodes (potentially discontinuous across elements)
     uAe=Ne\uAeg;
-    
+
     % Compute Hcurl contribution
     if nsd==2
       ErrorElemHcurl=sum((((Nex*uhe(:,2)-Ney*uhe(:,1))-...
@@ -128,9 +107,22 @@ switch Norm
 end
 ErrorElem=abs(ErrorElem);
 
-% Delete error contribution if the condition is not met
+% Discard the contribution if the condition is not met at the element center
 if not(feval(str2func(Condition),mean(Xe(:,1)),mean(Xe(:,2)),mean(Xe(:,3))))
   ErrorElem=0;
+end
+
+end
+
+function [t_or_w_or_n]=getIndependentVariable(Time,Domain)
+% Time, angular frequency or mode number, depending on the domain
+
+if strcmp(Domain,'Time')
+  t_or_w_or_n=Time.Time;
+elseif strcmp(Domain,'Frequency')
+  t_or_w_or_n=2*pi*Time.Frequency;
+elseif strcmp(Domain,'Mode')
+  t_or_w_or_n=Time.Mode(end);
 end
 
 end

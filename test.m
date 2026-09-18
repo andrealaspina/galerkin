@@ -1,4 +1,7 @@
 %% galerkin test
+%
+% Runs all the test cases in tests/ whose name starts with the name of this script and reports
+% which ones passed together with their CPU time.
 
 % Setup
 init;
@@ -18,15 +21,18 @@ end
 
 % Print results
 clc;
-Exitus='passed';
 for Test=1:length(Files)
   fprintf('\n%s%s',Files{Test},repmat('.',1,66-length(Files{Test})));
   if Passed(Test)
     fprintf('PASSED in %.1f sec',CPUTime(Test));
   else
     fprintf('FAILED!!!');
-    Exitus='failed';
   end
+end
+if all(Passed)
+  Exitus='passed';
+else
+  Exitus='failed';
 end
 fprintf('\n\nTest completed (%s) in %.0f sec (CPU time)\n',Exitus,sum(CPUTime));
 

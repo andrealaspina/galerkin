@@ -1,6 +1,5 @@
-function [MeshHigh]=generateMeshHighOrder(...
-         MeshLow,RefElementGeometry,RefElementApproxim)
-         % Generate hybrid mesh (a degree for the geometry and a higher one for the approximation)
+function [MeshHigh]=generateMeshHighOrder(MeshLow,RefElementGeometry,RefElementApproxim)
+% Generate a high-order mesh from a low-order one by adding the nodes of the approximation
 
 % Get general parameters
 Cg=MeshLow.Elements';
@@ -20,7 +19,7 @@ X1=Xg(1:N1,:);
 Nga=RefElementGeometry.ShapeFunctionsElem;
 pinvNaa=RefElementApproxim.PseudoinverseShapeFunctionsElem;
 
-% Insert additional nodes connectivity and coordinates
+% Compute coordinates of the additional nodes
 Xa_add=cell(NumElements,1);
 parfor iElem=1:NumElements
   Cge=Cg(iElem,:);
@@ -36,12 +35,8 @@ tol=1e-9;
 Xa_add_unique=Xa_add(ind1,:);
 Ca_add_unique=reshape(N1+ind2,[NumElementNodesAdd,NumElements])';
 
-% Merge nodes of linear mesh with nodes of high-order mesh
-Xa=[X1;Xa_add_unique];
-Ca=[C1,Ca_add_unique];
-
-% Return hybrid mesh
-MeshHigh.Nodes=Xa';
-MeshHigh.Elements=Ca';
+% Append the additional nodes to the linear mesh
+MeshHigh.Nodes=[X1;Xa_add_unique]';
+MeshHigh.Elements=[C1,Ca_add_unique]';
 
 end
