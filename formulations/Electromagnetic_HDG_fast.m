@@ -1,16 +1,16 @@
-classdef Electromagnetic_HDG_fast < Formulation  
-  
+classdef Electromagnetic_HDG_fast < Formulation
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) NumSpaceDim-1;
-    
+
     % Number of Voigt components
     NumVoigtComp=@(NumSpaceDim) 0;
-    
+
     % Number of local components
     NumLocalComp=@(NumSpaceDim) NumSpaceDim*(NumSpaceDim-1)/2+NumSpaceDim;
-    
+
     % Number of post-processed components
     NumPostComp=@(NumSpaceDim) NumSpaceDim;
 
@@ -19,14 +19,14 @@ classdef Electromagnetic_HDG_fast < Formulation
 
     % Time derivative order
     TimeDerOrder=1;
-    
+
     % Domain
     Domain='Time';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,Parameters,Time,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes*Sizes(iD).NumGlobalComp,1);
@@ -36,7 +36,7 @@ classdef Electromagnetic_HDG_fast < Formulation
           Parameters(iD).TimeDerOrder);
       end
     end
-    
+
     %% Compute initial conditions
     function [Block]=computeInitialConditions(~,iD,Block,Parameters,Mesh,~,Time,~,~)
       if strcmp(Time.TimeDependent,'yes')
@@ -46,7 +46,7 @@ classdef Electromagnetic_HDG_fast < Formulation
           Parameters(iD).ElectricField(...
           Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',Time.InitialTime)];
         Block(iD,iD).SolutionOld(:,:,1)=Block(iD,iD).SolutionLocal;
-        
+
         % Get ghost solutions for BDF order > 2
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder-1
@@ -60,13 +60,13 @@ classdef Electromagnetic_HDG_fast < Formulation
         end
       end
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD,Block,Elements,~,Parameters,~,~,Time,RefElement,Sizes)
       % Extract element data
       NodesElem=Elements(iD).Nodes;
       FacesElem=Elements(iD).Faces;
-      
+
       % Global lhs and local matrices
       if Time.TimeStep<=Time.BDFOrderEff
         LhsCoef=zeros(Sizes(iD).NumElementLhsCoef,Sizes(iD).NumElements);
@@ -82,10 +82,10 @@ classdef Electromagnetic_HDG_fast < Formulation
         Block(iD,iD).LhsGlobal=sparse(Block(iD,iD).LhsRowIndices,...
                                       Block(iD,iD).LhsColIndices,LhsCoef(:));
       end
-      
+
       % Extract element data
       SolutionOldElem=Elements(iD).SolutionOld;
-      
+
       % Element rhs
       RhsL=cell(Sizes(iD).NumElements,1);
       RhsG=cell(Sizes(iD).NumElements,1);
@@ -97,7 +97,7 @@ classdef Electromagnetic_HDG_fast < Formulation
         RhsL{iElem}=RhsLElem;
         RhsG{iElem}=RhsGElem;
       end
-      
+
       % Global rhs and local vectors
       RhsCoef=zeros(Sizes(iD).NumElementRhsCoef,Sizes(iD).NumElements);
       for iElem=1:Sizes(iD).NumElements
@@ -107,7 +107,7 @@ classdef Electromagnetic_HDG_fast < Formulation
       end
       Block(iD,iD).RhsGlobal=sparse(Block(iD,iD).RhsRowIndices,1,RhsCoef(:));
     end
-    
+
     %% Do post-process
     function [Elements]=doPostProcess(~,Elements,~,Parameters,~,Time,RefElement,Sizes)
       RefElement.PostLowHigh=createReferenceElement(Sizes.NumSpaceDim,...
@@ -132,7 +132,7 @@ classdef Electromagnetic_HDG_fast < Formulation
       Elements.LhsPost=LhsPost;
       Elements.RhsPost=RhsPost;
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,iST,Results,Block,~,Parameters,~,Time,~,Sizes)
       if iST==1
@@ -150,7 +150,7 @@ classdef Electromagnetic_HDG_fast < Formulation
         Results(iD).ElectricFieldPost=Block(iD,iD).SolutionPost;
       end
     end
-    
+
     %% Compute radiation
     function [Results]=computeRadiation(~,iD,Results,Elements,Mesh,Faces,RefElement,Sizes)
       NodesElem=Elements(iD).Nodes;
@@ -169,9 +169,9 @@ classdef Electromagnetic_HDG_fast < Formulation
       end
       Results(iD).Radiation=Radiation;
     end
-    
+
   end
-  
+
 end
 
 %% Build block element (lhs)
@@ -257,21 +257,21 @@ end
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=true;
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
     [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf(1:nsd,:),nsd);
-    
+
     % Check boundary
     isDirichlet=Faces.Dirichlet(iFace);
     isAbsorbing=Faces.Absorbing(iFace);
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
     nf2=nf1+NumElementNodes;
@@ -279,7 +279,7 @@ for iFace=1:NumElementFaces
     nef1=(iFace-1)*(nsd-1)*NumFaceNodes+(1:NumFaceNodes);
     nef2=nef1+NumFaceNodes;
     nefR=1:nsd;
-    
+
     % Flip face
     Node2Match1stNode1=Faces.Interior(2,iFace);
     FlipFace=max(Node2Match1stNode1);
@@ -289,7 +289,7 @@ for iFace=1:NumElementFaces
       nef2=nef2(order);
       nefR=circshift(flip(nefR(1:nsd)),Node2Match1stNode1);
     end
-    
+
     % Flip face (periodic (slave))
     if matchField(Faces,'Periodic') && not(isempty(Faces.Periodic))
       Node2Match1stNode1=Faces.Periodic(2,iFace);
@@ -309,7 +309,7 @@ for iFace=1:NumElementFaces
     if nsd==3
       R(:,2)=(W(:,2)-(R(:,1)'*W(:,2))*R(:,1))/norm(W(:,2)-(R(:,1)'*W(:,2))*R(:,1));
     end
-    
+
     % Get rotation operator
     if nsd==2
       Rxt1=R(1,1);
@@ -319,7 +319,7 @@ for iFace=1:NumElementFaces
       Ryt1=R(2,1); Ryt2=R(2,2);
       Rzt1=R(3,1); Rzt2=R(3,2);
     end
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
     Mf=NwfT*Nf;
@@ -341,7 +341,7 @@ for iFace=1:NumElementFaces
       Mfnynz=Mf*ny*nz;
       Mfnznz=Mf*nz*nz;
     end
-    
+
     % Compute lhs
     if nsd==2
       Kee(nf1,nf1)=Kee(nf1,nf1)+tauE*Mfnyny;
@@ -359,8 +359,8 @@ for iFace=1:NumElementFaces
       Kee(nf2,nf3)=Kee(nf2,nf3)-tauE*Mfnynz;
       Kee(nf3,nf3)=Kee(nf3,nf3)+tauE*Mfnxnx+tauE*Mfnyny;
     end
-    
-    if not(isDirichlet)                               
+
+    if not(isDirichlet)
       if nsd==2
         KHE(nf1,nef1)=KHE(nf1,nef1)+Rxt1*Mfny...
                                    -Ryt1*Mfnx;
@@ -378,7 +378,7 @@ for iFace=1:NumElementFaces
         KHE(nf3,nef2)=KHE(nf3,nef2)-Ryt2*Mfnx...
                                    +Rxt2*Mfny;
       end
-      
+
       if nsd==2
         KeE(nf1,nef1)=KeE(nf1,nef1)-Rxt1*tauE*Mf;
         KeE(nf2,nef1)=KeE(nf2,nef1)-Ryt1*tauE*Mf;
@@ -390,7 +390,7 @@ for iFace=1:NumElementFaces
         KeE(nf2,nef2)=KeE(nf2,nef2)-Ryt2*tauE*Mf;
         KeE(nf3,nef2)=KeE(nf3,nef2)-Rzt2*tauE*Mf;
       end
-      
+
       if nsd==2
         KEE(nef1,nef1)=KEE(nef1,nef1)+Rxt1*Rxt1*tauE*Mf...
                                      +Ryt1*Ryt1*tauE*Mf;
@@ -409,7 +409,7 @@ for iFace=1:NumElementFaces
                                      +Rzt2*Rzt2*tauE*Mf;
       end
     end
-    
+
     if isAbsorbing
       if nsd==2
         KEE(nef1,nef1)=KEE(nef1,nef1)+Rxt1*Rxt1*sqrt(epsilon/mu)*Mf...
@@ -429,7 +429,7 @@ for iFace=1:NumElementFaces
                                      +Rzt2*Rzt2*sqrt(epsilon/mu)*Mf;
       end
     end
-    
+
     % Remove undetermination
     if isDirichlet
       KEE(nef1,nef1)=eye(NumFaceNodes);
@@ -594,21 +594,21 @@ end
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=Faces.Exterior(iFace);
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
     [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf(1:nsd,:),nsd);
-    
+
     % Check boundary
     isDirichlet=Faces.Dirichlet(iFace);
     isAbsorbing=Faces.Absorbing(iFace);
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
     nf2=nf1+NumElementNodes;
@@ -616,7 +616,7 @@ for iFace=1:NumElementFaces
     nef1=(iFace-1)*(nsd-1)*NumFaceNodes+(1:NumFaceNodes);
     nef2=nef1+NumFaceNodes;
     nefR=1:nsd;
-    
+
     % Flip face
     Node2Match1stNode1=Faces.Interior(2,iFace);
     FlipFace=max(Node2Match1stNode1);
@@ -626,7 +626,7 @@ for iFace=1:NumElementFaces
       nef2=nef2(order);
       nefR=circshift(flip(nefR(1:nsd)),Node2Match1stNode1);
     end
-    
+
     % Flip face (periodic (slave))
     if matchField(Faces,'Periodic') && not(isempty(Faces.Periodic))
       Node2Match1stNode1=Faces.Periodic(2,iFace);
@@ -646,7 +646,7 @@ for iFace=1:NumElementFaces
     if nsd==3
       R(:,2)=(W(:,2)-(R(:,1)'*W(:,2))*R(:,1))/norm(W(:,2)-(R(:,1)'*W(:,2))*R(:,1));
     end
-    
+
     % Get rotation operator
     if nsd==2
       Rxt1=R(1,1);
@@ -656,7 +656,7 @@ for iFace=1:NumElementFaces
       Ryt1=R(2,1); Ryt2=R(2,2);
       Rzt1=R(3,1); Rzt2=R(3,2);
     end
-    
+
     % Compute variables at Gauss points
     Xfg=Nf*Xf;
     if isDirichlet
@@ -683,12 +683,12 @@ for iFace=1:NumElementFaces
         gzfg=gfg(:,3);
       end
     end
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
-    
+
     % Compute rhs
-    if isDirichlet      
+    if isDirichlet
       if nsd==2
         fH(nf1,1)=fH(nf1,1)+NwfT*(nx.*eDtyfg-ny.*eDtxfg);
       else
@@ -696,13 +696,13 @@ for iFace=1:NumElementFaces
         fH(nf2,1)=fH(nf2,1)+NwfT*(nz.*eDtxfg-nx.*eDtzfg);
         fH(nf3,1)=fH(nf3,1)+NwfT*(nx.*eDtyfg-ny.*eDtxfg);
       end
-      
+
       fe(nf1,1)=fe(nf1,1)+tauE*NwfT*(eDtxfg);
       fe(nf2,1)=fe(nf2,1)+tauE*NwfT*(eDtyfg);
       if nsd==3
         fe(nf3,1)=fe(nf3,1)+tauE*NwfT*(eDtzfg);
       end
-    elseif isAbsorbing      
+    elseif isAbsorbing
       if nsd==2
         fE(nef1,1)=fE(nef1,1)-NwfT*(Rxt1*gxfg+...
                                     Ryt1*gyfg);

@@ -29,7 +29,7 @@ if strcmp(Parameters.DiscretizationType,'CG')
   s=zeros(ng,nsd^2);
   dsdF=zeros(ng,nsd^4);
   D=NaN;
-  
+
   % Extract deformation gradient
   if nsd==2
     Fxx=F(:,1); Fxy=F(:,2);

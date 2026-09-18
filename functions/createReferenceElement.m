@@ -224,7 +224,7 @@ if nsd==3
   z=Xg3D(:,3);
   O=0*x;
   I=1+O;
-  
+
   % Pascal triangle and derivatives in 3D
   switch kNodes
     case 0
@@ -275,7 +275,7 @@ if nsd==3
     otherwise
       error('Element not yet implemented');
   end
-  
+
   % Coefficients in 3D
   if strcmp(Distribution,'Uniform')
     switch kNodes
@@ -324,7 +324,7 @@ if nsd==3
         error('Element not yet implemented');
     end
   end
-  
+
   % Evaluate shape functions and derivatives with required precision in 3D
   if Digits==16
     C3D=eval(C3D); %#ok
@@ -352,7 +352,7 @@ if nsd>=2
   y=Xg2D(:,2);
   O=0*x;
   I=1+O;
-  
+
   % Pascal triangle and derivatives in 2D
   switch kNodes
     case 0
@@ -394,7 +394,7 @@ if nsd>=2
     otherwise
       error('Element not yet implemented');
   end
-  
+
   % Coefficients in 2D
   if strcmp(Distribution,'Uniform')
     switch kNodes
@@ -443,7 +443,7 @@ if nsd>=2
         error('Element not yet implemented');
     end
   end
-  
+
   % Evaluate shape functions and derivatives with required precision in 2D
   if Digits==16
     C2D=eval(C2D); %#ok
@@ -461,7 +461,7 @@ if nsd>=1
   x=Xg1D(:,1);
   O=0*x;
   I=1+O;
-  
+
   % Pascal triangle and derivatives in 1D
   switch kNodes
     case 0
@@ -494,7 +494,7 @@ if nsd>=1
     otherwise
       error('Element not yet implemented');
   end
-  
+
   % Coefficients in 1D
   if strcmp(Distribution,'Uniform')
     switch kNodes
@@ -543,7 +543,7 @@ if nsd>=1
         error('Element not yet implemented');
     end
   end
-  
+
   % Evaluate shape functions and derivatives with required precision in 1D
   if Digits==16
     C1D=eval(C1D); %#ok

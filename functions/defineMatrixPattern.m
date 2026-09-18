@@ -145,8 +145,8 @@ for iD=1:Simulation.NumDiscretizations
     end
     Block(iD,iDC).LhsRowIndices=reshape(ind_i,[],1);
     Block(iD,iDC).LhsColIndices=reshape(ind_j,[],1);
-    
-    % Add dummy indices to make sure to span the entire DOFs of the coupled discretizations    
+
+    % Add dummy indices to make sure to span the entire DOFs of the coupled discretizations
     if strcmp(Parameters(iD).DiscretizationType,'CG') && ...
        strcmp(Parameters(iDC).DiscretizationType,'CG')
       Block(iD,iDC).LhsRowIndices=[Block(iD,iDC).LhsRowIndices;...

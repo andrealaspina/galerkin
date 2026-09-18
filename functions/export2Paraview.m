@@ -34,7 +34,7 @@ end
 if nsd==2
   switch k
     case 0
-      order=[1,2,3];    
+      order=[1,2,3];
     case 1
       order=[1,2,3];
     case 2
@@ -110,7 +110,7 @@ fprintf(vtkId,'%d\n',CellType);
 % Write point data
 fprintf(vtkId,'\nPOINT_DATA %d\n',NumNodes);
 for iP=1:length(Options.Export2Paraview)
-  
+
   % Get data in nodal format
   VariableName=Options.Export2Paraview{iP};
   if matchField(Results,VariableName)
@@ -132,7 +132,7 @@ for iP=1:length(Options.Export2Paraview)
   else
     continue;
   end
-  
+
   % Format data in vtk format
   isComplex=not(isreal(Variable));
   for iRI=1:(1+isComplex)

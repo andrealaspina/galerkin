@@ -20,7 +20,7 @@ for iD=1:Simulation.NumDiscretizations
   end
   NumGlobalComp=Sizes(iD).NumGlobalComp;
   NumFaceNodesHigh=size(RefElement(iD,iD).NodesCoordFace,1);
-  
+
   % Get interior faces
   if strcmp(Parameters(iD).DiscretizationType,'HDG')
     Faces(iD,iD).Interior=zeros(NumElements*NumElemFaces,5);
@@ -55,7 +55,7 @@ for iD=1:Simulation.NumDiscretizations
     end
     Faces(iD,iD).Interior=Faces(iD,iD).Interior(1:iFaceInt,:);
   end
-  
+
   % Get exterior faces and BCs
   Faces(iD,iD).Exterior=double.empty(0,2);
   Elements(iD).Faces.Exterior=...
@@ -66,7 +66,7 @@ for iD=1:Simulation.NumDiscretizations
   for iBoundaryName=1:length(BoundaryNames)
     Faces(iD,iD).(BoundaryNames{iBoundaryName})=[];
     Elements(iD).Faces.(BoundaryNames{iBoundaryName})=...
-        mat2cell(repmat(zeros(1,NumElemFaces),1,NumElements),1,repmat(NumElemFaces,1,NumElements))';  
+        mat2cell(repmat(zeros(1,NumElemFaces),1,NumElements),1,repmat(NumElemFaces,1,NumElements))';
     BCs(iD).(BoundaryNames{iBoundaryName})=[];
   end
   for iBoundaryFace=1:NumFaces
@@ -117,7 +117,7 @@ for iD=1:Simulation.NumDiscretizations
       Faces(iD,iD).(BoundaryNames{iBoundaryName})=double.empty(0,2);
     end
   end
-  
+
   % Get faces of specific regions
   if not(isempty(Regions))
     RegionsNames=fieldnames(Regions(iD));
@@ -131,8 +131,8 @@ for iD=1:Simulation.NumDiscretizations
           Mesh(iD).Degree1.Nodes(1,:),Mesh(iD).Degree1.Nodes(2,:)))';
       elseif Sizes(iD).NumSpaceDim==3
         Nodes=find(Regions(iD).(RegionsNames{iRegionName}).Definition(...
-          Mesh(iD).Degree1.Nodes(1,:),Mesh(iD).Degree1.Nodes(2,:),Mesh(iD).Degree1.Nodes(3,:)))';                                             
-      end                  
+          Mesh(iD).Degree1.Nodes(1,:),Mesh(iD).Degree1.Nodes(2,:),Mesh(iD).Degree1.Nodes(3,:)))';
+      end
       ElementNodes=ismember(Mesh(iD).Degree1.Elements',Nodes);
       ElementSharing=find(sum(ElementNodes,2)==NumFaceNodes);
       Element=ElementSharing;
@@ -163,7 +163,7 @@ for iD=1:Simulation.NumDiscretizations
       BCs(iD).(RegionsNames{iRegionName})=[BCs(iD).(RegionsNames{iRegionName});Nodes];
     end
   end
-  
+
   % Couple faces at the interface
   if matchField(Boundaries(iD),'Interface')
     for iFace=1:size(Faces(iD,iD).Interface,1)
@@ -190,7 +190,7 @@ for iD=1:Simulation.NumDiscretizations
       end
     end
   end
-  
+
   % Couple faces for periodic boundary conditions
   if matchField(Boundaries(iD),'PeriodicMaster')
     Faces(iD,iD).Periodic=zeros(size(Faces(iD,iD).PeriodicMaster,1),5);
@@ -223,7 +223,7 @@ for iD=1:Simulation.NumDiscretizations
       error('Not all periodic faces are properly coupled!');
     end
   end
-  
+
   % Build faces connectivity
   if strcmp(Parameters(iD).DiscretizationType,'HDG')
     Faces(iD,iD).Connectivity=zeros(NumElements,NumElemFaces);
@@ -237,7 +237,7 @@ for iD=1:Simulation.NumDiscretizations
       Faces(iD,iD).Connectivity(Ext(1),Ext(2))=iFace+size(Faces(iD,iD).Interior,1);
     end
   end
-  
+
   % Modify faces connectivity for periodic boundary conditions
   if strcmp(Parameters(iD).DiscretizationType,'HDG') && matchField(Faces(iD),'Periodic')
    for iFace=1:size(Faces(iD,iD).Periodic,1)
@@ -247,7 +247,7 @@ for iD=1:Simulation.NumDiscretizations
    Faces(iD,iD).Connectivity=changem(Faces(iD,iD).Connectivity,...
      1:length(unique(Faces(iD,iD).Connectivity)),unique(Faces(iD,iD).Connectivity));
   end
-  
+
   % Build global-local map
   Faces(iD,iD).GlobalLocal=cell(NumElements,1);
   if strcmp(Parameters(iD).DiscretizationType,'HDG')

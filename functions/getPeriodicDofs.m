@@ -17,7 +17,7 @@ for iD=1:Simulation.NumDiscretizations
     NumGlobalComp=Sizes(iD).NumGlobalComp;
     NumNodes=Sizes(iD).NumNodes;
   end
-  
+
   % Master nodes
   if strcmp(Parameters(iD).DiscretizationType,'CG') && ...
      matchField(Boundaries(iD),'PeriodicMaster') && not(isempty(Boundaries(iD).PeriodicMaster))
@@ -86,7 +86,7 @@ for iD=1:Simulation.NumDiscretizations
       error('Not all periodic nodes are properly coupled!');
     end
     NodesS=NodesS(NodesOrder);
-    
+
     % Get master DOFs
     Block(iD,iD).DOFsMaster=reshape(repmat(NodesM,NumGlobalComp,1)'...
                                                               +((0:NumGlobalComp-1)*NumNodes),[],1);
@@ -95,5 +95,5 @@ for iD=1:Simulation.NumDiscretizations
     Block(iD,iD).DOFsSlave=reshape(repmat(NodesS,NumGlobalComp,1)'...
                                                               +((0:NumGlobalComp-1)*NumNodes),[],1);
   end
-  
+
 end

@@ -6,7 +6,7 @@ function [N,Nx,Ny,Nz,w,Ng,pinvN]=mapShapeFunctions(...
 N=[]; Nx=[]; Ny=[]; Nz=[]; w=[]; Ng=[]; pinvN=[];
 
 if Where==1
-  
+
   % Element calculations
   Ng=RefElementGeometry.ShapeFunctionsElem;
   N=RefElementApproxim.ShapeFunctionsElem;
@@ -63,9 +63,9 @@ if Where==1
     Nz=invJ31.*Naxi+invJ32.*Naeta+invJ33.*Nazeta;
   end
   w=g.*detJ;
-  
+
 elseif Where==0
-  
+
   % Face calculations
   Ng=RefElementGeometry.ShapeFunctionsFace;
   N=RefElementApproxim.ShapeFunctionsFace;
@@ -101,7 +101,7 @@ elseif Where==0
     Nz=tz./detJ;
   end
   w=g.*detJ;
-  
+
 end
 
 end

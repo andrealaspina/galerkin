@@ -1,7 +1,7 @@
-classdef Darcy2Phase_CG < Formulation  
-  
+classdef Darcy2Phase_CG < Formulation
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) 1+1;
 
@@ -10,14 +10,14 @@ classdef Darcy2Phase_CG < Formulation
 
     % Time derivative order
     TimeDerOrder=1;
-    
+
     % Domain
     Domain='Time';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,Parameters,Time,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes,Sizes(iD).NumGlobalComp,1);
@@ -26,7 +26,7 @@ classdef Darcy2Phase_CG < Formulation
           Parameters(iD).TimeDerOrder);
       end
     end
-    
+
     %% Compute initial conditions
     function [Block]=computeInitialConditions(~,iD,Block,Parameters,Mesh,~,Time,~,~)
       if strcmp(Time.TimeDependent,'yes')
@@ -36,7 +36,7 @@ classdef Darcy2Phase_CG < Formulation
           Parameters(iD).Saturation(...
           Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',Time.InitialTime)];
         Block(iD,iD).SolutionOld(:,:,1)=Block(iD,iD).SolutionGlobal;
-        
+
         % Get ghost solutions for BDF order > 2
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder-1
@@ -63,7 +63,7 @@ classdef Darcy2Phase_CG < Formulation
         Mesh(iD).Nodes(2,Block(iD,iD).DOFsFixed(1:end/Sizes(iD).NumGlobalComp))',...
         Mesh(iD).Nodes(3,Block(iD,iD).DOFsFixed(1:end/Sizes(iD).NumGlobalComp))',Time.Time)];
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD1,Block,Elements,~,Parameters,~,~,Time,RefElement,...
         Sizes)
@@ -85,7 +85,7 @@ classdef Darcy2Phase_CG < Formulation
                                       Block(iD1,iD1).LhsColIndices,LhsCoef(:));
       Block(iD1,iD1).RhsGlobal=sparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,iST,Results,Block,~,~,~,Time,~,~)
       if iST==1
@@ -97,9 +97,9 @@ classdef Darcy2Phase_CG < Formulation
       Results(iD).Pressure(:,:,iST)=Block(iD,iD).SolutionGlobal(:,1);
       Results(iD).Saturation(:,:,iST)=Block(iD,iD).SolutionGlobal(:,2);
     end
-    
+
   end
-  
+
 end
 
 %% Build block element
@@ -378,37 +378,37 @@ fS(ne1,1)=fS(ne1,1)+NweT*(q2eg);
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=Faces.Neumann(iFace);
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
     [Nf,~,~,~,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf(1:nsd,:),nsd);
-    
+
     % Reduce to only 1 Gauss point
     Nf=mean(Nf);
     wfg=sum(wfg);
-    
+
     % Check boundary
     isNeumann=Faces.Neumann(iFace);
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
-    
+
     % Compute variables at Gauss points
     Xfg=Nf*Xf;
     if isNeumann
       f1Nfg=f1N(Xfg(:,1),Xfg(:,2),Xfg(:,3),t);
       f2Nfg=f2N(Xfg(:,1),Xfg(:,2),Xfg(:,3),t);
     end
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
-    
+
     % Compute rhs
     if isNeumann
       fP(nf1,1)=fP(nf1,1)+NwfT*(f1Nfg);

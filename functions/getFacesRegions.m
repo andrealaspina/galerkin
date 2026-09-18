@@ -8,7 +8,7 @@ for iD=1:Simulation.NumDiscretizations
   FaceNodesElem=RefElement(iD,iD).Degree1.FaceNodesElem;
   NumElemNodes=size(Mesh(iD).Degree1.Elements,1);
   NumFaceNodes=size(FaceNodesElem,2);
-    
+
   % Get faces of specific regions
   if not(isempty(Regions))
     RegionsNames=fieldnames(Regions(iD));
@@ -19,8 +19,8 @@ for iD=1:Simulation.NumDiscretizations
           Mesh(iD).Degree1.Nodes(1,:),Mesh(iD).Degree1.Nodes(2,:)))';
       elseif Sizes(iD).NumSpaceDim==3
         Nodes=find(Regions(iD).(RegionsNames{iRegionName}).Definition(...
-          Mesh(iD).Degree1.Nodes(1,:),Mesh(iD).Degree1.Nodes(2,:),Mesh(iD).Degree1.Nodes(3,:)))';                                             
-      end                  
+          Mesh(iD).Degree1.Nodes(1,:),Mesh(iD).Degree1.Nodes(2,:),Mesh(iD).Degree1.Nodes(3,:)))';
+      end
       ElementNodes=ismember(Mesh(iD).Degree1.Elements',Nodes);
       ElementSharing=find(sum(ElementNodes,2)==NumFaceNodes);
       Element=ElementSharing;

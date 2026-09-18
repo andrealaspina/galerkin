@@ -90,10 +90,10 @@ switch Norm
     if size(uhe,2)~=nsd
       error('Impossible to compute error in the Hdiv norm for this variable');
     end
-    
+
     % Get analytic solution at nodes (potential discontinous solution across elements)
     uAe=Ne\uAeg;
-    
+
     % Compute Hdiv contribution
     if nsd==2
       ErrorElemHdiv=sum((((Nex*uhe(:,1)+Ney*uhe(:,2))-...
@@ -108,10 +108,10 @@ switch Norm
     if size(uhe,2)~=nsd
       error('Impossible to compute error in the Hcurl norm for this variable');
     end
-    
+
     % Get analytic solution at nodes (potential discontinous solution across elements)
     uAe=Ne\uAeg;
-    
+
     % Compute Hcurl contribution
     if nsd==2
       ErrorElemHcurl=sum((((Nex*uhe(:,2)-Ney*uhe(:,1))-...

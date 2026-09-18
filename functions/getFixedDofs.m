@@ -14,7 +14,7 @@ for iD=1:Simulation.NumDiscretizations
     NumFaceNodesDeg1=size(FaceNodesElemDeg1,2);
     NumGlobalComp=Sizes(iD).NumGlobalComp;
     NumNodes=Sizes(iD).NumNodes;
-    
+
     % Get fixed nodes
     NodesFixed=[];
     for iFaceFixed=Boundaries(iD).Fixed
@@ -35,7 +35,7 @@ for iD=1:Simulation.NumDiscretizations
       end
     end
     NodesFixed=unique(NodesFixed);
-    
+
     % Get fixed DOFs
     Block(iD,iD).DOFsFixed=reshape(repmat(NodesFixed,NumGlobalComp,1)'...
                                                               +((0:NumGlobalComp-1)*NumNodes),[],1);

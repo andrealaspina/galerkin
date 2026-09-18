@@ -1,7 +1,7 @@
-classdef Thermal_CG < Formulation  
-  
+classdef Thermal_CG < Formulation
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) 1;
 
@@ -10,14 +10,14 @@ classdef Thermal_CG < Formulation
 
     % Time derivative order
     TimeDerOrder=1;
-    
+
     % Domain
     Domain='Time';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,Parameters,Time,Sizes)
       Block(iD,iD).SolutionGlobal=MP*zeros(Sizes(iD).NumGlobalNodes,Sizes(iD).NumGlobalComp,1);
@@ -26,19 +26,19 @@ classdef Thermal_CG < Formulation
           Parameters(iD).TimeDerOrder);
       end
     end
-    
+
     %% Compute initial conditions
     function [Block]=computeInitialConditions(~,iD,Block,Parameters,Mesh,~,Time,~,~)
       if strcmp(Time.TimeDependent,'yes')
         Block(iD,iD).SolutionGlobal=Parameters(iD).Temperature(...
           Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',Time.InitialTime);
         Block(iD,iD).SolutionOld(:,:,1)=Block(iD,iD).SolutionGlobal;
-        
+
         % Get ghost solutions for BDF order > 2
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder-1
             Time.TimeOld=Time.Time-iBDF*Time.TimeStepSize;
-              Block(iD,iD).SolutionOld(:,:,1+iBDF)=Parameters(iD).Temperature(....
+              Block(iD,iD).SolutionOld(:,:,1+iBDF)=Parameters(iD).Temperature(...
                 Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',Time.TimeOld);
           end
         end
@@ -53,7 +53,7 @@ classdef Thermal_CG < Formulation
         Mesh(iD).Nodes(2,Block(iD,iD).DOFsFixed(1:end/Sizes(iD).NumGlobalComp))',...
         Mesh(iD).Nodes(3,Block(iD,iD).DOFsFixed(1:end/Sizes(iD).NumGlobalComp))',Time.Time);
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD1,Block,Elements,~,Parameters,~,Faces,Time,...
         RefElement,Sizes)
@@ -63,7 +63,7 @@ classdef Thermal_CG < Formulation
       SolutionOldElem=Elements(iD1).SolutionOld;
       LhsCoef=MP*zeros(Sizes(iD1).NumElementLhsCoef,Sizes(iD1).NumElements);
       RhsCoef=MP*zeros(Sizes(iD1).NumElementRhsCoef,Sizes(iD1).NumElements);
-      
+
       % Extract coupling data
       SolutionGlobalElemCoupled=MP*double.empty(Sizes.NumElements,0);
       if matchField(Faces(iD1,iD1),'Interface') && not(isempty(Faces(iD1,iD1).Interface))
@@ -73,7 +73,7 @@ classdef Thermal_CG < Formulation
           Faces(iD1,iD2).Interface(:,1),Faces(iD1,iD2).Interface(:,2));
         SolutionGlobalElemCoupled(iEF)=Elements(iD2).SolutionGlobal(Faces(iD1,iD2).Interface(:,3));
       end
-      
+
       parfor iElem=1:Sizes(iD1).NumElements
         [LhsGlobalElem,RhsGlobalElem]=...
           buildBlockElement(iD1,NodesElem{iElem},FacesElem(iElem),...
@@ -87,7 +87,7 @@ classdef Thermal_CG < Formulation
                                       Block(iD1,iD1).LhsColIndices,LhsCoef(:));
       Block(iD1,iD1).RhsGlobal=sparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
     end
-    
+
     %% Do coupling
     function [Block]=doCoupling(~,iD1,iD2,Block,~,~,Parameters,Mesh,Faces,~,RefElement,...
         Sizes)
@@ -106,7 +106,7 @@ classdef Thermal_CG < Formulation
                                         Block(iD1,iD2).LhsColIndices,0);
       end
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,iST,Results,Block,~,~,~,Time,~,~)
       if iST==1
@@ -116,9 +116,9 @@ classdef Thermal_CG < Formulation
       Results(iD).Time(iST)=Time.Time;
       Results(iD).Temperature(:,:,iST)=Block(iD,iD).SolutionGlobal;
     end
-    
+
   end
-  
+
 end
 
 %% Build block element
@@ -232,20 +232,20 @@ fu(ne1,1)=fu(ne1,1)+NweT*(seg);
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=Faces.Exterior(iFace);
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
     FaceNodes=RefElement(iD1,iD1).FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
     [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement(iD1,iD1),RefElement(iD1,iD1),Xf,nsd);
-    
+
     % Compute characteristic element size
     h=sum(wfg);
-    
+
     % Check boundary
     Boundary=Faces.Boundary(iFace);
     isDirichlet=Faces.Dirichlet(iFace);
@@ -256,10 +256,10 @@ for iFace=1:NumElementFaces
     else
       isInterface=false;
     end
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
-    
+
     % Compute derivatives of shape functions
     if isDirichlet || isInterface
       Nxe=pinvNe*Nex;
@@ -273,7 +273,7 @@ for iFace=1:NumElementFaces
         Nzf=Nf*Nze(nf1,:);
       end
     end
-    
+
     % Compute variables at nodes
     uf=ue(nf1);
     Duxf=Duxe(nf1);
@@ -281,7 +281,7 @@ for iFace=1:NumElementFaces
     if nsd==3
       Duzf=Duze(nf1);
     end
-    
+
     % Compute variables at Gauss points
     Xfg=Nf*Xf;
     ufg=Nf*uf;
@@ -300,7 +300,7 @@ for iFace=1:NumElementFaces
       Hfg=H(Xfg(:,1),Xfg(:,2),Xfg(:,3),Boundary);
       uinffg=uinf(Xfg(:,1),Xfg(:,2),Xfg(:,3),Boundary);
     end
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
     Mf=NwfT*Nf;
@@ -317,43 +317,43 @@ for iFace=1:NumElementFaces
         Cznzf=NwzfT*(nz.*Nf);
       end
     end
-    
+
     % Get quantities for coupling ------------------------------------------------------------------
     if isInterface
       % Get general parameters
       iD2=setdiff(1:2,iD1);
       iFace2=Faces.Interface(2,iFace);
       NumFaceNodes2=Sizes(iD2).NumFaceNodes;
-      
+
       % Get solution
       U2e=SolutionGlobalCoupled{iFace};
-      
+
       % Compute weights at Gauss points
       [N12f,n12x,n12y,n12z,w12fg]=mapShapeFunctions(0,RefElement(iD1,iD2),...
                                                       RefElement(iD1,iD2),Xf,nsd);
       N21f=RefElement(iD2,iD1).ShapeFunctionsFace;
-      
+
       % Indices
       n2ef1=(iFace2-1)*NumFaceNodes2+(1:NumFaceNodes2);
-      
+
       % Flip face
       Node2Match1stNode1=Faces.Interface(3,iFace);
       order=flipFace(nsd,Parameters(iD2).Degree,Node2Match1stNode1);
       n2ef1=n2ef1(order);
-      
+
       % Compute derivatives of shape functions
       N12xf=N12f*Nxe(nf1,:);
       N12yf=N12f*Nye(nf1,:);
       if nsd==3
         N12zf=N12f*Nze(nf1,:);
       end
-      
+
       % Compute variables at nodes
       U2f=U2e(n2ef1);
-      
+
       % Compute variables at Gauss points
       U2fg=N21f*U2f;
-      
+
       % Compute basic matrices
       Nw12fT=(w12fg.*N12f)';
       Nw12xfT=(w12fg.*N12xf)';
@@ -363,7 +363,7 @@ for iFace=1:NumElementFaces
       end
     end
     % ----------------------------------------------------------------------------------------------
-    
+
     % Compute lhs
     if isDirichlet || isInterface
       Kuu(nf1,ne1)=Kuu(nf1,ne1)-kappa*Cxnxf'...
@@ -371,9 +371,9 @@ for iFace=1:NumElementFaces
       if nsd==3
         Kuu(nf1,ne1)=Kuu(nf1,ne1)-kappa*Cznzf';
       end
-      
+
       Kuu(nf1,nf1)=Kuu(nf1,nf1)+gamma/h*Mf;
-      
+
       Kuu(ne1,nf1)=Kuu(ne1,nf1)-kappa*Cxnxf...
                                -kappa*Cynyf;
       if nsd==3
@@ -384,7 +384,7 @@ for iFace=1:NumElementFaces
     if isRobin
       Kuu(nf1,nf1)=Kuu(nf1,nf1)+NwfT*(Hfg.*Nf);
     end
-    
+
     % Compute rhs
     if isDirichlet
       fu(nf1,1)=fu(nf1,1)+NwfT*(+kappa*(Duxfg.*nx+Duyfg.*ny)...
@@ -392,36 +392,36 @@ for iFace=1:NumElementFaces
       if nsd==3
         fu(nf1,1)=fu(nf1,1)+NwfT*(kappa*Duzfg.*nz);
       end
-      
+
       fu(ne1,1)=fu(ne1,1)+kappa*NwxfT*(nx.*(ufg-uDfg))...
                          +kappa*NwyfT*(ny.*(ufg-uDfg));
       if nsd==3
         fu(ne1,1)=fu(ne1,1)+kappa*NwzfT*(nz.*(ufg-uDfg));
       end
     end
-    
+
     if isInterface
       fu(nf1,1)=fu(nf1,1)+NwfT*(+kappa*(Duxfg.*nx+Duyfg.*ny)...
                                 -gamma/h*ufg);
       if nsd==3
         fu(nf1,1)=fu(nf1,1)+NwfT*(kappa*Duzfg.*nz);
       end
-      
+
       fu(nf1,1)=fu(nf1,1)+Nw12fT*(gamma/h*U2fg);
-      
+
       fu(ne1,1)=fu(ne1,1)+kappa*NwxfT*(nx.*ufg)...
                          +kappa*NwyfT*(ny.*ufg);
       if nsd==3
         fu(ne1,1)=fu(ne1,1)+kappa*NwzfT*(nz.*ufg);
       end
-      
+
       fu(ne1,1)=fu(ne1,1)-kappa*Nw12xfT*(n12x.*U2fg)...
                          -kappa*Nw12yfT*(n12y.*U2fg);
       if nsd==3
         fu(ne1,1)=fu(ne1,1)-kappa*Nw12zfT*(n12z.*U2fg);
       end
     end
-    
+
     if isNeumann
       fu(nf1,1)=fu(nf1,1)+NwfT*(fNfg);
     end
@@ -466,7 +466,7 @@ Ku1U2=MP*zeros(NumElementNodes1,NumElementFaces2*NumFaceNodes2);
 
 % Compute weights at Gauss points
 [~,N1ex,N1ey,N1ez,~,~,pinvN1e]=mapShapeFunctions(1,RefElement(iD1,iD1),RefElement(iD1,iD1),X1e,nsd);
-  
+
 % Indices
 n1e1=1:NumElementNodes1;
 

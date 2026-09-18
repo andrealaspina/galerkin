@@ -1,7 +1,7 @@
-classdef Darcy2PhaseRichards_CG < Formulation  
-  
+classdef Darcy2PhaseRichards_CG < Formulation
+
   properties
-    
+
     % Number of global components
     NumGlobalComp=@(NumSpaceDim) 1+1;
 
@@ -10,14 +10,14 @@ classdef Darcy2PhaseRichards_CG < Formulation
 
     % Time derivative order
     TimeDerOrder=1;
-    
+
     % Domain
     Domain='Time';
-    
+
   end
-  
+
   methods
-    
+
     %% Initialize unknowns
     function [Block]=initializeUnknowns(~,iD,Block,Parameters,Time,Sizes)
       Block(iD,iD).SolutionGlobal=zeros(Sizes(iD).NumGlobalNodes,Sizes(iD).NumGlobalComp,1);
@@ -26,7 +26,7 @@ classdef Darcy2PhaseRichards_CG < Formulation
           Parameters(iD).TimeDerOrder);
       end
     end
-    
+
     %% Compute initial conditions
     function [Block]=computeInitialConditions(~,iD,Block,Parameters,Mesh,~,Time,~,~)
       if strcmp(Time.TimeDependent,'yes')
@@ -36,7 +36,7 @@ classdef Darcy2PhaseRichards_CG < Formulation
           Parameters(iD).Saturation(...
           Mesh(iD).Nodes(1,:)',Mesh(iD).Nodes(2,:)',Mesh(iD).Nodes(3,:)',Time.InitialTime)];
         Block(iD,iD).SolutionOld(:,:,1)=Block(iD,iD).SolutionGlobal;
-        
+
         % Get ghost solutions for BDF order > 2
         if Time.BDFOrder>2
           for iBDF=1:Time.BDFOrder-1
@@ -63,7 +63,7 @@ classdef Darcy2PhaseRichards_CG < Formulation
         Mesh(iD).Nodes(2,Block(iD,iD).DOFsFixed(1:end/Sizes(iD).NumGlobalComp))',...
         Mesh(iD).Nodes(3,Block(iD,iD).DOFsFixed(1:end/Sizes(iD).NumGlobalComp))',Time.Time)];
     end
-    
+
     %% Build block
     function [Block,Elements]=buildBlock(~,iD1,Block,Elements,~,Parameters,~,~,Time,RefElement,...
         Sizes)
@@ -85,7 +85,7 @@ classdef Darcy2PhaseRichards_CG < Formulation
                                       Block(iD1,iD1).LhsColIndices,LhsCoef(:));
       Block(iD1,iD1).RhsGlobal=sparse(Block(iD1,iD1).RhsRowIndices,1,RhsCoef(:));
     end
-    
+
     %% Store results
     function [Results]=storeResults(~,iD,iST,Results,Block,~,~,~,Time,~,~)
       if iST==1
@@ -97,9 +97,9 @@ classdef Darcy2PhaseRichards_CG < Formulation
       Results(iD).Pressure(:,:,iST)=Block(iD,iD).SolutionGlobal(:,1);
       Results(iD).Saturation(:,:,iST)=Block(iD,iD).SolutionGlobal(:,2);
     end
-    
+
   end
-  
+
 end
 
 %% Build block element
@@ -379,17 +379,17 @@ fS=fS+NweT*(q2eg/r2);
 
 % Faces loop
 for iFace=1:NumElementFaces
-  
+
   % Check need to compute face
   ComputeFace=Faces.Neumann(iFace) || Faces.Outflow(iFace);
-  
+
   % Compute face
   if ComputeFace
     % Compute weights at Gauss points
     FaceNodes=RefElement.FaceNodesElem;
     Xf=Xe(FaceNodes(iFace,:),:);
     [Nf,nx,ny,nz,wfg]=mapShapeFunctions(0,RefElement,RefElement,Xf(1:nsd,:),nsd);
-    
+
     % Reduce to only 1 Gauss point
     if ReduceTo1GaussPoint
       Nf=mean(Nf,1);
@@ -398,11 +398,11 @@ for iFace=1:NumElementFaces
 
     % Compute characteristic element size
     h=sum(wfg);
-    
+
     % Check boundary
     isNeumann=Faces.Neumann(iFace);
     isOutflow=Faces.Outflow(iFace);
-    
+
     % Indices
     nf1=FaceNodes(iFace,:);
 
@@ -435,7 +435,7 @@ for iFace=1:NumElementFaces
         DGzf=DGze(nf1);
       end
     end
-    
+
     % Compute variables at Gauss points
     Xfg=Nf*Xf;
     Pfg=Nf*Pf;
@@ -459,12 +459,12 @@ for iFace=1:NumElementFaces
         DGzfg=Nf*DGzf;
       end
     end
-    
+
     % Compute basic matrices
     NwfT=(wfg.*Nf)';
     Mf=NwfT*Nf;
     Mf=(Mf+Mf')/2;
-    
+
     % Compute effective parameters
     if isOutflow
       if nsd==2
@@ -475,7 +475,7 @@ for iFace=1:NumElementFaces
           solveUnitCell(Sfg,iElem,Parameters,UnitCell);
       end
     end
-    
+
     % Compute derivatives of effective parameters wrt saturation
     if isOutflow
       if nsd==2
@@ -550,7 +550,7 @@ for iFace=1:NumElementFaces
         KSS(nf1,ne1)=KSS(nf1,ne1)+NwfT*((dv2zdSGfg.*nz).*Nzf);
       end
     end
-    
+
     % Compute rhs
     if isNeumann
       fP(nf1,1)=fP(nf1,1)+NwfT*(f1Nfg/r1+f2Nfg/r2);
@@ -560,7 +560,7 @@ for iFace=1:NumElementFaces
 
     if isOutflow
       fP(nf1,1)=fP(nf1,1)+NwfT*(-gamma/h*(Pfg-PDfg));
-      
+
       fS(nf1,1)=fS(nf1,1)-NwfT*(v2nfg);
     end
   end

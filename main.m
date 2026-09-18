@@ -80,7 +80,7 @@ Results=struct();
 iS1=1;
 iS2=0;
 for iS=1:Simulation.NumSimulations
-  
+
   % Set parameters for each simulation
   switch Simulation.Type
     case 'SingleSimulation'
@@ -157,7 +157,7 @@ for iS=1:Simulation.NumSimulations
         end
       end
   end
-  
+
   % Start parpool if needed
   PoolAux=gcp; if isempty(PoolAux); PoolAux=[]; PoolAux.NumWorkers=1; end
   if matchField(Simulation,'NumProcessors') && Simulation.NumProcessors~=PoolAux.NumWorkers
@@ -168,12 +168,12 @@ for iS=1:Simulation.NumSimulations
       fprintf('\n'); parpool(parcluster('local'),Simulation.NumProcessors);
     end
   end
-  
+
   fprintf('\n--------------------------------------------------------------------------------')
-  
+
   % Print file name
   fprintf('\nInput file: %s\n',FileName);
-  
+
   % Skip pre-processing
   if matchField(Simulation,'SkipPreProcessing','yes')
     fprintf('\nPre-processing  file: output/%s%s.mat',Options.SaveResultsFolder,...
@@ -181,11 +181,11 @@ for iS=1:Simulation.NumSimulations
     load(sprintf('%s/output/%s%s.mat',fileparts(which(mfilename)),Options.SaveResultsFolder,...
                         Simulation.PreProcessingFileName),'-regexp','^(?!(FileName|Simulation)$).');
   else
-    
+
     % Timer
     TimerPreProcessingAux=tic;
     fprintf('\nPre-processing  started...');
-    
+
     % Create model
     for iD=1:Simulation.NumDiscretizations
       Model(iD)=createpde(); %#ok
@@ -254,7 +254,7 @@ for iS=1:Simulation.NumSimulations
     for iD=1:Simulation.NumDiscretizations
       Sizes(iD).NumSpaceDim=1+(Geometry(iD).NumFaces>0)+(Geometry(iD).NumCells>0);
     end
-    
+
     % Assign default uniform nodes distribution
     if not(matchField(Parameters,'NodesDistribution'))
       [Parameters(:).NodesDistribution]=deal('Uniform');
@@ -264,7 +264,7 @@ for iS=1:Simulation.NumSimulations
     for iD=1:Simulation.NumDiscretizations
       Parameters(iD).DiscretizationType=Formulation{iD}.DiscretizationType;
     end
-    
+
     % Create reference element
     for iD1=1:Simulation.NumDiscretizations
       for iD2=1:Simulation.NumDiscretizations
@@ -278,7 +278,7 @@ for iS=1:Simulation.NumSimulations
                                                Parameters(iD1).NodesDistribution,Simulation.Digits);
       RefElement(iD,iD).MeshDegree1=createReferenceElement(Sizes(iD).NumSpaceDim,...
                         1,Parameters(iD).Degree,Parameters(iD).NodesDistribution,Simulation.Digits);
-      RefElement(iD,iD).MeshDegreeK=createReferenceElement(Sizes(iD).NumSpaceDim,....
+      RefElement(iD,iD).MeshDegreeK=createReferenceElement(Sizes(iD).NumSpaceDim,...
                                                 Parameters(iD).Degree,Parameters(iD).Degree,...
                                                 Parameters(iD).NodesDistribution,Simulation.Digits);
     end
@@ -293,34 +293,34 @@ for iS=1:Simulation.NumSimulations
                                                 Parameters(iD).NodesDistribution,Simulation.Digits);
       end
     end
-    
+
     % Number of components
     for iD=1:Simulation.NumDiscretizations
       Sizes(iD).NumGlobalComp=Formulation{iD}.NumGlobalComp(Sizes(iD).NumSpaceDim);
       if strcmp(Parameters(iD).DiscretizationType,'HDG')
-        Sizes(iD).NumVoigtComp=Formulation{iD}.NumVoigtComp(Sizes(iD).NumSpaceDim); 
+        Sizes(iD).NumVoigtComp=Formulation{iD}.NumVoigtComp(Sizes(iD).NumSpaceDim);
         Sizes(iD).NumLocalComp=Formulation{iD}.NumLocalComp(Sizes(iD).NumSpaceDim);
         if strcmp(Parameters(iD).PostProcessingHDG,'yes')
           Sizes(iD).NumPostComp=Formulation{iD}.NumPostComp(Sizes(iD).NumSpaceDim);
         end
       end
     end
-    
+
     % Initialize regions
     if not(exist('Regions','var'))
       Regions=[];
     end
-    
+
     % Get faces and BCs
     [Faces,Elements,BCs]=getFacesAndBCs(Simulation,Geometry,Mesh,Boundaries,Regions,...
                                                                        Parameters,RefElement,Sizes);
-    
+
     % Degree-independent sizes
     for iD=1:Simulation.NumDiscretizations
       Sizes(iD).NumElements=size(Mesh(iD).Degree1.Elements,2);
       Sizes(iD).NumElementFaces=size(RefElement(iD,iD).Degree1.FaceNodesElem,1);
     end
-    
+
     % Generate high order mesh
     Mesh(1:Simulation.NumDiscretizations)=Mesh(1:Simulation.NumDiscretizations);
     for iD=1:Simulation.NumDiscretizations
@@ -340,7 +340,7 @@ for iS=1:Simulation.NumSimulations
       Mesh(iD).MinElementSize=Mesh(iD).Degree1.MinElementSize;
       Mesh(iD).MeshGradation= Mesh(iD).Degree1.MeshGradation;
     end
-    
+
     % Generate mesh for HDG post-processing
     for iD=1:Simulation.NumDiscretizations
       if strcmp(Parameters(iD).DiscretizationType,'HDG') && ...
@@ -351,7 +351,7 @@ for iS=1:Simulation.NumSimulations
         Mesh(iD).Post.Elements=MeshPostAux.Elements;
       end
     end
-    
+
     % Sizes
     for iD=1:Simulation.NumDiscretizations
       Sizes(iD).NumNodes=size(Mesh(iD).Nodes,2);
@@ -368,7 +368,7 @@ for iS=1:Simulation.NumSimulations
         Sizes(iD).NumFaceNodesPost=size(RefElement(iD,iD).Post.NodesCoordFace,1);
       end
     end
-    
+
     % Modify mesh for HDG
     for iD=1:Simulation.NumDiscretizations
       if strcmp(Parameters(iD).DiscretizationType,'HDG')
@@ -383,7 +383,7 @@ for iS=1:Simulation.NumSimulations
         end
       end
     end
-    
+
     % Add z-component for 2D
     for iD=1:Simulation.NumDiscretizations
       if Sizes(iD).NumSpaceDim==2
@@ -402,12 +402,12 @@ for iS=1:Simulation.NumSimulations
                   Mesh(iD).Elements(1:Sizes(iD).NumSpaceDim+1,:)),3,Sizes(iD).NumSpaceDim+1,[]),2));
       end
     end
-    
+
     % Store initial mesh
     for iD=1:Simulation.NumDiscretizations
       Mesh(iD).NodesInitial=Mesh(iD).Nodes;
     end
-    
+
     % Store element data for effective use of parfor
     for iD=1:Simulation.NumDiscretizations
       Elements(iD).Nodes=mat2cell(Mesh(iD).Nodes(:,Mesh(iD).Elements(:)),...
@@ -418,7 +418,7 @@ for iS=1:Simulation.NumSimulations
       Elements(iD).NodesInitial=mat2cell(Mesh(iD).NodesInitial(:,Mesh(iD).Elements(:)),...
         3,ones(Sizes(iD).NumElements,1)*max(Sizes(iD).NumSpaceDim+1,Sizes(iD).NumElementNodes))';
     end
-    
+
     % Number of nodes
     for iD=1:Simulation.NumDiscretizations
       if strcmp(Parameters(iD).DiscretizationType,'CG')
@@ -429,7 +429,7 @@ for iS=1:Simulation.NumSimulations
         Sizes(iD).NumLocalNodes= Sizes(iD).NumElements*Sizes(iD).NumElementNodes;
       end
     end
-    
+
     % Sizes of elemental contributions
     for iD=1:Simulation.NumDiscretizations
       if strcmp(Parameters(iD).DiscretizationType,'CG')
@@ -440,7 +440,7 @@ for iS=1:Simulation.NumSimulations
       end
       Sizes(iD).NumElementLhsCoef=Sizes(iD).NumElementRhsCoef^2;
     end
-    
+
     % Interface related sizes
     if matchField(Boundaries,'Interface')
       for iD1=1:Simulation.NumDiscretizations
@@ -451,10 +451,10 @@ for iS=1:Simulation.NumSimulations
         end
       end
     end
-    
+
     % Define matrix pattern
     Block=defineMatrixPattern(Simulation,Parameters,Mesh,Faces,Sizes);
-    
+
     % Get fixed DOFs
     Block=getFixedDofs(Block,Simulation,Mesh,Boundaries,Parameters,RefElement,Sizes);
     System.DOFsFixed=[];
@@ -462,7 +462,7 @@ for iS=1:Simulation.NumSimulations
       System.DOFsFixed=[System.DOFsFixed,Block(iD,iD).DOFsFixed+...
                         sum(arrayfun(@(S) S.NumGlobalNodes*S.NumGlobalComp,Sizes(1:iD-1)))];
     end
-    
+
     % Get periodic DOFs
     Block=getPeriodicDofs(Block,Simulation,Mesh,Boundaries,Parameters,RefElement,Sizes);
     System.DOFsMaster=[]; System.DOFsSlave=[];
@@ -472,7 +472,7 @@ for iS=1:Simulation.NumSimulations
       System.DOFsSlave=[System.DOFsSlave,Block(iD,iD).DOFsSlave+...
                         sum(arrayfun(@(S) S.NumGlobalNodes*S.NumGlobalComp,Sizes(1:iD-1)))];
     end
-        
+
     % Default settings
     if strcmp(Time.TimeDependent,'yes')
       for iD=1:Simulation.NumDiscretizations
@@ -495,7 +495,7 @@ for iS=1:Simulation.NumSimulations
       Time.NumTimeSteps=1;
     end
     Time.Time=Time.InitialTime;
-    
+
     % BDF parameters
     if strcmp(Time.TimeDependent,'yes')
       Time.BDF1stDer=['[     1,      -1,      0,       0,     0,       0,        0;',...
@@ -518,22 +518,22 @@ for iS=1:Simulation.NumSimulations
         Time.BDF2ndDer=mp(Time.BDF2ndDer);
       end
     end
-    
+
     % Colors
     Colors={'b','r','k','g','m','c','y','b','r','k','g','m','c','y'};
-    
+
     % Styles
     Styles={'-','--',':','-.','-','--',':','-.','-','--',':','-.'};
-    
+
     % Markers
     Markers={'o','s','d','p','^','x','*','h','o','s','d','p'};
-    
+
     % Get axis limits
     MinMaxAux=minmax(double([Mesh.Nodes]));
     XMinMaxAux=MinMaxAux(1,:)+[-1,+1]*(MinMaxAux(1,1)==MinMaxAux(1,2));
     YMinMaxAux=MinMaxAux(2,:)+[-1,+1]*(MinMaxAux(2,1)==MinMaxAux(2,2));
     ZMinMaxAux=MinMaxAux(3,:)+[-1,+1]*(MinMaxAux(3,1)==MinMaxAux(3,2));
-    
+
     % Plot geometry
     if strcmp(Options.PlotGeometry,'yes')
       figure('Color','w');
@@ -554,7 +554,7 @@ for iS=1:Simulation.NumSimulations
         pause(eps);
       end
     end
-    
+
     % Plot mesh
     if strcmp(Options.PlotMesh,'yes')
       figure('Color','w');
@@ -596,7 +596,7 @@ for iS=1:Simulation.NumSimulations
         pause(eps);
       end
     end
-    
+
     % Plot mesh distortion
     if matchField(Options,'PlotMeshDistortion','yes')
       NumColAux=10;
@@ -628,34 +628,34 @@ for iS=1:Simulation.NumSimulations
       xlim(XMinMaxAux); xlabel('x'); ylim(YMinMaxAux); ylabel('y'); zlim(ZMinMaxAux); zlabel('z');
       pause(eps);
     end
-    
+
     % Timer
     Timer.PreProcessing=toc(TimerPreProcessingAux);
     Memory.PreProcessing=whos; Memory.PreProcessing=sum(vertcat(Memory.PreProcessing.bytes));
     fprintf('\nPre-processing  completed in %.1f sec (%.1f MB)',Timer.PreProcessing,...
                                                                 Memory.PreProcessing/1e6);
-    
+
     % Stop here for pre-processing only
     if matchField(Simulation,'ComputeOnlyPreProcessing','yes')
       fprintf('\n'); break;
     end
-    
+
   end % End of skip pre-processing
-  
+
   %% Processing
-  
+
   % Timer
   TimerProcessingAux=tic;
   fprintf('\nProcessing      started...');
   Timer.Evaluation=[];
   Timer.Solution=[];
   Timer.Local=[];
-  
+
   % Compute quantity of interest at the start of the simulation
   if matchField(Options,'ComputeQuantityStart')
     eval(Options.ComputeQuantityStart);
   end
-  
+
   % Initialization of unknowns
   for iD=1:Simulation.NumDiscretizations
     Block=Formulation{iD}.initializeUnknowns(iD,Block,Parameters,Time,Sizes);
@@ -666,7 +666,7 @@ for iS=1:Simulation.NumSimulations
     Block=Formulation{iD}.computeInitialConditions(iD,Block,Parameters,Mesh,Faces,Time,...
       RefElement,Sizes);
   end
-  
+
   % Initial and final time step
   if matchField(Simulation,'RestartInitialFinalSteps')
     Time.InitialTimeStep=Simulation.RestartInitialFinalSteps(1);
@@ -675,15 +675,15 @@ for iS=1:Simulation.NumSimulations
     Time.InitialTimeStep=1;
     Time.FinalTimeStep=Time.NumTimeSteps;
   end
-  
+
   if strcmp(Time.TimeDependent,'yes')
     fprintf('\nTime integration ...............................................................');
   end
-  
+
   % Time loop
   for iT=Time.InitialTimeStep:Time.FinalTimeStep
     Time.TimeStep=double(iT);
-    
+
     % Load restart file
     if matchField(Simulation,'RestartInitialFinalSteps') && ...
        Time.TimeStep==Time.InitialTimeStep && Time.InitialTimeStep>1
@@ -692,18 +692,18 @@ for iS=1:Simulation.NumSimulations
       load(sprintf('%s/output/%s%s.mat',fileparts(which(mfilename)),Options.SaveResultsFolder,...
                  Simulation.RestartFileName),'-regexp','^(?!(FileName|Simulation|Time|Options)$).');
     end
-    
+
     % Update time
     if strcmp(Time.TimeDependent,'yes')
       Time.Time=Time.InitialTime+Time.TimeStep*Time.TimeStepSize;
     end
-    
+
     % Print time step info
     if strcmp(Time.TimeDependent,'yes')
       fprintf('\nTime = %.2e',Time.Time);
       fprintf(' Step = %.*d/%d',ceil(log10(Time.NumTimeSteps)+eps),Time.TimeStep,Time.NumTimeSteps);
     end
-    
+
     % Select appropriate BDF coefficients
     if strcmp(Time.TimeDependent,'yes')
       if Time.BDFOrder>2
@@ -716,7 +716,7 @@ for iS=1:Simulation.NumSimulations
     else
       Time.BDFOrderEff=1;
     end
-    
+
     % Prediction of unknowns
     if strcmp(Time.TimeDependent,'yes')
       for iD=1:Simulation.NumDiscretizations
@@ -730,7 +730,7 @@ for iS=1:Simulation.NumSimulations
         end
       end
     end
-    
+
     % Initialization of system solutions
     for iD=1:Simulation.NumDiscretizations
       Block(iD,iD).SysSolutionGlobal=MP*zeros(Sizes(iD).NumGlobalNodes*Sizes(iD).NumGlobalComp,1);
@@ -738,33 +738,33 @@ for iS=1:Simulation.NumSimulations
         Block(iD,iD).SysSolutionLocal=MP*zeros(Sizes(iD).NumLocalNodes,Sizes(iD).NumLocalComp);
       end
     end
-    
+
     % Evaluate solution at fixed DOFs
     for iD=1:Simulation.NumDiscretizations
       Block=Formulation{iD}.evaluateSolutionFixedDofs(iD,Block,Parameters,Mesh,Time,Sizes);
     end
-    
+
     % Compute quantity of interest at the current time step
     if matchField(Options,'ComputeQuantityTimeStep')
       eval(Options.ComputeQuantityTimeStep);
     end
-    
+
     % Initialization of residual
     System.ResidualNorm=Inf;
-    
+
     % Initialization of iteration count
     System.Iteration=0;
-    
+
     % Newton iterations
     while System.ResidualNorm > System.Tolerance && ...
           System.Iteration    < System.MaxIterations
-      
+
       % Update iteration count
       System.Iteration=System.Iteration+1;
-      
+
       % Timer
       TimerEvaluationAux=tic;
-      
+
       % Store element data for effective use of parfor
       for iD=1:Simulation.NumDiscretizations
         if strcmp(Parameters(iD).DiscretizationType,'CG')
@@ -778,7 +778,7 @@ for iS=1:Simulation.NumSimulations
           else
             Elements(iD).SolutionOld=cell(Sizes(iD).NumElements,1);
           end
-        elseif strcmp(Parameters(iD).DiscretizationType,'HDG')          
+        elseif strcmp(Parameters(iD).DiscretizationType,'HDG')
           Elements(iD).SolutionGlobal=mat2cell(Block(iD,iD).SolutionGlobal(...
             cell2mat(Faces(iD,iD).GlobalLocal),:,:),ones(Sizes(iD).NumElements,1)*...
             Sizes(iD).NumElementFaces*Sizes(iD).NumFaceNodes*Sizes(iD).NumGlobalComp,...
@@ -797,12 +797,12 @@ for iS=1:Simulation.NumSimulations
           end
         end
       end
-      
+
       % Compute quantity of interest at the current iteration
       if matchField(Options,'ComputeQuantityIteration')
         eval(Options.ComputeQuantityIteration);
       end
-      
+
       % Build block matrices and residuals
       for iD1=1:Simulation.NumDiscretizations
         for iD2=1:Simulation.NumDiscretizations
@@ -815,10 +815,10 @@ for iS=1:Simulation.NumSimulations
           end
         end
       end
-      
+
       % Timer
       Timer.Evaluation=[Timer.Evaluation,toc(TimerEvaluationAux)];
-      
+
       % Build system
       System.Lhs=struct();
       for iD=1:Simulation.NumDiscretizations
@@ -853,7 +853,7 @@ for iS=1:Simulation.NumSimulations
             System.Rhs=(System.Rhs+System.Rhs.')/2;
           end
       end
-      
+
       % GLOBAL PROBLEM -----------------------------------------------------------------------------
       % Equilibrate
       if matchField(Solver,'Equilibrate','yes')
@@ -861,7 +861,7 @@ for iS=1:Simulation.NumSimulations
         System.Lhs=System.EquilR*System.EquilP*System.Lhs*System.EquilC;
         System.Rhs=System.EquilR*System.EquilP*System.Rhs;
       end
-      
+
       % Preconditioning
       if matchField(Solver,'Preconditioner')
         if (Time.TimeStep==1    || strcmp(Solver.PreconditionerAllTimeSteps,'yes')) && ...
@@ -877,16 +877,16 @@ for iS=1:Simulation.NumSimulations
         end
         fprintf('\n\n');
       end
-      
+
       % Distribute
       if matchField(System,'Distribute','yes')
         System.Lhs=distributed(System.Lhs);
         System.Rhs=distributed(System.Rhs);
       end
-      
+
       % Timer
       TimerSolutionAux=tic;
-      
+
       % Decompose
       if matchField(System,'Decompose','yes')
         if Time.TimeStep<Time.BDFOrder
@@ -896,7 +896,7 @@ for iS=1:Simulation.NumSimulations
         end
         System.Lhs=System.LhsDecomposed;
       end
-      
+
       % Store old solution for relaxation
       if matchField(System,'RelaxationParameter')
         if System.Iteration>1
@@ -905,7 +905,7 @@ for iS=1:Simulation.NumSimulations
           System.SolutionOld=sparse(size(System.Rhs,1),1);
         end
       end
-      
+
       % Solve
       switch Solver.Type
         case 'backslash'
@@ -929,34 +929,34 @@ for iS=1:Simulation.NumSimulations
           Results.NaturalFrequency(1,1,:)=sqrt(diag(EigenvaluesAux(Time.Mode,Time.Mode)))';
       end
       System.Solution=full(System.Solution);
-      
+
       % Timer
       Timer.Solution=[Timer.Solution,toc(TimerSolutionAux)];
-      
+
       % Relax solution
       if matchField(System,'RelaxationParameter')
         System.Solution=System.RelaxationParameter*System.Solution...
                    +(1-System.RelaxationParameter)*System.SolutionOld;
       end
-      
+
       % Gather
       if matchField(System,'Distribute','yes')
         System.Solution=gather(System.Solution);
       end
-      
+
       % Un-equilibrate
       if matchField(Solver,'Equilibrate','yes')
         System.Solution=System.EquilC*System.Solution;
       end
-      
+
       % Extract
       Block(1,1).SysSolutionGlobal=System.Solution((1:size(Block(1,1).RhsGlobal,1)),1,:);
       for iD=2:Simulation.NumDiscretizations
-        Block(iD,iD).SysSolutionGlobal=System.Solution(....
+        Block(iD,iD).SysSolutionGlobal=System.Solution(...
           sum(arrayfun(@(S) S.NumGlobalNodes*S.NumGlobalComp,Sizes(1:iD-1)))...
           +(1:size(Block(iD,iD).RhsGlobal,1)),1,:);
       end
-      
+
       % Reshape
       for iD=1:Simulation.NumDiscretizations
         if strcmp(Parameters(iD).DiscretizationType,'CG')
@@ -964,7 +964,7 @@ for iS=1:Simulation.NumSimulations
                                                Sizes(iD).NumGlobalNodes,Sizes(iD).NumGlobalComp,[]);
         end
       end
-      
+
       % Update
       for iD=1:Simulation.NumDiscretizations
         if matchField(System,'IncrementalForm','no')
@@ -974,20 +974,20 @@ for iS=1:Simulation.NumSimulations
         end
       end
       % --------------------------------------------------------------------------------------------
-      
+
       % LOCAL PROBLEMS -----------------------------------------------------------------------------
       % Timer
       TimerLocalAux=tic;
-      
+
       for iD=1:Simulation.NumDiscretizations
         if strcmp(Parameters(iD).DiscretizationType,'HDG')
-          
+
           % Store element data for effective use of parfor
           Elements(iD).SysSolutionGlobal=mat2cell(Block(iD,iD).SysSolutionGlobal(...
             cell2mat(Faces(iD,iD).GlobalLocal),:,:),ones(Sizes(iD).NumElements,1)*...
             Sizes(iD).NumElementFaces*Sizes(iD).NumFaceNodes*Sizes(iD).NumGlobalComp,...
             size(Block(iD,iD).SysSolutionGlobal,3));
-          
+
           % Solve
           for iElem=1:Sizes(iD).NumElements
             Block(iD,iD).SysSolutionLocal((iElem-1)*Sizes(iD).NumElementNodes+...
@@ -996,7 +996,7 @@ for iS=1:Simulation.NumSimulations
                               Elements(iD).MatLocal{iElem}*Elements(iD).SysSolutionGlobal{iElem},...
                               Sizes(iD).NumElementNodes,Sizes(iD).NumLocalComp);
           end
-          
+
           % Update
           if matchField(System,'IncrementalForm','no')
             Block(iD,iD).SolutionLocal=Block(iD,iD).SysSolutionLocal;
@@ -1005,14 +1005,14 @@ for iS=1:Simulation.NumSimulations
           end
         end
       end
-      
+
       % Timer
       Timer.Local=[Timer.Local,toc(TimerLocalAux)];
       % --------------------------------------------------------------------------------------------
-      
+
       % Compute norm of the residual
       System.ResidualNorm=norm(System.Rhs,'fro');
-      
+
       % Print Newton iteration info
       if strcmp(System.Nonlinear,'yes')
         fprintf('\n%2sIter = %d','',System.Iteration);
@@ -1022,14 +1022,14 @@ for iS=1:Simulation.NumSimulations
           Timer.Evaluation(end),Timer.Solution(end),repmat(sprintf(',%.1f',Timer.Local(end)),1,...
           any(strcmp({Parameters.DiscretizationType},'HDG'))));
       end
-      
+
       % Compute quantity of interest at the end of the current iteration
       if matchField(Options,'ComputeQuantityIterationEnd')
         eval(Options.ComputeQuantityIterationEnd);
       end
-      
+
     end % End of the Newton iterations
-    
+
     % Shift old solutions
     if strcmp(Time.TimeDependent,'yes') && Time.TimeStep<Time.NumTimeSteps
       for iD=1:Simulation.NumDiscretizations
@@ -1044,7 +1044,7 @@ for iS=1:Simulation.NumSimulations
         end
       end
     end
-    
+
     % Store results of current time step
     if matchField(Options,'StoreTimeSteps')
       iST=find(Time.TimeStep==eval(Options.StoreTimeSteps));
@@ -1055,12 +1055,12 @@ for iS=1:Simulation.NumSimulations
         end
       end
     end
-    
+
     % Compute quantity of interest
     if matchField(Options,'ComputeQuantity')
       eval(Options.ComputeQuantity);
     end
-    
+
     % Plot solution of current time step
     if matchField(Options,'PlotSolution') && ...
        matchField(Options,'PlotSolutionTimeSteps') && ...
@@ -1068,7 +1068,7 @@ for iS=1:Simulation.NumSimulations
       iPlotT=find(Time.TimeStep==eval(Options.StoreTimeSteps));
       plotSolution(Simulation,Mesh,Faces,Results,Parameters,RefElement,Sizes,Options,iPlotT);
     end
-    
+
     % Export to Paraview of current time step
     if matchField(Options,'Export2Paraview') && ...
        matchField(Options,'StoreTimeSteps') && ...
@@ -1085,7 +1085,7 @@ for iS=1:Simulation.NumSimulations
         export2Paraview(Mesh(iD),Results(iD),Parameters(iD),Time,Sizes(iD),Options,FileNameAux);
       end
     end
-  
+
     % Save results of current time step
     if matchField(Options,'SaveResults','yes') && ...
        matchField(Options,'StoreTimeSteps') && ...
@@ -1095,13 +1095,13 @@ for iS=1:Simulation.NumSimulations
             Options.SaveResultsFolder,FileName,ceil(log10(Time.NumTimeSteps)+eps),Time.TimeStep),...
            'Results',Options.SaveResultsMatVersion);
     end
-    
+
   end % End of the time loop
-  
+
   if strcmp(Time.TimeDependent,'yes')
     fprintf('\n................................................................................');
   end
-  
+
   % Store element data for effective use of parfor
   for iD=1:Simulation.NumDiscretizations
     if strcmp(Parameters(iD).DiscretizationType,'CG')
@@ -1134,7 +1134,7 @@ for iS=1:Simulation.NumSimulations
       end
     end
   end
-  
+
   % HDG POST-PROCESSING ----------------------------------------------------------------------------
   for iD=1:Simulation.NumDiscretizations
     if strcmp(Parameters(iD).DiscretizationType,'HDG') && ...
@@ -1143,11 +1143,11 @@ for iS=1:Simulation.NumSimulations
       Elements(iD).LhsPost=[]; Elements(iD).RhsPost=[];
       Elements(iD)=Formulation{iD}.doPostProcess(Elements(iD),Simulation,Parameters(iD),...
                                                      Faces(iD,iD),Time,RefElement(iD,iD),Sizes(iD));
-      
+
       % Solve
       SolutionPost=MP*zeros(Sizes(iD).NumElementNodesPost*Sizes(iD).NumPostComp,...
                                                           Sizes(iD).NumElements);
-      LhsPostAux=Elements(iD).LhsPost; RhsPostAux=Elements(iD).RhsPost;      
+      LhsPostAux=Elements(iD).LhsPost; RhsPostAux=Elements(iD).RhsPost;
       parfor iElem=1:Sizes(iD).NumElements
         SolutionPostAux=reshape(LhsPostAux{iElem}\RhsPostAux{iElem},...
                                 Sizes(iD).NumElementNodesPost,Sizes(iD).NumPostComp)'; %#ok
@@ -1155,13 +1155,13 @@ for iS=1:Simulation.NumSimulations
       end
       Block(iD,iD).SolutionPost=SolutionPost;
       clear SolutionPost;
-      
+
       % Reshape
       Block(iD,iD).SolutionPost=reshape(Block(iD,iD).SolutionPost,Sizes(iD).NumPostComp,[])';
     end
   end
   % ------------------------------------------------------------------------------------------------
-  
+
   % Store final results
   if matchField(Options,'StoreTimeSteps')
     iST=find(Time.TimeStep==eval(Options.StoreTimeSteps));
@@ -1172,7 +1172,7 @@ for iS=1:Simulation.NumSimulations
     Results=Formulation{iD}.storeResults(iD,iST,Results,Block,Simulation,Parameters,Mesh,Time,...
       RefElement,Sizes);
   end
-  
+
   % Compute Fast Fourier Transform
   if matchField(Options,'ComputeFFT')
     for iD=1:Simulation.NumDiscretizations
@@ -1184,24 +1184,24 @@ for iS=1:Simulation.NumSimulations
       end
     end
   end
-  
+
   % Timer
   Timer.Processing=toc(TimerProcessingAux);
   Memory.Processing=whos; Memory.Processing=sum(vertcat(Memory.Processing.bytes));
   fprintf('\nProcessing      completed in %.1f sec (%.1f MB)',Timer.Processing,...
                                                               Memory.Processing/1e6);
-  
+
   %% Post-processing
-  
+
   % Timer
   TimerPostProcessingAux=tic;
   fprintf('\nPost-processing started...');
-  
+
   % Compute quantity of interest for error computation
   if matchField(Options,'ComputeQuantityError')
     eval(Options.ComputeQuantityError);
   end
-  
+
   % Plot final solution
   if matchField(Options,'PlotSolution')
     if matchField(Results,'Time')
@@ -1211,7 +1211,7 @@ for iS=1:Simulation.NumSimulations
     end
     plotSolution(Simulation,Mesh,Faces,Results,Parameters,RefElement,Sizes,Options,iPlotT);
   end
-  
+
   % Compute error
   if matchField(Options,'ComputeError')
     if size(Options.ComputeError,2)==1
@@ -1240,12 +1240,12 @@ for iS=1:Simulation.NumSimulations
       end
     end
   end
-  
+
   % Compute quantity of interest for after error computation
   if matchField(Options,'ComputeQuantityPostError')
     eval(Options.ComputeQuantityPostError);
   end
-  
+
   % Compute convergence rate for space convergence
   if strcmp(Simulation.Type,'ConvergenceSpace')
     for iD=1:Simulation.NumDiscretizations
@@ -1273,7 +1273,7 @@ for iS=1:Simulation.NumSimulations
         end
       end
     end
-    
+
     % Plot space convergence
     if strcmp(Options.PlotConvergence,'yes')
       if iS==1
@@ -1312,7 +1312,7 @@ for iS=1:Simulation.NumSimulations
       end
     end
   end
-  
+
   % Compute convergence rate for time convergence
   if strcmp(Simulation.Type,'ConvergenceTime')
     for iD=1:Simulation.NumDiscretizations
@@ -1337,7 +1337,7 @@ for iS=1:Simulation.NumSimulations
         end
       end
     end
-    
+
     % Plot time convergence
     if strcmp(Options.PlotConvergence,'yes')
       if iS==1
@@ -1376,14 +1376,14 @@ for iS=1:Simulation.NumSimulations
       end
     end
   end
-  
+
   % Save parameter of parametric study
   if strcmp(Simulation.Type,'ParametricStudy')
     for iD=1:Simulation.NumDiscretizations
       Results(iD).(Simulation.ParameterStudy)(iS2)=Parameters(iD).(Simulation.ParameterStudy);
     end
   end
-  
+
   % Compute speedup for strong scaling
   if strcmp(Simulation.Type,'ScalingStrong')
     for iD=1:Simulation.NumDiscretizations
@@ -1391,7 +1391,7 @@ for iS=1:Simulation.NumSimulations
       Results(iD).Timer(iS2)=sum(Timer.(Options.CharacteristicTimer));
       Results(iD).Speedup(iS2)=Results(iD).Timer(1)/Results(iD).Timer(iS2);
     end
-    
+
     % Plot speedup
     if strcmp(Options.PlotSpeedup,'yes')
       if iS==1
@@ -1411,7 +1411,7 @@ for iS=1:Simulation.NumSimulations
       end
     end
   end
-  
+
   % Compute speedup for weak scaling
   if strcmp(Simulation.Type,'ScalingWeak')
     for iD=1:Simulation.NumDiscretizations
@@ -1420,7 +1420,7 @@ for iS=1:Simulation.NumSimulations
       Results(iD).Timer(iS2)=sum(Timer.(Options.CharacteristicTimer));
       Results(iD).Efficiency(iS2)=Results(iD).Timer(1)/Results(iD).Timer(iS2);
     end
-    
+
     % Plot efficiency
     if strcmp(Options.PlotEfficiency,'yes')
       if iS==1
@@ -1441,12 +1441,12 @@ for iS=1:Simulation.NumSimulations
       end
     end
   end
-  
+
   % Compute quantity of interest at the end of the simulation
   if matchField(Options,'ComputeQuantityEnd')
     eval(Options.ComputeQuantityEnd);
   end
-  
+
   % Export to Paraview
   if matchField(Options,'Export2Paraview')
     for iD=1:Simulation.NumDiscretizations
@@ -1464,13 +1464,13 @@ for iS=1:Simulation.NumSimulations
       end
     end
   end
-  
+
   % Timer
   Timer.PostProcessing=toc(TimerPostProcessingAux);
   Memory.PostProcessing=whos; Memory.PostProcessing=sum(vertcat(Memory.PostProcessing.bytes));
   fprintf('\nPost-processing completed in %.1f sec (%.1f MB)',Timer.PostProcessing,...
                                                               Memory.PostProcessing/1e6);
-  
+
   % Print errors and convergence rates
   if matchField(Options,'ComputeError')
     fprintf('\n\nVariable%21sError%6sNorm','','');
@@ -1493,7 +1493,7 @@ for iS=1:Simulation.NumSimulations
       end
     end
   end
-  
+
   % Print simulation info
   if strcmp(Simulation.Type,'ConvergenceSpace')
     fprintf('\n\nSimulation with %s completed',strjoin(arrayfun(@(iD)...
@@ -1513,14 +1513,14 @@ for iS=1:Simulation.NumSimulations
     fprintf('\n\nSimulation with np = %d and nel = %d completed',...
                                          Results(1).NumProcessors(iS2),Results(1).NumElements(iS2));
   end
-  
+
   fprintf('\n--------------------------------------------------------------------------------\n');
-  
+
   % Clear variables
   if iS<Simulation.NumSimulations
     clear RefElement Faces Block Mesh;
   end
-  
+
 end % End of the single simulation
 
 % Perform test
